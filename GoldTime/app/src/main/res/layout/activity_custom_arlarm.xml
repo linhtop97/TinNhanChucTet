@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_marginBottom="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.CardView
+                android:layout_gravity="center_horizontal"
+                app:cardElevation="5dp"
+                app:cardCornerRadius="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TimePicker
+                    android:id="@+id/time_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="340dp">
+
+                </TimePicker>
+            </android.support.v7.widget.CardView>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ToggleButton
+                    android:id="@+id/bt_mo"
+                    android:layout_weight="1"
+                    android:textOff="MO"
+                    android:textOn="MO"
+                    android:gravity="center"
+                    android:checked="false"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:background="@drawable/custom_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ToggleButton
+                    android:id="@+id/bt_tu"
+                    android:layout_weight="1"
+                    android:textOn="TU"
+                    android:textOff="TU"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:background="@drawable/custom_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ToggleButton
+                    android:id="@+id/bt_we"
+                    android:layout_weight="1"
+                    android:textOn="WE"
+                    android:textOff="WE"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:background="@drawable/custom_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ToggleButton
+                    android:id="@+id/bt_th"
+                    android:layout_weight="1"
+                    android:textOff="TH"
+                    android:textOn="TH"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:background="@drawable/custom_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ToggleButton
+                    android:id="@+id/bt_fr"
+                    android:layout_weight="1"
+                    android:textOff="FR"
+                    android:textOn="FR"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:background="@drawable/custom_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ToggleButton
+                    android:id="@+id/bt_sa"
+                    android:layout_weight="1"
+                    android:textOn="SA"
+                    android:textOff="SA"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:background="@drawable/custom_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ToggleButton
+                    android:id="@+id/bt_su"
+                    android:layout_weight="1"
+                    android:textOn="SU"
+                    android:textOff="SU"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:background="@drawable/custom_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:text="Âm Lượng : "
+                android:textSize="20sp"
+                android:textColor="#eb1c1c"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <SeekBar
+                android:id="@+id/seekbar_volume"
+                android:layout_margin="10dp"
+                android:progress="50"
+
+                android:max="100"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:text="Âm Báo : "
+                android:textSize="20sp"
+                android:textColor="#eb1c1c"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txt_menu_nhac"
+                android:textSize="15dp"
+                android:text="mặc định"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginTop="10dp"
+                android:text="Thời gian báo lại : "
+                android:textSize="20sp"
+                android:textColor="#eb1c1c"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txt_time_bao_lai"
+                android:textSize="15dp"
+                android:text="10 phút (mặc định)"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:text="số lần báo lại : "
+                android:textSize="20sp"
+                android:textColor="#eb1c1c"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txt_count_time_back"
+                android:inputType="number"
+                android:textSize="15dp"
+                android:text="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginTop="10dp"
+                android:text="Thời gian nhạc bật : "
+                android:textSize="20sp"
+                android:textColor="#eb1c1c"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txt_time_phat_nhac"
+                android:textSize="15dp"
+                android:text="1 phút (mặc định)"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:text="ghi chú : "
+                android:textSize="20sp"
+                android:textColor="#eb1c1c"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/txt_ghi_chu"
+                android:textSize="15dp"
+                android:text="none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+
+    </ScrollView>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/bt_cancel"
+            android:text="Cancel"
+            android:textSize="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/bt_luu"
+            android:text="lưu"
+            android:textSize="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>
