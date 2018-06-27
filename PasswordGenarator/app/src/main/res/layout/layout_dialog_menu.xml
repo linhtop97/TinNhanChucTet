@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dp_320"
+    android:layout_height="260dp">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/select_your_color_category"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05"/>
+
+    <ImageView
+        android:id="@+id/imageView_green"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:srcCompat="@color/colorPrimary" />
+
+    <ImageView
+        android:id="@+id/imageView_red"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorRed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_green" />
+
+    <ImageView
+        android:id="@+id/imageView_blue"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorBlue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_red" />
+
+    <ImageView
+        android:id="@+id/imageView_grey"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorGrey"
+        app:layout_constraintStart_toEndOf="@+id/imageView_red"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_purple" />
+
+    <ImageView
+        android:id="@+id/imageView_purple"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPurple"
+        app:layout_constraintStart_toEndOf="@+id/imageView_green"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <ImageView
+        android:id="@+id/imageView_orange"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorOrange"
+        app:layout_constraintBottom_toTopOf="@+id/button_select"
+        app:layout_constraintStart_toEndOf="@+id/imageView_blue"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_grey" />
+
+    <CheckBox
+        android:id="@+id/checkBox_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="16dp"
+        android:text="Green"
+        app:layout_constraintStart_toEndOf="@+id/imageView_green"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <CheckBox
+        android:id="@+id/checkBox_red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Red"
+        app:layout_constraintStart_toEndOf="@+id/imageView_red"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_green" />
+
+    <CheckBox
+        android:id="@+id/checkBox_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Blue"
+        app:layout_constraintStart_toEndOf="@+id/imageView_blue"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_red" />
+
+    <CheckBox
+        android:id="@+id/checkBox_purple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Purple"
+        app:layout_constraintStart_toEndOf="@+id/imageView_purple"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <CheckBox
+        android:id="@+id/checkBox_grey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Grey"
+        app:layout_constraintStart_toEndOf="@+id/imageView_grey"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_purple" />
+
+    <CheckBox
+        android:id="@+id/checkBox_orange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Orange"
+        app:layout_constraintStart_toEndOf="@+id/imageView_orange"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_grey" />
+
+    <Button
+        android:id="@+id/button_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Select"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_blue" />
+
+</android.support.constraint.ConstraintLayout>
