@@ -107,4 +107,9 @@ public class ListPassPresenter implements ListPassContract.Presenter {
             }
         }
     }
+
+    @Override
+    public void showWindow(UserData userData) {
+        mView.showFloatingWindow(userData);
+    }
 }

@@ -6,9 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.nttungg.passwordgenarator.screens.savescreen.SaveActivity">
 
-
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar_save"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -35,11 +34,12 @@
                 tools:ignore="MissingConstraints"
                 app:hintTextAppearance="@style/MyAppearance"
                 android:layout_below="@id/image_back">
-                <android.support.design.widget.TextInputEditText
+                <EditText
                     android:id="@+id/edit_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/title"
+                    android:theme="@style/AppTheme.LighterEditText"
                     android:textCursorDrawable="@drawable/cursor_color"
                     android:textColor="@color/colorWhite"/>
             </android.support.design.widget.TextInputLayout>
@@ -60,7 +60,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_save"
         app:layout_constraintVertical_bias="0.05"/>
 
     <ImageView

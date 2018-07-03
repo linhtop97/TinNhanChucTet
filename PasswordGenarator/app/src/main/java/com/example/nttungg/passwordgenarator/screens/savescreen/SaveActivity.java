@@ -4,23 +4,27 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.example.nttungg.passwordgenarator.R;
 import com.example.nttungg.passwordgenarator.models.UserData;
-import com.example.nttungg.passwordgenarator.screens.listscreen.ListPassActivity;
 import com.example.nttungg.passwordgenarator.utils.Constant;
+import com.example.nttungg.passwordgenarator.utils.Utils;
 
 /**
  * Save Screen.
@@ -49,6 +53,7 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
     private UserData mUserData;
     private int mPosition;
 
+    private Toolbar mToolbar;
     private EditText mEditTextPass;
     private ImageView mImageViewShowHidePass;
     private ImageView mImageViewCat;
@@ -65,16 +70,26 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
     private ImageView mImgageViewPurple;
     private ImageView mImgageViewOrange;
 
+    private Dialog mPassDialog;
+    private ImageView mImageViewClose;
+    private Button mButtonEnter;
+    private EditText mEditTextPassDialog;
+    private TextView mTextViewPassReult;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save);
         mPresenter = new SavePresenter(this);
         mCategory = Constant.color_green;
-        Intent setData = new Intent();
-        setResult(RESULT_CANCELED, setData);
         initUI();
         getData();
+    }
+
+    @Override
+    protected void onRestart() {
+        showPassDialog();
+        super.onRestart();
     }
 
     private void getData(){
@@ -94,6 +109,40 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
         }
     }
 
+    public void checkPass(){
+        if (!mEditTextPassDialog.getText().toString().equals("")){
+            if (mEditTextPassDialog.getText().toString().equals(Utils.getPass(this))){
+                mPassDialog.dismiss();
+            }else{
+                mTextViewPassReult.setText(Constant.wrong_pass);
+            }
+        }else{
+            mTextViewPassReult.setText(Constant.empty_pass);
+        }
+    }
+    public void showPassDialog(){
+        mPassDialog = new Dialog(this);
+        mPassDialog.setContentView(R.layout.layout_dialog_login);
+        mPassDialog.show();
+        mPassDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mPassDialog.dismiss();
+                finish();
+            }
+        });
+        initPassDialog();
+    }
+
+    private void initPassDialog() {
+        mImageViewClose = mPassDialog.findViewById(R.id.imageView_closedialog);
+        mButtonEnter = mPassDialog.findViewById(R.id.button_enter);
+        mTextViewPassReult = mPassDialog.findViewById(R.id.textView_resultpass);
+        mEditTextPassDialog = mPassDialog.findViewById(R.id.editText_dilogpass);
+        mImageViewClose.setVisibility(View.GONE);
+        mButtonEnter.setOnClickListener(this);
+    }
+
     private void initUI(){
         mEditTextPass = findViewById(R.id.editText_pass);
         mImageViewShowHidePass = findViewById(R.id.imageView_showhidepass);
@@ -103,6 +152,8 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
         mButtonSave = findViewById(R.id.button_save);
         mImageViewBack = findViewById(R.id.image_back);
         mImageViewCopy = findViewById(R.id.imageView_copypass);
+        mToolbar = findViewById(R.id.toolbar_save);
+        this.setSupportActionBar(mToolbar);
         mImageViewShowHidePass.setOnClickListener(this);
         mImageViewCat.setOnClickListener(this);
         mImageViewCopy.setOnClickListener(this);
@@ -154,30 +205,42 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
             case R.id.imageView_blue:
                 mCategory = Constant.color_blue;
                 mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorBlue));
+                mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                        .getColor(R.color.colorBlue)));
                 mDialog.dismiss();
                 break;
             case R.id.imageView_green:
                 mCategory = Constant.color_green;
                 mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                        .getColor(R.color.colorPrimary)));
                 mDialog.dismiss();
                 break;
             case R.id.imageView_red:
                 mCategory = Constant.color_red;
                 mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorRed));
+                mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                        .getColor(R.color.colorRed)));
                 mDialog.dismiss();
                 break;
             case R.id.imageView_grey:
                 mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+                mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                        .getColor(R.color.colorGrey)));
                 mCategory = Constant.color_grey;
                 mDialog.dismiss();
                 break;
             case R.id.imageView_purple:
                 mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorPurple));
+                mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                        .getColor(R.color.colorPurple)));
                 mCategory = Constant.color_purple;
                 mDialog.dismiss();
                 break;
             case R.id.imageView_orange:
                 mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+                mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                        .getColor(R.color.colorOrange)));
                 mCategory = Constant.color_orange;
                 mDialog.dismiss();
                 break;
@@ -186,9 +249,6 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
                     mPresenter.savePassword();
                 }else if(mUserData !=null){
                     mPresenter.editUserData(mUserData,mPosition);
-                    Intent setData = new Intent();
-                    setData.putExtra("data", 0);
-                    setResult(RESULT_OK, setData);
                     finish();
                 }else{
 
@@ -200,6 +260,9 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
             case R.id.imageView_copypass:
                 copyText(mEditTextPass.getText().toString());
                 Toast.makeText(this, "Copied", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.button_enter:
+                checkPass();
                 break;
         }
     }
@@ -213,18 +276,32 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
     public void setCategory(String category){
        if (category.equals(Constant.color_blue)){
            mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorBlue));
+           mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                   .getColor(R.color.colorBlue)));
        }else if(category.equals(Constant.color_green)){
            mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+           mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                   .getColor(R.color.colorPrimary)));
        }else if(category.equals(Constant.color_red)){
            mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorRed));
+           mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                   .getColor(R.color.colorRed)));
        }else if(category.equals(Constant.color_grey)){
            mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorGrey));
+           mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                   .getColor(R.color.colorGrey)));
        }else if(category.equals(Constant.color_purple)){
            mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorPurple));
+           mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                   .getColor(R.color.colorPurple)));
        }else if(category.equals(Constant.color_orange)){
            mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorOrange));
+           mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                   .getColor(R.color.colorOrange)));
        }else{
            mImageViewCat.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+           mToolbar.setBackgroundDrawable(new ColorDrawable(getResources()
+                   .getColor(R.color.colorPrimary)));
        }
     }
 
@@ -270,4 +347,31 @@ public class SaveActivity extends AppCompatActivity implements SaveContract.View
         finish();
     }
 
+    public void showNotSaveDialog(){
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Saving")
+                .setMessage("Are you sure you want to back without saving?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                      SaveActivity.this.finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        showNotSaveDialog();
+    }
 }

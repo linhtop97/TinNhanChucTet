@@ -3,11 +3,13 @@ package com.example.nttungg.passwordgenarator.screens.listscreen;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,9 +24,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nttungg.passwordgenarator.R;
 import com.example.nttungg.passwordgenarator.models.UserData;
+import com.example.nttungg.passwordgenarator.screens.savescreen.SaveActivity;
 import com.example.nttungg.passwordgenarator.screens.services.WindowService;
 import com.example.nttungg.passwordgenarator.utils.Constant;
 import com.example.nttungg.passwordgenarator.utils.Utils;
@@ -34,7 +38,7 @@ import java.util.ArrayList;
 /**
  * ListPass Screen.
  */
-public class ListPassActivity extends AppCompatActivity implements ListPassContract.View,DataUserAdapter.ItemClickListener,
+public class ListPassActivity extends AppCompatActivity implements ListPassContract.View,
         View.OnClickListener,SearchView.OnQueryTextListener {
 
     public static Intent getListIntent(Context context){
@@ -49,14 +53,8 @@ public class ListPassActivity extends AppCompatActivity implements ListPassContr
     private Dialog mDialog;
     private SearchView mSearchView;
 
-    private Dialog mPassDialog;
-    private ImageView mImageViewClose;
-    private Button mButtonEnter;
-    private EditText mEditTextPass;
-    private TextView mTextViewPassReult;
     private ArrayList<UserData> mUserData = new ArrayList<>();
     private ArrayList<UserData> mUserDataCat = new ArrayList<>();
-    public static boolean isResume;
 
     private CheckBox mCheckBoxGreen;
     private CheckBox mCheckBoxRed;
@@ -75,69 +73,18 @@ public class ListPassActivity extends AppCompatActivity implements ListPassContr
         mRecyclerView = findViewById(R.id.recycler_list);
         mToolbar = findViewById(R.id.toolbar_display);
         mPresenter = new ListPassPresenter(this);
-        mDataUserAdapter = new DataUserAdapter(mPresenter,this,this);
+        mDataUserAdapter = new DataUserAdapter(mPresenter,this);
         mRecyclerView.setAdapter(mDataUserAdapter);
         mRecyclerView.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         initToolbar();
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 15) {
-            if(resultCode == RESULT_CANCELED){
-               isResume = false;
-            }
-        }
-    }
 
-    @Override
-    protected void onStop() {
-        isResume = true;
-        super.onStop();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (isResume){
-            showPassDialog();
-        }
-    }
 
     @Override
     protected void onResume() {
         mPresenter.readData();
         super.onResume();
-    }
-
-    public void showPassDialog(){
-        mPassDialog = new Dialog(ListPassActivity.this);
-        mPassDialog.setContentView(R.layout.layout_dialog_login);
-        mPassDialog.show();
-        mPassDialog.setCancelable(false);
-        mPassDialog.setCanceledOnTouchOutside(false);
-        initPassDialog();
-    }
-
-    private void initPassDialog() {
-        mImageViewClose = mPassDialog.findViewById(R.id.imageView_closedialog);
-        mButtonEnter = mPassDialog.findViewById(R.id.button_enter);
-        mTextViewPassReult = mPassDialog.findViewById(R.id.textView_resultpass);
-        mEditTextPass = mPassDialog.findViewById(R.id.editText_dilogpass);
-        mImageViewClose.setVisibility(View.GONE);
-        mButtonEnter.setOnClickListener(this);
-    }
-
-    public void checkPass(){
-        if (!mEditTextPass.getText().toString().equals("")){
-            if (mEditTextPass.getText().toString().equals(Utils.getPass(this))){
-                mPassDialog.dismiss();
-            }else{
-                mTextViewPassReult.setText(Constant.wrong_pass);
-            }
-        }else{
-            mTextViewPassReult.setText(Constant.empty_pass);
-        }
     }
 
     public void initToolbar() {
@@ -205,10 +152,34 @@ public class ListPassActivity extends AppCompatActivity implements ListPassContr
         return true;
     }
 
+    public void showPermisionDialog(final UserData userData) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Permission")
+                .setMessage("\n" +
+                        "Grant Permission To Use Floating View")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
     public void showWindow(UserData userData) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
-                startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())));
+                showPermisionDialog(userData);
             } else {
                 startService(WindowService.getServiceIntent(this,userData));
             }
@@ -278,6 +249,7 @@ public class ListPassActivity extends AppCompatActivity implements ListPassContr
     public void deleteSuccess(ArrayList<UserData> userData) {
         mUserData = new ArrayList<>();
         mUserData.addAll(userData);
+        Toast.makeText(this,"Delete Successed",Toast.LENGTH_SHORT).show();
         if (isCategory){
            mDataUserAdapter.replaceData(mUserDataCat);
         }else{
@@ -298,7 +270,7 @@ public class ListPassActivity extends AppCompatActivity implements ListPassContr
     }
 
     @Override
-    public void onItemClicked(UserData userData) {
+    public void showFloatingWindow(UserData userData) {
         showWindow(userData);
     }
 
@@ -309,9 +281,6 @@ public class ListPassActivity extends AppCompatActivity implements ListPassContr
                 mUserDataCat = new ArrayList<>();
                 checkBoxOption();
                 mDialog.dismiss();
-                break;
-            case R.id.button_enter:
-                checkPass();
                 break;
         }
     }

@@ -1,10 +1,12 @@
 package com.example.nttungg.passwordgenarator.screens.services;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import com.example.nttungg.passwordgenarator.R;
 import com.example.nttungg.passwordgenarator.models.UserData;
 import com.example.nttungg.passwordgenarator.screens.listscreen.ListPassActivity;
+import com.example.nttungg.passwordgenarator.utils.Constant;
 
 /**
  * Created by nttungg on 6/20/18.
@@ -43,6 +46,7 @@ public class WindowService extends Service implements View.OnClickListener {
     private static UserData mUserData;
     private  View collapsedView;
     private  View expandedView;
+    private BroadcastReceiver mReceiver;
 
     public static Intent getServiceIntent(Context context, UserData userData) {
         Intent intent = new Intent(context, WindowService.class);
@@ -58,7 +62,24 @@ public class WindowService extends Service implements View.OnClickListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        final IntentFilter theFilter = new IntentFilter();
+        theFilter.addAction("remove_window");
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                windowManager.removeView(mFloatingView);
+                Constant.is_show = false;
+                stopSelf();
+            }
+        };
+        this.registerReceiver(this.mReceiver, theFilter);
         initView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.unregisterReceiver(this.mReceiver);
     }
 
     private void initView() {
@@ -105,6 +126,7 @@ public class WindowService extends Service implements View.OnClickListener {
             @Override
             public void onClick(View view) {
                 windowManager.removeView(mFloatingView);
+                Constant.is_show = false;
                 stopSelf();
             }
         });
@@ -151,6 +173,7 @@ public class WindowService extends Service implements View.OnClickListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Constant.is_show = true;
         mUserData = (UserData) intent.getExtras().get("key_user_data");
         if (mUserData.equals("")){
             mImageViewCopAcc.setVisibility(View.GONE);

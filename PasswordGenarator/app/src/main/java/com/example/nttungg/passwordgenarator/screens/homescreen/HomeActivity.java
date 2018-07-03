@@ -2,8 +2,12 @@ package com.example.nttungg.passwordgenarator.screens.homescreen;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -57,12 +61,6 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     private Boolean isOptionCharacter;
     private Boolean isSign;
 
-    private Dialog mDialog;
-    private ImageView mImageViewClose;
-    private Button mButtonEnter;
-    private EditText mEditTextPass;
-    private TextView mTextViewPassReult;
-
     private int mNumberOfCharacter = Constant.defaulNumber;
 
     @Override
@@ -109,13 +107,10 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 10) {
-            if(resultCode == RESULT_OK){
-                mEditTextResult.setText("");
-                mTextViewStrengh.setText("");
-            }
-        }
+    protected void onResume() {
+        mEditTextResult.setText("");
+        mTextViewStrengh.setText("");
+        super.onResume();
     }
 
     @Override
@@ -123,9 +118,7 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         switch (view.getId()){
             case R.id.buttonGen:
                 checkBoxOption();
-                String result = mPresenter.RandomString(isNotSimilar,isCap,isLower,isNumber,isOptionCharacter,isOption,isSign,mNumberOfCharacter);
-                Utils.calculatePasswordStrength(this,result,mTextViewStrengh);
-                mEditTextResult.setText(result);
+                mPresenter.RandomString(isNotSimilar,isCap,isLower,isNumber,isOptionCharacter,isOption,isSign,mNumberOfCharacter);
                 break;
             case R.id.buttonSave:
                 if (!mEditTextResult.getText().toString().equals("")){
@@ -136,45 +129,14 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
                 }
                 break;
             case R.id.imageView_listpass:
-                showDialog();
-                break;
-            case R.id.button_enter:
-                checkPass();
-                break;
-            case R.id.imageView_closedialog:
-                mDialog.dismiss();
-                break;
-        }
-    }
-
-    public void checkPass(){
-        if (!mEditTextPass.getText().toString().equals("")){
-            if (mEditTextPass.getText().toString().equals(Utils.getPass(this))){
                 startActivity(ListPassActivity.getListIntent(this));
-                mDialog.dismiss();
-            }else{
-                mTextViewPassReult.setText(Constant.wrong_pass);
-            }
-        }else{
-            mTextViewPassReult.setText(Constant.empty_pass);
+                break;
+
+            case R.id.imageView_closedialog:
+
         }
     }
 
-    public void showDialog(){
-        mDialog = new Dialog(HomeActivity.this);
-        mDialog.setContentView(R.layout.layout_dialog_login);
-        mDialog.show();
-        initDialog();
-    }
-
-    private void initDialog() {
-        mImageViewClose = mDialog.findViewById(R.id.imageView_closedialog);
-        mButtonEnter = mDialog.findViewById(R.id.button_enter);
-        mTextViewPassReult = mDialog.findViewById(R.id.textView_resultpass);
-        mEditTextPass = mDialog.findViewById(R.id.editText_dilogpass);
-        mButtonEnter.setOnClickListener(this);
-        mImageViewClose.setOnClickListener(this);
-    }
 
     public void checkBoxListener(){
         mCheckBoxOption.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -187,13 +149,17 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
                     mCheckBoxSign.setEnabled(false);
                     mCheckBoxOptinalCharacter.setEnabled(false);
                     mEditTextOptinalCharacter.setFocusable(false);
+                    setBackGround(mEditTextOptinalCharacter,false);
                 }else{
                     mCheckBoxCapital.setEnabled(true);
                     mCheckBoxLowercase.setEnabled(true);
                     mCheckBoxNumber.setEnabled(true);
                     mCheckBoxSign.setEnabled(true);
                     mCheckBoxOptinalCharacter.setEnabled(true);
-                    mEditTextOptinalCharacter.setFocusableInTouchMode(true);
+                    if (mCheckBoxOptinalCharacter.isChecked()){
+                        mEditTextOptinalCharacter.setFocusableInTouchMode(true);
+                        setBackGround(mEditTextOptinalCharacter,true);
+                    }
                 }
             }
         });
@@ -202,11 +168,34 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (mCheckBoxOptinalCharacter.isChecked()){
                     mEditTextOptinalCharacter.setFocusableInTouchMode(true);
+                    setBackGround(mEditTextOptinalCharacter,true);
                 }else{
                     mEditTextOptinalCharacter.setFocusable(false);
+                    setBackGround(mEditTextOptinalCharacter,false);
                 }
             }
         });
+    }
+
+    public void setBackGround(EditText editText, boolean isFocus){
+        Drawable dw1 = getApplicationContext().getResources().getDrawable(R.drawable.layout_boder_grey);
+        Drawable dw2 = getApplicationContext().getResources().getDrawable(R.drawable.layout_boder);
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        int jellyBean = android.os.Build.VERSION_CODES.JELLY_BEAN;
+        if (isFocus){
+            if(sdk < jellyBean) {
+                editText.setBackgroundDrawable(dw2);
+            } else {
+                editText.setBackground(dw2);
+            }
+        }else {
+            if(sdk < jellyBean) {
+                editText.setBackgroundDrawable(dw1);
+            } else {
+                editText.setBackground(dw1);
+            }
+        }
+
     }
 
     public void checkBoxOption(){
@@ -251,5 +240,60 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     public String getOptinalString() {
         String optinalString = mEditTextOptinalCharacter.getText().toString();
         return optinalString;
+    }
+
+    @Override
+    public void randomSuccess(String result) {
+        Utils.calculatePasswordStrength(this,result,mTextViewStrengh);
+        mEditTextResult.setText(result);
+    }
+
+    @Override
+    public void showEmptyDialog(){
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Empty")
+                .setMessage("Your characters are empty?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    @Override
+    public void showLengthDialog() {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Number too large")
+                .setMessage("\n" +
+                        "Number Of Your Characters Exceeds Allowed")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }

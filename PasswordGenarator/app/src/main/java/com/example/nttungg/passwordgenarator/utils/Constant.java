@@ -19,5 +19,6 @@ public class Constant {
     public static String color_orange = "Orange";
     public static String wrong_pass = "Wrong Password";
     public static String empty_pass = "Enter Password";
+    public static boolean is_show = false;
     public static int defaulNumber = 8;
 }

@@ -25,7 +25,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".screens.services.WindowService" />
-        <service android:name=".screens.services.ShowToastService" />
 
         <activity
             android:name=".screens.listscreen.ListPassActivity"
@@ -41,6 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

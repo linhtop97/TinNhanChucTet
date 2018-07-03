@@ -1,5 +1,8 @@
 package com.example.nttungg.passwordgenarator.screens.homescreen;
 
+import android.util.Log;
+
+import com.example.nttungg.passwordgenarator.models.sources.RandomCallBack;
 import com.example.nttungg.passwordgenarator.utils.RandomString;
 
 import java.util.Random;
@@ -12,20 +15,22 @@ public class HomePresenter  implements HomeContract.Presenter {
 
     private HomeContract.View mView;
     private String mRandomStringResult;
+    private boolean mIsOptinalString;
+    private int mLength;
+    private boolean isEmpty;
 
     public HomePresenter(HomeContract.View view) {
         mView = view;
     }
 
     @Override
-    public String RandomString(boolean isNotSimilar, boolean isCap, boolean isLower, boolean isNumber,
+    public void RandomString(boolean isNotSimilar, boolean isCap, boolean isLower, boolean isNumber,
                                boolean isOptionaChar, boolean isOption,boolean isSign,int length) {
-        if (!isOption && isNotSimilar){
+        mIsOptinalString = isOptionaChar;
+        mLength = length;
+        if (!isOption){
             RandomString.randomString = RandomString.alphanum;
-            return new RandomString(length).nextStringNotSimilar();
-        }else if (!isOption && !isNotSimilar){
-            RandomString.randomString = RandomString.alphanum;
-            return new RandomString(length).nextString();
+            randomPass(length,isNotSimilar);
         }else{
             String randomString  = new String();
             if (isCap){
@@ -44,22 +49,71 @@ public class HomePresenter  implements HomeContract.Presenter {
                 randomString = RandomString.alphanum;
             }
             RandomString.randomString = randomString;
-            if (isNotSimilar){
-                mRandomStringResult = new RandomString(length).nextStringNotSimilar();
-            }else{
-                mRandomStringResult = new RandomString(length).nextString();
-            }
-            if (isOptionaChar){
-                String optinalString;
-                if (mView.getOptinalString() != null){
-                    optinalString = mView.getOptinalString();
-                    StringBuilder stringBuilder = new StringBuilder(mRandomStringResult);
-                    int startindex = new Random().nextInt(length-optinalString.length()-1);
+            randomPass(length,isNotSimilar);
+        }
+    }
+
+    private void randomOptinalChar(){
+        isEmpty = false;
+        if (mIsOptinalString){
+            String optinalString;
+            if (!mView.getOptinalString().equals("")){
+                optinalString = mView.getOptinalString();
+                Random rd = new Random();
+                int number = rd.nextInt(optinalString.length());
+                for (int i = 0; i< number ; i++){
+                    int rdChar = rd.nextInt(optinalString.length());
+                    char s = optinalString.charAt(rdChar);
+                    char S = Character.toUpperCase(s);
+                    char[] myChars = optinalString.toCharArray();
+                    myChars[rdChar] = S;
+                    optinalString = String.valueOf(myChars);
+                }
+                StringBuilder stringBuilder = new StringBuilder(mRandomStringResult);
+                if (mLength-optinalString.length()-1 >= 0){
+                    int startindex = new Random().nextInt(mLength-optinalString.length()-1);
                     int endindex = startindex + optinalString.length();
                     mRandomStringResult = stringBuilder.replace(startindex,endindex,optinalString).toString();
+                    isEmpty = false;
+                }else {
+                    mView.showLengthDialog();
+                    isEmpty = true;
                 }
+            }else{
+                mView.showEmptyDialog();
+                isEmpty = true;
             }
         }
-        return mRandomStringResult;
+    }
+
+    public void randomPass(int length, final boolean isSimilar){
+        RandomString.isSimilar = isSimilar;
+        new RandomString(length, new RandomCallBack() {
+            @Override
+            public void onStartLoading() {
+
+            }
+
+            @Override
+            public void onRandomSuccess(String data) {
+               if (data != null) {
+                   mRandomStringResult = data;
+                   randomOptinalChar();
+                   if (!isEmpty){
+                       mView.randomSuccess(mRandomStringResult);
+                   }
+               }
+            }
+
+            @Override
+            public void onRandomFailure(String message) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }).execute();
     }
 }
