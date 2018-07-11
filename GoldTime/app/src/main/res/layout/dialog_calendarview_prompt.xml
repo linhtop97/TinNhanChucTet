@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="400dp">
+
+    <CalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_gravity="center_horizontal">
+
+    </CalendarView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true">
+
+        <Button
+            android:id="@+id/bt_huy_dialog_calendar_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hủy" />
+
+        <Button
+            android:id="@+id/bt_ok_dialog_calendar_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/bt_huy_dialog_calendar_prompt"
+            android:text="ok" />
+    </RelativeLayout>
+</RelativeLayout>

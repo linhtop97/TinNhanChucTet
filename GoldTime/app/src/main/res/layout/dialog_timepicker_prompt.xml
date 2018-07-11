@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="400dp"
+    android:layout_width="300dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.vdt.trieuvu310198.goldtime.customview.TimePickerCustom
+        android:id="@+id/timepicker_prompt"
+        android:layout_width="300dp"
+        android:layout_height="350dp">
+    </com.vdt.trieuvu310198.goldtime.customview.TimePickerCustom>
+    <RelativeLayout
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/bt_huy_dialog_timepicker_prompt"
+            android:text="hủy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/bt_ok_dialog_timepicker_prompt"
+            android:layout_toRightOf="@+id/bt_huy_dialog_timepicker_prompt"
+            android:text="ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</RelativeLayout>

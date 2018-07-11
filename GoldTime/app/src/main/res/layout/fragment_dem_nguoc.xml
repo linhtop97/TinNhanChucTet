@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:id="@+id/rl_set_time"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+        <TextView
+            android:id="@+id/tv_set_time"
+            android:textColor="#339639"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:text="00:00:00"
+            android:textSize="50sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/ll_set_time"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:padding="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:android="http://schemas.android.com/apk/res/android">
+
+                <com.vdt.trieuvu310198.goldtime.customview.NumberPickerCustomHour
+                    android:id="@+id/time_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </com.vdt.trieuvu310198.goldtime.customview.NumberPickerCustomHour>
+
+                <com.vdt.trieuvu310198.goldtime.customview.NumberPickerCustomMinute
+                    android:id="@+id/time_minute"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </com.vdt.trieuvu310198.goldtime.customview.NumberPickerCustomMinute>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.vdt.trieuvu310198.goldtime.customview.NumberPickerCustomSecond
+                    android:id="@+id/time_second"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </com.vdt.trieuvu310198.goldtime.customview.NumberPickerCustomSecond>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_ringtore"
+        android:padding="10dp"
+        android:background="#b7b7b4"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:textColor="#000000"
+            android:text="nhạc báo thức"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_ringtore"
+            android:layout_marginLeft="10dp"
+            android:textColor="#686767"
+            android:layout_alignParentRight="true"
+            android:text="bipbip"
+            android:layout_marginRight="10dp"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/bt_huy_timer"
+            android:text="hủy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/bt_start_timer"
+            android:text="bắt đầu"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</LinearLayout>
