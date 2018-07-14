@@ -49,6 +49,7 @@ public class LVDialogTimeOnMusicAdapter extends ArrayAdapter<ModelLVDiaLogAmBao>
         final ModelLVDiaLogAmBao modelLVDiaLogAmBao = listTimeOn.get(position);
         holder.nameTimeOn.setText(modelLVDiaLogAmBao.getNameMusic());
         holder.rbMusic.setChecked(modelLVDiaLogAmBao.isIscheckedMusic());
+        holder.rbMusic.setClickable(false);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

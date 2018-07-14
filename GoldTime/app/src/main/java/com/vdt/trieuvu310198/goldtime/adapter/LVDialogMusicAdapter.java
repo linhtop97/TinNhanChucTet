@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ public class LVDialogMusicAdapter extends ArrayAdapter<ModelLVDiaLogAmBao> {
     private List<ModelLVDiaLogAmBao> listMusic;
     private LayoutInflater inflater;
     private OnDialogListClickListener mlistener;
+
 
     public LVDialogMusicAdapter(@NonNull Context context, int resource, @NonNull List<ModelLVDiaLogAmBao> objects,
                                 OnDialogListClickListener listener) {
@@ -47,6 +49,14 @@ public class LVDialogMusicAdapter extends ArrayAdapter<ModelLVDiaLogAmBao> {
         final ModelLVDiaLogAmBao modelLVDiaLogAmBao = listMusic.get(position);
         holder.nameMusic.setText(modelLVDiaLogAmBao.getNameMusic());
         holder.rbMusic.setChecked(modelLVDiaLogAmBao.isIscheckedMusic());
+
+        holder.rbMusic.setClickable(false);
+        holder.rbMusic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+            }
+        });
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,5 +73,9 @@ public class LVDialogMusicAdapter extends ArrayAdapter<ModelLVDiaLogAmBao> {
 
     public interface OnDialogListClickListener {
         void onItemClick(int position);
+    }
+
+    private interface OnCheckedChangelistener {
+        void onCheckedChange(int position, boolean b);
     }
 }

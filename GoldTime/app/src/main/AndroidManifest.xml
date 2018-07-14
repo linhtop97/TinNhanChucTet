@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vdt.trieuvu310198.goldtime">
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -24,8 +27,13 @@
             android:name=".customalarm.CustomAlarmActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <receiver android:name=".customalarm.AlarmReceiver"/>
-        <service android:name=".customalarm.Music"
-            android:enabled="true"/>
+        <service android:name=".customalarm.RingtoreService"/>
+        <service android:name=".customtimer.ServiceTimer"/>
+        <activity android:name=".customprompt.CustomPromptActivity"/>
+        <receiver android:name=".customprompt.PromptReceiver"/>
+        <service android:name=".customprompt.PromptService"/>
+        <activity android:name=".customtimezone.ListCountryActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

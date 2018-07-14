@@ -13,7 +13,7 @@ public class DataAlarmModel {
     private boolean su;
     private int positonMusic;
     private int positionTimeBack;
-    private String countTimeBack;
+    private boolean vibrate;
     private int positionTimeOn;
     private String note;
     private boolean status;
@@ -21,19 +21,9 @@ public class DataAlarmModel {
     public DataAlarmModel() {
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public boolean isStatus() {
-
-        return status;
-    }
-
-    public DataAlarmModel(int hour, int minute, int volume, boolean mo,
-                          boolean tu, boolean we, boolean th, boolean fr,
-                          boolean sa, boolean su, int positonMusic, int positionTimeBack,
-                          String countTimeBack, int positionTimeOn, String note, boolean status) {
+    public DataAlarmModel(int hour, int minute, int volume, boolean mo, boolean tu, boolean we, boolean th,
+                          boolean fr, boolean sa, boolean su, int positonMusic, int positionTimeBack, boolean vibrate,
+                          int positionTimeOn, String note, boolean status) {
         this.hour = hour;
         this.minute = minute;
         this.volume = volume;
@@ -46,11 +36,10 @@ public class DataAlarmModel {
         this.su = su;
         this.positonMusic = positonMusic;
         this.positionTimeBack = positionTimeBack;
-        this.countTimeBack = countTimeBack;
+        this.vibrate = vibrate;
         this.positionTimeOn = positionTimeOn;
         this.note = note;
         this.status = status;
-
     }
 
     public int getHour() {
@@ -101,8 +90,8 @@ public class DataAlarmModel {
         return positionTimeBack;
     }
 
-    public String getCountTimeBack() {
-        return countTimeBack;
+    public boolean isVibrate() {
+        return vibrate;
     }
 
     public int getPositionTimeOn() {
@@ -113,8 +102,11 @@ public class DataAlarmModel {
         return note;
     }
 
-    public void setHour(int hour) {
+    public boolean isStatus() {
+        return status;
+    }
 
+    public void setHour(int hour) {
         this.hour = hour;
     }
 
@@ -162,8 +154,8 @@ public class DataAlarmModel {
         this.positionTimeBack = positionTimeBack;
     }
 
-    public void setCountTimeBack(String countTimeBack) {
-        this.countTimeBack = countTimeBack;
+    public void setVibrate(boolean vibrate) {
+        this.vibrate = vibrate;
     }
 
     public void setPositionTimeOn(int positionTimeOn) {
@@ -172,5 +164,9 @@ public class DataAlarmModel {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

@@ -1,7 +1,8 @@
 package com.vdt.trieuvu310198.goldtime.customalarm;
 
-import android.app.AlarmManager;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,17 +15,20 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.vdt.trieuvu310198.goldtime.R;
 import com.vdt.trieuvu310198.goldtime.adapter.LVDialogMusicAdapter;
 import com.vdt.trieuvu310198.goldtime.adapter.LVDialogTimeBackAdapter;
 import com.vdt.trieuvu310198.goldtime.adapter.LVDialogTimeOnMusicAdapter;
+import com.vdt.trieuvu310198.goldtime.customview.TimePickerCustom;
 import com.vdt.trieuvu310198.goldtime.data.DataAlarm;
 import com.vdt.trieuvu310198.goldtime.model.DataAlarmModel;
 import com.vdt.trieuvu310198.goldtime.model.ModelLVDiaLogAmBao;
@@ -39,7 +43,11 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
     private TextView txtTimeBack;
     private TextView txtTimeOn;
     private TextView txtGhiChu;
-    private TextView txtCountTimeBack;
+
+    private LinearLayout llMusic;
+    private LinearLayout llTimeBack;
+    private LinearLayout llTimeOn;
+    private LinearLayout llNote;
 
     private Button btHenGio;
     private Button btCancel;
@@ -68,22 +76,17 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
     private ToggleButton tbSA;
     private ToggleButton tbSU;
 
-    private int positionMusic;
-    private int positionTimeBack;
-    private int positionTimeOn;
-    private int timeBack;
+    private int positionMusic = 0;
+    private int positionTimeBack = 2;
+    private int positionTimeOn = 2;
     private int positionRV;
 
-    private TimePicker timePicker;
-    private Calendar calendar;
-    private AlarmManager alarmManager;
+    private TimePickerCustom timePickerCustom;
     private SeekBar sbVolume;
     private MediaPlayer mediaPlayer;
 
     private EditText edGhiChu;
-    private EditText edCountTimeBack;
-
-    private String strDay;
+    private Switch swVibrate;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -106,7 +109,7 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void customSeekbarVolume() {
-        mediaPlayer = MediaPlayer.create(CustomAlarmActivity.this, R.raw.doraemon_nhacchuong);
+        mediaPlayer = MediaPlayer.create(CustomAlarmActivity.this, R.raw.music1);
         sbVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -127,8 +130,6 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void xuLi() {
         listTimeOn = new ArrayList<>();
         listTimeBack = new ArrayList<>();
@@ -146,15 +147,15 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
 //        ReadDataGhiChu();
     }
 
+    @SuppressLint("WrongViewCast")
     private void inIt() {
         btHenGio = findViewById(R.id.bt_luu);
         btCancel = findViewById(R.id.bt_cancel);
-        timePicker = findViewById(R.id.time_picker);
+        timePickerCustom = findViewById(R.id.time_picker_custom);
         txtMusic = findViewById(R.id.txt_menu_nhac);
         txtTimeBack = findViewById(R.id.txt_time_bao_lai);
         txtTimeOn = findViewById(R.id.txt_time_phat_nhac);
         txtGhiChu = findViewById(R.id.txt_ghi_chu);
-        txtCountTimeBack = findViewById(R.id.txt_count_time_back);
         sbVolume = findViewById(R.id.seekbar_volume);
         tbMO = findViewById(R.id.bt_mo);
         tbTU = findViewById(R.id.bt_tu);
@@ -163,6 +164,11 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
         tbFR = findViewById(R.id.bt_fr);
         tbSA = findViewById(R.id.bt_sa);
         tbSU = findViewById(R.id.bt_su);
+        swVibrate = findViewById(R.id.switch_vibrate);
+        llMusic = findViewById(R.id.ll_music);
+        llTimeBack = findViewById(R.id.ll_timeback);
+        llTimeOn = findViewById(R.id.ll_timeon);
+        llNote = findViewById(R.id.ll_note);
 
         ((ScrollView) findViewById(R.id.scroll_view)).getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
@@ -175,14 +181,14 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
             }
         });
 
+        llMusic.setOnClickListener(this);
+        llTimeBack.setOnClickListener(this);
+        llTimeOn.setOnClickListener(this);
+        llNote.setOnClickListener(this);
 
-        txtMusic.setOnClickListener(this);
-        txtTimeBack.setOnClickListener(this);
-        txtTimeOn.setOnClickListener(this);
-        txtGhiChu.setOnClickListener(this);
-        txtCountTimeBack.setOnClickListener(this);
         btHenGio.setOnClickListener(this);
         btCancel.setOnClickListener(this);
+
         tbMO.setOnCheckedChangeListener(this);
         tbTU.setOnCheckedChangeListener(this);
         tbWE.setOnCheckedChangeListener(this);
@@ -191,39 +197,38 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
         tbSA.setOnCheckedChangeListener(this);
         tbSU.setOnCheckedChangeListener(this);
 
+        swVibrate.setOnCheckedChangeListener(this);
+
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
 
-            case R.id.txt_menu_nhac:
+            case R.id.ll_music:
                 showDialogMusic();
                 break;
-            case R.id.txt_time_bao_lai:
+            case R.id.ll_timeback:
                 showDialogTimeBack();
                 break;
 
-            case R.id.txt_time_phat_nhac:
+            case R.id.ll_timeon:
 
                 showDialogTimeOn();
                 break;
 
-            case R.id.txt_count_time_back:
-                showDialogCountTimeBack();
-                break;
-
-            case R.id.txt_ghi_chu:
+            case R.id.ll_note:
                 showDialogGhiChu();
                 break;
 
             case R.id.bt_luu:
-
                 saveData();
- //               henGio();
+                Intent intent = new Intent("UPDATEALARM");
+                sendBroadcast(intent);
+
+                //               henGio();
 //                Intent intent = new Intent("update_alarm");
 //                if(positionRV != -1) {
 //                    setDay();
@@ -390,39 +395,6 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
         dialogTimeBack.show();
     }
 
-    private void showDialogCountTimeBack() {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-            customSeekbarVolume();
-        }
-        final Dialog dialogCountTimeBack = new Dialog(this);
-        dialogCountTimeBack.setContentView(R.layout.dialog_count_time_back);
-        edCountTimeBack = dialogCountTimeBack.findViewById(R.id.ed_count_time_back);
-        edCountTimeBack.setFilters(new InputFilter[]{new InputFilter.LengthFilter(5)});
-        dialogCountTimeBack.setCanceledOnTouchOutside(false);
-        dialogCountTimeBack.findViewById(R.id.bt_ok_count_time_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (edCountTimeBack.getText() != null && !edCountTimeBack.getText().toString().trim().equals("")) {
-                    txtCountTimeBack.setText(edCountTimeBack.getText().toString().trim());
-                    Log.e("COUNT", "ok1" + txtCountTimeBack);
-                } else {
-                    Log.e("COUNT", "ok");
-                    txtCountTimeBack.setText("0");
-                }
-
-                dialogCountTimeBack.dismiss();
-            }
-        });
-        dialogCountTimeBack.findViewById(R.id.bt_huy_count_time_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogCountTimeBack.dismiss();
-            }
-        });
-        dialogCountTimeBack.show();
-    }
 
     private void showDialogMusic() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
@@ -558,35 +530,34 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void dataMusic() {
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip1 (mặc định)", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip2", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip3", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip4", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip5", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip6", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip7", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip8", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip9", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
-        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bip bip", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("music 1 (mặc định)", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("music 2", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("music 3", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("music 4", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("sound 1", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("sound 2", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bell 1", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bell 2", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bell 3", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("bell 4", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("harp 1", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("harp 2", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("alert", false));
+        listModelDialogMusic.add(new ModelLVDiaLogAmBao("xmas", false));
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
     private void saveData() {
+        int hour;
+        int minute;
+        long interval = 0;
+        Calendar calendar = Calendar.getInstance();
         DataAlarm dataAlarm = new DataAlarm();
-        if (positionRV != -1) {
-            Log.e("DATA_SIZE_CUSTOM", listDataAlarmModel.size()+"");
+        if (positionRV != -1) { //luc sua data
             DataAlarmModel dataAlarmModel = listDataAlarmModel.get(positionRV);
-            dataAlarmModel.setHour(timePicker.getHour());
-            dataAlarmModel.setMinute(timePicker.getMinute());
+            dataAlarmModel.setHour(timePickerCustom.getCurrentHour());
+            dataAlarmModel.setMinute(timePickerCustom.getCurrentMinute());
             dataAlarmModel.setVolume(sbVolume.getProgress());
             dataAlarmModel.setMo(tbMO.isChecked());
             dataAlarmModel.setTu(tbTU.isChecked());
@@ -596,28 +567,44 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
             dataAlarmModel.setSa(tbSA.isChecked());
             dataAlarmModel.setSu(tbSU.isChecked());
             dataAlarmModel.setPositonMusic(positionMusic);
+            dataAlarmModel.setVibrate(swVibrate.isChecked());
             dataAlarmModel.setPositionTimeBack(positionTimeBack);
-            dataAlarmModel.setCountTimeBack(txtCountTimeBack.getText().toString());
             dataAlarmModel.setPositionTimeOn(positionTimeOn);
             dataAlarmModel.setNote(txtGhiChu.getText().toString());
             dataAlarmModel.setStatus(true);
 
             dataAlarm.saveDataAlarm(CustomAlarmActivity.this, listDataAlarmModel);
-        } else {
-            DataAlarmModel dataAlarmModel = new DataAlarmModel(timePicker.getHour(), timePicker.getMinute(), sbVolume.getProgress(),
+
+
+        } else {//them bao thuc
+            DataAlarmModel dataAlarmModel = new DataAlarmModel(timePickerCustom.getCurrentHour(),
+                    timePickerCustom.getCurrentMinute(), sbVolume.getProgress(),
                     tbMO.isChecked(), tbTU.isChecked(), tbWE.isChecked(), tbTH.isChecked(), tbFR.isChecked(),
-                    tbSA.isChecked(), tbSU.isChecked(), positionMusic, positionTimeBack, txtCountTimeBack.getText().toString(),
+                    tbSA.isChecked(), tbSU.isChecked(), positionMusic, positionTimeBack, swVibrate.isChecked(),
                     positionTimeOn, txtGhiChu.getText().toString(), true);
 
             dataAlarm.addAlarm(CustomAlarmActivity.this, dataAlarmModel);
         }
         dataAlarm.sortDataAlarm(CustomAlarmActivity.this);
 
+        calendar.set(Calendar.HOUR_OF_DAY, timePickerCustom.getCurrentHour());
+        calendar.set(Calendar.MINUTE, timePickerCustom.getCurrentMinute());
+        interval = calendar.getTimeInMillis() - System.currentTimeMillis();
+        if (!tbMO.isChecked() && !tbTU.isChecked() && !tbWE.isChecked() && !tbTH.isChecked() && !tbFR.isChecked() &&
+                !tbSA.isChecked() && !tbSU.isChecked()) {
+            if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+                interval = calendar.getTimeInMillis() - System.currentTimeMillis() + 86400000;
+
+            } else {
+                interval = calendar.getTimeInMillis() - System.currentTimeMillis();
+            }
+            hour = (int) (interval / 3600000);
+            minute = (int) ((interval % 3600000) / 60000) + 1;
+            Toast.makeText(this, "còn lại " + hour + "h:" + minute + "m", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void readDataAlarm() {
         positionRV = getIntent().getIntExtra("POSITION", -1);
         DataAlarm dataAlarm = new DataAlarm();
@@ -625,10 +612,10 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
         dataTimeOn();
         dataTimeBack();
         dataMusic();
-        Log.e("POSITION", positionRV+"");
-        if(positionRV != -1) {//ân vào từng item của rv
-            timePicker.setHour(listDataAlarmModel.get(positionRV).getHour());
-            timePicker.setMinute(listDataAlarmModel.get(positionRV).getMinute());
+        Log.e("POSITION", positionRV + "");
+        if (positionRV != -1) {//ân vào từng item của rv
+            timePickerCustom.setCurrentHour(listDataAlarmModel.get(positionRV).getHour());
+            timePickerCustom.setCurrentMinute(listDataAlarmModel.get(positionRV).getMinute());
             sbVolume.setProgress(listDataAlarmModel.get(positionRV).getVolume());
 
             tbMO.setChecked(listDataAlarmModel.get(positionRV).isMo());
@@ -638,6 +625,11 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
             tbFR.setChecked(listDataAlarmModel.get(positionRV).isFr());
             tbSA.setChecked(listDataAlarmModel.get(positionRV).isSa());
             tbSU.setChecked(listDataAlarmModel.get(positionRV).isSu());
+            swVibrate.setChecked(listDataAlarmModel.get(positionRV).isVibrate());
+
+            positionMusic = listDataAlarmModel.get(positionRV).getPositonMusic();
+            positionTimeBack = listDataAlarmModel.get(positionRV).getPositionTimeBack();
+            positionTimeOn = listDataAlarmModel.get(positionRV).getPositionTimeOn();
 
             txtMusic.setText(listModelDialogMusic.get(listDataAlarmModel.get(positionRV).getPositonMusic()).getNameMusic());
             listModelDialogMusic.get(listDataAlarmModel.get(positionRV).getPositonMusic()).setIscheckedMusic(true);
@@ -645,7 +637,6 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
             txtTimeBack.setText(listTimeBack.get(listDataAlarmModel.get(positionRV).getPositionTimeBack()).getNameMusic());
             listTimeBack.get(listDataAlarmModel.get(positionRV).getPositionTimeBack()).setIscheckedMusic(true);
 
-            txtCountTimeBack.setText(listDataAlarmModel.get(positionRV).getCountTimeBack());
 
             txtTimeOn.setText(listTimeOn.get(listDataAlarmModel.get(positionRV).getPositionTimeOn()).getNameMusic());
             listTimeOn.get(listDataAlarmModel.get(positionRV).getPositionTimeOn()).setIscheckedMusic(true);
@@ -662,6 +653,7 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
             tbFR.setChecked(false);
             tbSA.setChecked(false);
             tbSU.setChecked(false);
+            swVibrate.setChecked(true);
 
             listModelDialogMusic.get(0).setIscheckedMusic(true);
             txtMusic.setText(listModelDialogMusic.get(0).getNameMusic());
@@ -669,15 +661,12 @@ public class CustomAlarmActivity extends AppCompatActivity implements View.OnCli
             listTimeBack.get(2).setIscheckedMusic(true);
             txtTimeBack.setText(listTimeBack.get(2).getNameMusic());
 
-            txtCountTimeBack.setText("0");
-
             listTimeOn.get(2).setIscheckedMusic(true);
             txtTimeOn.setText(listTimeOn.get(2).getNameMusic());
 
             txtGhiChu.setText("none");
         }
     }
-
 
 
 }

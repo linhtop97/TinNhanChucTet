@@ -60,8 +60,9 @@
             android:src="@drawable/icon_popup_menu"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:padding="15dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
     </RelativeLayout>
 
 

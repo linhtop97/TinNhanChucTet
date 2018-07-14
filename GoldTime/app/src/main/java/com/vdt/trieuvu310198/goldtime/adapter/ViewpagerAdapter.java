@@ -5,12 +5,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.vdt.trieuvu310198.goldtime.fragment.BamGioFragment;
-import com.vdt.trieuvu310198.goldtime.fragment.DemNguocFragment;
-import com.vdt.trieuvu310198.goldtime.fragment.HenGioFragment;
-import com.vdt.trieuvu310198.goldtime.fragment.NhacNhoFragmnet;
+import com.vdt.trieuvu310198.goldtime.fragment.AlarmFragment;
+import com.vdt.trieuvu310198.goldtime.fragment.TimeZoneFragment;
+import com.vdt.trieuvu310198.goldtime.fragment.PromptFragmnet;
+import com.vdt.trieuvu310198.goldtime.fragment.StopwatchFragment;
+import com.vdt.trieuvu310198.goldtime.fragment.TimerFragment;
 
 public class ViewpagerAdapter extends FragmentPagerAdapter {
+
     public ViewpagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -19,20 +21,22 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new HenGioFragment();
+                return new AlarmFragment();
             case 1:
-                return new NhacNhoFragmnet();
+                return new StopwatchFragment();
             case 2:
-                return new DemNguocFragment();
+                return new TimerFragment();
             case 3:
-                return new BamGioFragment();
-                default: return new HenGioFragment();
+                return new PromptFragmnet();
+            case 4:
+                return new TimeZoneFragment();
+                default: return new AlarmFragment();
         }
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 
     @Nullable
@@ -40,13 +44,15 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "Hẹn Giờ";
+                return "Hẹn giờ";
             case 1:
-                return "Nhắc Nhở";
+                return "Bấm giờ";
             case 2:
-                return "Đếm Ngược";
+                return "Đếm Giờ";
             case 3:
-                return "Bấm Giờ";
+                return "Nhắc nhở";
+            case 4:
+                return "Giờ quốc tế";
                 default:
                     return "Hẹn Giờ";
         }

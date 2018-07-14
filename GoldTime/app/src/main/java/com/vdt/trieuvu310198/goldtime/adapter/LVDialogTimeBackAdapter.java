@@ -24,7 +24,7 @@ public class LVDialogTimeBackAdapter extends ArrayAdapter<ModelLVDiaLogAmBao> {
 
     public LVDialogTimeBackAdapter(@NonNull Context context, int resource, @NonNull List<ModelLVDiaLogAmBao> objects,
                                    OnDialogListClickListener listener) {
-        super(context, resource, objects);
+            super(context, resource, objects);
         this.listTime = objects;
         this.inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         this.mlistener = listener;
@@ -49,6 +49,7 @@ public class LVDialogTimeBackAdapter extends ArrayAdapter<ModelLVDiaLogAmBao> {
         final ModelLVDiaLogAmBao modelLVDiaLogAmBao = listTime.get(position);
         holder.nameTimeBack.setText(modelLVDiaLogAmBao.getNameMusic());
         holder.rbMusic.setChecked(modelLVDiaLogAmBao.isIscheckedMusic());
+        holder.rbMusic.setClickable(false);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
