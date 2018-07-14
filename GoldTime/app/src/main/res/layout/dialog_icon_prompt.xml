@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
-    android:id="@+id/rv_dialog_icon_prompt"
-    android:layout_height="300dp"
-    android:layout_width="300dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-</android.support.v7.widget.RecyclerView>
