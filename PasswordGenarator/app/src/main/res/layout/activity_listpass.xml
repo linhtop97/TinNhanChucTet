@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_img"
-    tools:context="com.example.nttungg.passwordgenarator.screens.listscreen.ListPassActivity">
+    tools:context="com.password.creator.passwordgenerator.screens.listscreen.ListPassActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_display"

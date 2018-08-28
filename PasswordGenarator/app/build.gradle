@@ -3,13 +3,14 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.nttungg.passwordgenarator"
+        applicationId "com.password.creator.passwordgenerator"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -33,4 +34,5 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     compile "net.qiujuer.genius:ui:${genius_version}"
     compile "net.qiujuer.genius:res:${genius_version}"
+    implementation files("libs/androidzen.jar")
 }
