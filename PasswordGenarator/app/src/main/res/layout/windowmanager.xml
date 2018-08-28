@@ -12,37 +12,46 @@
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/colorWhite"
+        android:background="@color/colorGreyDark"
         android:visibility="gone">
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ll_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorGreyDark">
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/window_title"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
                 android:padding="@dimen/dp_4"
+                android:layout_marginLeft="12dp"
                 android:textColor="@color/colorWhite"
-                android:textSize="16sp"/>
-            <TextView
+                android:textSize="14sp"/>
+            <ImageView
                 android:id="@+id/text_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="X"
-                android:padding="@dimen/dp_4"
+                android:layout_toRightOf="@id/window_title"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_close"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
                 android:textColor="@color/colorWhite"
-                android:textSize="16sp"
-                android:layout_marginLeft="10dp"/>
-        </LinearLayout>
+                android:layout_marginTop="3dp"
+                android:padding="2dp"/>
+        </RelativeLayout>
+        <View
+            android:layout_width="160dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorLightBlue"/>
         <TextView
+            android:id="@+id/window_title_acc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/account"
-            android:textSize="16sp"
-            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:textColor="@color/colorWhite"
             android:layout_marginTop="@dimen/dp_8"
             android:layout_marginLeft="@dimen/dp_8" />
         <LinearLayout
@@ -55,21 +64,22 @@
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:textColor="@color/colorGrey"
+                android:textColor="@color/colorWhite"
                 android:layout_marginLeft="@dimen/dp_16"
                 android:ellipsize="marquee" />
             <ImageView
                 android:id="@+id/imageView_copacc"
                 android:layout_width="@dimen/dp_24"
                 android:layout_height="@dimen/dp_24"
-                android:src="@drawable/ic_content_copy_black_24dp" />
+                android:src="@drawable/ic_copy" />
         </LinearLayout>
         <TextView
+            android:id="@+id/window_title_pass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/password"
-            android:textSize="16sp"
-            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:textColor="@color/colorWhite"
             android:layout_marginTop="@dimen/dp_8"
             android:layout_marginLeft="@dimen/dp_8"/>
         <LinearLayout
@@ -83,15 +93,16 @@
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:textColor="@color/colorGrey"
+                android:textColor="@color/colorWhite"
                 android:password="true"
+                android:fontFamily="@font/utm_avo"
                 android:ellipsize="marquee"
                 android:layout_marginLeft="@dimen/dp_16"/>
             <ImageView
                 android:id="@+id/imageView_coppass"
                 android:layout_width="@dimen/dp_24"
                 android:layout_height="@dimen/dp_24"
-                android:src="@drawable/ic_content_copy_black_24dp" />
+                android:src="@drawable/ic_copy" />
         </LinearLayout>
     </LinearLayout>
 
@@ -103,17 +114,17 @@
         android:orientation="vertical">
         <ImageView
             android:id="@+id/close_btn"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="42dp"
-            android:src="@drawable/ic_close_black_24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="35dp"
+            android:src="@drawable/ic_close"
             tools:ignore="ContentDescription"/>
         <!--Icon of floating widget -->
         <ImageView
             android:id="@+id/collapsed_iv"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/icons_circle_password"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_launcher"
             tools:ignore="ContentDescription"/>
         <!--Close button-->
     </LinearLayout>

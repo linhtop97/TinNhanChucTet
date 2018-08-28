@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PasswordGenarator</string>
+    <string name="app_name">Password Generator</string>
     <string name="good">Good</string>
     <string name="normal">Normal</string>
     <string name="bad">Bad</string>
@@ -18,7 +18,7 @@
     <string name="password">Password</string>
     <string name="title">Title</string>
     <string name="catogory">Catogory</string>
-    <string name="select_your_color_category">Select your color category</string>
+    <string name="select_your_color_category">Select category color</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -27,4 +27,5 @@
     <string name="enter_password">Enter Password</string>
     <string name="enter_your_password">Enter Your Password</string>
     <string name="enter">Enter</string>
+    <string name="digit">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;!@#$%^*</string>
 </resources>

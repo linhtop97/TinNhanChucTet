@@ -56,9 +56,8 @@ public class SavePresenter implements SaveContract.Presenter {
         String account = mView.getAccount();
         String password = mView.getPassword();
         String category = mView.getMyCategory();
-        if (title.equals("") || account.equals("")){
+        if (title.equals("")){
             title = Constant.defaultString;
-            account = Constant.defaultAccount;
         }
         mDataReposite.editData(new DataSource.Callback() {
             @Override

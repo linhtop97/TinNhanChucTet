@@ -70,10 +70,13 @@ public class HomePresenter  implements HomeContract.Presenter {
                     optinalString = String.valueOf(myChars);
                 }
                 StringBuilder stringBuilder = new StringBuilder(mRandomStringResult);
-                if (mLength-optinalString.length()-1 >= 0){
-                    int startindex = new Random().nextInt(mLength-optinalString.length()-1);
+                if (mLength-optinalString.length() > 0){
+                    int startindex = new Random().nextInt(mLength-optinalString.length());
                     int endindex = startindex + optinalString.length();
                     mRandomStringResult = stringBuilder.replace(startindex,endindex,optinalString).toString();
+                    isEmpty = false;
+                }else if(mLength-optinalString.length() == 0){
+                    mRandomStringResult = stringBuilder.replace(0, optinalString.length(),optinalString).toString();
                     isEmpty = false;
                 }else {
                     mView.showLengthDialog();

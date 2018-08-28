@@ -7,8 +7,17 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +34,6 @@ import com.example.nttungg.passwordgenarator.screens.listscreen.ListPassActivity
 import com.example.nttungg.passwordgenarator.screens.savescreen.SaveActivity;
 import com.example.nttungg.passwordgenarator.utils.Constant;
 import com.example.nttungg.passwordgenarator.utils.Utils;
-
-import org.w3c.dom.Text;
 
 /**
  * Home Screen.
@@ -70,6 +77,48 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         mPresenter = new HomePresenter(this);
         initUI();
         checkBoxListener();
+        editTextFilter();
+        edittextListen();
+    }
+
+    public void editTextFilter(){
+        InputFilter filter = new InputFilter() {
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                String filtered = "";
+                for (int i = start; i < end; i++) {
+                    char character = source.charAt(i);
+                    if (!Character.isWhitespace(character)) {
+                        filtered += character;
+                    }
+                }
+                return filtered;
+            }
+
+        };
+        mEditTextResult.setFilters(new InputFilter[] { filter });
+        mEditTextOptinalCharacter.setFilters(new InputFilter[] { filter });
+    }
+
+
+    public void edittextListen(){
+        mEditTextResult.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (mEditTextResult.getText().toString().equals("")){
+                    mButtonSave.setBackground(getResources().getDrawable(R.drawable.layout_boder_save_grey));
+                }else{
+                    mButtonSave.setBackground(getResources().getDrawable(R.drawable.layout_boder_button));
+                }
+            }
+        });
     }
 
     private void initUI() {
@@ -87,6 +136,17 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
         mButtonGen = findViewById(R.id.buttonGen);
         mButtonSave = findViewById(R.id.buttonSave);
         mTextViewStrengh = findViewById(R.id.textView_passstrength);
+
+        mEditTextResult.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        mEditTextOptinalCharacter.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+
+        mCheckBoxSimilarCharacter.setTypeface(ResourcesCompat.getFont(this, R.font.utm_avo));
+        mCheckBoxOption.setTypeface(ResourcesCompat.getFont(this, R.font.utm_avo));
+        mCheckBoxCapital.setTypeface(ResourcesCompat.getFont(this, R.font.utm_avo));
+        mCheckBoxLowercase.setTypeface(ResourcesCompat.getFont(this, R.font.utm_avo));
+        mCheckBoxNumber.setTypeface(ResourcesCompat.getFont(this, R.font.utm_avo));
+        mCheckBoxSign.setTypeface(ResourcesCompat.getFont(this, R.font.utm_avo));
+        mCheckBoxOptinalCharacter.setTypeface(ResourcesCompat.getFont(this, R.font.utm_avo));
 
         mButtonGen.setOnClickListener(this);
         mButtonSave.setOnClickListener(this);
@@ -121,19 +181,20 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
                 mPresenter.RandomString(isNotSimilar,isCap,isLower,isNumber,isOptionCharacter,isOption,isSign,mNumberOfCharacter);
                 break;
             case R.id.buttonSave:
-                if (!mEditTextResult.getText().toString().equals("")){
+                if (!mEditTextResult.getText().toString().equals("") && mEditTextResult.getText().toString().length() == mNumberOfCharacter){
                     String password = mEditTextResult.getText().toString();
                     startActivityForResult(SaveActivity.getSaveIntent(password,this),10);
-                }else{
+                }else if(mEditTextResult.getText().toString().length() < mNumberOfCharacter ||
+                        mEditTextResult.getText().toString().length() > mNumberOfCharacter){
+                    showLengthDialog();
+                }
+                else{
                     Toast.makeText(this, "Generate your key", Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.imageView_listpass:
                 startActivity(ListPassActivity.getListIntent(this));
                 break;
-
-            case R.id.imageView_closedialog:
-
         }
     }
 
@@ -179,20 +240,24 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
 
     public void setBackGround(EditText editText, boolean isFocus){
         Drawable dw1 = getApplicationContext().getResources().getDrawable(R.drawable.layout_boder_grey);
-        Drawable dw2 = getApplicationContext().getResources().getDrawable(R.drawable.layout_boder);
+        Drawable dw2 = getApplicationContext().getResources().getDrawable(R.drawable.layout_edittext_gradient);
         int sdk = android.os.Build.VERSION.SDK_INT;
         int jellyBean = android.os.Build.VERSION_CODES.JELLY_BEAN;
         if (isFocus){
             if(sdk < jellyBean) {
                 editText.setBackgroundDrawable(dw2);
+                editText.setPadding(16,0,16,0);
             } else {
                 editText.setBackground(dw2);
+                editText.setPadding(16,0,16,0);
             }
         }else {
             if(sdk < jellyBean) {
                 editText.setBackgroundDrawable(dw1);
+                editText.setPadding(16,0,16,0);
             } else {
                 editText.setBackground(dw1);
+                editText.setPadding(16,0,16,0);
             }
         }
 
@@ -215,9 +280,9 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
             isNumber = false;
         }
         if (mCheckBoxSimilarCharacter.isChecked()){
-            isNotSimilar = true;
-        }else{
             isNotSimilar = false;
+        }else{
+            isNotSimilar = true;
         }
         if (mCheckBoxOption.isChecked()){
             isOption  = true;
@@ -252,23 +317,19 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     public void showEmptyDialog(){
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            builder = new AlertDialog.Builder(this, R.style.MyDialogTheme);
         } else {
-            builder = new AlertDialog.Builder(this);
+            ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.MyDialogTheme);
+            builder = new AlertDialog.Builder(ctw);
         }
         builder.setTitle("Empty")
-                .setMessage("Your characters are empty?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setMessage("Your Characters Are Empty?")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(getResources().getDrawable(R.drawable.ic_warning))
                 .show();
     }
 
@@ -276,24 +337,20 @@ public class HomeActivity extends AppCompatActivity implements HomeContract.View
     public void showLengthDialog() {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+            builder = new AlertDialog.Builder(this,  R.style.MyDialogTheme);
         } else {
-            builder = new AlertDialog.Builder(this);
+            ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.MyDialogTheme);
+            builder = new AlertDialog.Builder(ctw);
         }
-        builder.setTitle("Number too large")
+        builder.setTitle("Out Of Allowed Characters")
                 .setMessage("\n" +
                         "Number Of Your Characters Exceeds Allowed")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(getResources().getDrawable(R.drawable.ic_warning))
                 .show();
     }
 }

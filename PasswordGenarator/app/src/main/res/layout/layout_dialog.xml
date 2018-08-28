@@ -3,8 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorGreyDark"
     android:layout_width="@dimen/dp_320"
-    android:layout_height="@dimen/dp_200">
+    android:layout_gravity="center"
+    android:layout_height="220dp">
 
     <TextView
         android:id="@+id/textView2"
@@ -14,80 +16,163 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/select_your_color_category"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/select_your_color_category"
+        android:textColor="@color/colorWhite"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView_green"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageView_green"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:srcCompat="@color/colorPrimary"
-        app:layout_constraintHorizontal_bias="0.1"/>
+        android:background="@color/colorPrimary"
+        app:riv_border_width="2dip"
+        app:riv_corner_radius="5dip"
+        app:riv_mutate_background="true" />
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageView_red"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView_green"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        android:background="@color/colorRed" />
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        app:riv_border_width="2dip"
+        app:riv_corner_radius="5dip"
+        app:riv_mutate_background="true"
+        android:background="@color/colorRed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_green" />
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageView_blue"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView_red"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        android:background="@color/colorBlue" />
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorBlue"
+        app:riv_border_width="2dip"
+        app:riv_corner_radius="5dip"
+        app:riv_mutate_background="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_red" />
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageView_grey"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_red"
+        app:riv_border_width="2dip"
+        app:riv_corner_radius="5dip"
+        app:riv_mutate_background="true"
         android:background="@color/colorGrey"
-        app:layout_constraintHorizontal_bias="0.38"/>
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_purple" />
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageView_purple"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView_blue"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        android:background="@color/colorPurple"/>
+        app:riv_border_width="2dip"
+        app:riv_corner_radius="5dip"
+        app:riv_mutate_background="true"
+        android:background="@color/colorPurple"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageView_orange"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
+        app:riv_border_width="2dip"
+        app:riv_corner_radius="5dip"
+        app:riv_mutate_background="true"
+        android:background="@color/colorOrange"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_grey" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="26dp"
+        android:text="Green"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView_green"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="22dp"
+        android:text="Red"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView_red"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="Blue"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView_blue"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_red" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="26dp"
+        android:text="Purple"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView_purple"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="Grey"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/imageView_grey"
-        app:layout_constraintTop_toBottomOf="@+id/imageView_blue"
-        android:background="@color/colorOrange" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView_purple" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="Orange"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView_orange"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_grey" />
 
 </android.support.constraint.ConstraintLayout>

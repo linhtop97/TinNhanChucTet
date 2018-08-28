@@ -1,5 +1,9 @@
 package com.example.nttungg.passwordgenarator.screens.services;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -7,25 +11,28 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
+import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
-import android.text.method.PasswordTransformationMethod;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nttungg.passwordgenarator.R;
 import com.example.nttungg.passwordgenarator.models.UserData;
+import com.example.nttungg.passwordgenarator.screens.homescreen.HomeActivity;
 import com.example.nttungg.passwordgenarator.screens.listscreen.ListPassActivity;
 import com.example.nttungg.passwordgenarator.utils.Constant;
 
@@ -34,15 +41,25 @@ import com.example.nttungg.passwordgenarator.utils.Constant;
  */
 
 public class WindowService extends Service implements View.OnClickListener {
+    public static final String ACTION_OPEN_WINDOW = "ACTION_OPEN_WINDOW";
+    private static final int NOTIFY_ID = 1;
+
+    private PendingIntent pendingIntentOpenApp;
+    private NotificationCompat.Builder mBuilder;
+
     private WindowManager windowManager;
     private WindowManager.LayoutParams mParams;
     private View mFloatingView;
+    private WindowService mWindowService;
 
     private TextView mTextviewAccount;
     private TextView mTextviewPass;
-    private TextView mTextviewCancel;
+    private TextView mTextViewTitle;
+    private ImageView mTextviewCancel;
     private ImageView mImageViewCopPass;
     private ImageView mImageViewCopAcc;
+    private TextView mImageViewTitleAcc;
+    private TextView mImageViewTitlePass;
     private static UserData mUserData;
     private  View collapsedView;
     private  View expandedView;
@@ -92,8 +109,21 @@ public class WindowService extends Service implements View.OnClickListener {
         mTextviewCancel = mFloatingView.findViewById(R.id.text_cancel);
         mTextviewAccount = mFloatingView.findViewById(R.id.text_account);
         mTextviewPass = mFloatingView.findViewById(R.id.text_password);
+        mTextViewTitle = mFloatingView.findViewById(R.id.window_title);
+        mImageViewTitleAcc = mFloatingView.findViewById(R.id.window_title_acc);
+        mImageViewTitlePass = mFloatingView.findViewById(R.id.window_title_pass);
+
         mImageViewCopPass = mFloatingView.findViewById(R.id.imageView_coppass);
         mImageViewCopAcc = mFloatingView.findViewById(R.id.imageView_copacc);
+
+        Typeface mtypeFace = Typeface.createFromAsset(getApplicationContext().getAssets(),
+                "fonts/utm_avo.ttf");
+        // set TypeFace to the TextView or Edittext
+        mTextViewTitle.setTypeface(mtypeFace);
+        mTextviewAccount.setTypeface(mtypeFace);
+        mTextviewPass.setTypeface(mtypeFace);
+        mImageViewTitleAcc.setTypeface(mtypeFace);
+        mImageViewTitlePass.setTypeface(mtypeFace);
 
         mParams = new WindowManager.LayoutParams();
         mParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -173,6 +203,12 @@ public class WindowService extends Service implements View.OnClickListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        handleIntent(intent);
+        showForegroundNotification("Viewing mode is running");
+        return START_NOT_STICKY;
+    }
+
+    private void handleIntent(Intent intent) {
         Constant.is_show = true;
         mUserData = (UserData) intent.getExtras().get("key_user_data");
         if (mUserData.equals("")){
@@ -180,7 +216,7 @@ public class WindowService extends Service implements View.OnClickListener {
         }
         mTextviewAccount.setText(mUserData.getAccount());
         mTextviewPass.setText(mUserData.getPassword());
-        return START_NOT_STICKY;
+        mTextViewTitle.setText(mUserData.getTitle());
     }
 
 
@@ -212,5 +248,64 @@ public class WindowService extends Service implements View.OnClickListener {
         }
     }
 
+    private static final int NOTIFICATION_ID = 1;
+    private static final String NOTIFICATION_CHANNEL_ID = "window_channel";
+
+    private void showForegroundNotification(String contentText) {
+        // Create intent that will bring our app to the front, as if it was tapped in the app
+        // launcher
+        Intent showTaskIntent = new Intent(getApplicationContext(), ListPassActivity.class);
+
+        showTaskIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(
+                getApplicationContext(),
+                0,
+                showTaskIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new Notification.Builder(getApplicationContext())
+                .setContentText(contentText)
+                .setSmallIcon(R.drawable.icon_launcher_small)
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(contentIntent)
+                .build();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O)
+            startMyOwnForeground();
+        else
+            startForeground(NOTIFICATION_ID, notification);
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void startMyOwnForeground()
+    {
+        String channelName = "My Background Service";
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.createNotificationChannel(chan);
+
+        Intent showTaskIntent = new Intent(getApplicationContext(), ListPassActivity.class);
+
+        showTaskIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(
+                getApplicationContext(),
+                0,
+                showTaskIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setContentText("Viewing mode is running")
+                .setSmallIcon(R.drawable.icon_launcher_small)
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(contentIntent)
+                .build();
+        startForeground(NOTIFICATION_ID, notification);
+    }
 
 }

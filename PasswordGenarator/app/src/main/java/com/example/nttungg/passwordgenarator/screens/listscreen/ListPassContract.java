@@ -21,6 +21,7 @@ interface ListPassContract {
         boolean getIsCategory();
         void deleteCategoryData(int i);
         void showFloatingWindow(UserData userData);
+        void dataEmpty(ArrayList<Integer> position);
     }
 
     /**
@@ -33,5 +34,7 @@ interface ListPassContract {
         void setNewPositon();
         void searchTitle(ArrayList<UserData> userData,String title);
         void showWindow(UserData userData);
+        ArrayList<Integer> getPositionList();
+        void initPosition(ArrayList<UserData> userData);
     }
 }

@@ -5,12 +5,17 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,6 +30,7 @@ import com.example.nttungg.passwordgenarator.screens.savescreen.SaveActivity;
 import com.example.nttungg.passwordgenarator.utils.Constant;
 import com.example.nttungg.passwordgenarator.utils.Utils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +44,6 @@ public class DataUserAdapter extends RecyclerView.Adapter<DataUserAdapter.ViewHo
     private ListPassContract.Presenter mListPassPresenter;
     private Context mContext;
     private Dialog mDialog;
-    private ImageView mImageViewClose;
     private Button mButtonEnter;
     private EditText mEditTextPass;
     private TextView mTextViewPassReult;
@@ -84,20 +89,14 @@ public class DataUserAdapter extends RecyclerView.Adapter<DataUserAdapter.ViewHo
         private UserData mUserData;
         private TextView mTextViewTitle;
         private View mViewCat;
-        private ImageView mImageViewEdit;
-        private ImageView mImageViewDelete;
-        private ImageView mImageViewWindow;
+        private ImageView mImageViewMore;
 
         ViewHolder(View itemView) {
             super(itemView);
             mTextViewTitle = itemView.findViewById(R.id.textView_itemTitle);
             mViewCat = itemView.findViewById(R.id.view_category);
-            mImageViewEdit = itemView.findViewById(R.id.imageView_edit);
-            mImageViewDelete = itemView.findViewById(R.id.imageView_delete);
-            mImageViewWindow = itemView.findViewById(R.id.imageView_window);
-            mImageViewWindow.setOnClickListener(this);
-            mImageViewEdit.setOnClickListener(this);
-            mImageViewDelete.setOnClickListener(this);
+            mImageViewMore = itemView.findViewById(R.id.imageView_more);
+            mImageViewMore.setOnClickListener(this);
         }
         public void bindData(UserData userData) {
             if (userData != null) {
@@ -144,47 +143,73 @@ public class DataUserAdapter extends RecyclerView.Adapter<DataUserAdapter.ViewHo
         public void showPassDialog(){
             mDialog = new Dialog(mContext);
             mDialog.setContentView(R.layout.layout_dialog_login);
+            mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             mDialog.show();
             initDialog();
         }
 
         private void initDialog() {
-            mImageViewClose = mDialog.findViewById(R.id.imageView_closedialog);
             mButtonEnter = mDialog.findViewById(R.id.button_enter);
             mTextViewPassReult = mDialog.findViewById(R.id.textView_resultpass);
             mEditTextPass = mDialog.findViewById(R.id.editText_dilogpass);
             mButtonEnter.setOnClickListener(this);
-            mImageViewClose.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.imageView_edit:
-                    mContext.sendBroadcast(myIntent);
-                    showPassDialog();
-                    mType = 0;
-                    break;
-                case R.id.imageView_delete:
-                    mContext.sendBroadcast(myIntent);
-                    showPassDialog();
-                    mType = 1;
-                    break;
-                case R.id.imageView_closedialog:
-                    mDialog.dismiss();
+                case R.id.imageView_more:
+                    popUp(v);
                     break;
                 case R.id.button_enter:
                     checkPass(mType);
                     break;
-                case R.id.imageView_window:
-                    if (!Constant.is_show){
-                        showPassDialog();
-                    }else {
-                        mListPassPresenter.showWindow(mUserData);
-                    }
-                    mType = 2;
-                    break;
             }
+        }
+        public void popUp(View v){
+            PopupMenu popupMenu = new PopupMenu(mContext, v);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.see_menu:
+                            if (!Constant.is_show){
+                                showPassDialog();
+                            }else {
+                                mListPassPresenter.showWindow(mUserData);
+                            }
+                            mType = 2;
+                            return true;
+                        case R.id.edit_menu:
+                            mContext.sendBroadcast(myIntent);
+                            showPassDialog();
+                            mType = 0;
+                            return true;
+                        case R.id.delete_menu:
+                            mContext.sendBroadcast(myIntent);
+                            showPassDialog();
+                            mType = 1;
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+            popupMenu.inflate(R.menu.custom_menu);
+            Object menuHelper;
+            Class[] argTypes;
+            try {
+                Field fMenuHelper = PopupMenu.class.getDeclaredField("mPopup");
+                fMenuHelper.setAccessible(true);
+                menuHelper = fMenuHelper.get(popupMenu);
+                argTypes = new Class[] { boolean.class };
+                menuHelper.getClass().getDeclaredMethod("setForceShowIcon" ,
+                        argTypes).invoke(menuHelper, true);
+            } catch (Exception e) {
+                popupMenu.show();
+                return;
+            }
+            popupMenu.show();
         }
     }
 }

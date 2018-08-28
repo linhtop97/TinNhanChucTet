@@ -27,12 +27,15 @@ public class ListPassPresenter implements ListPassContract.Presenter {
 
     @Override
     public void readData() {
+        setNewPositon();
         mDataReposite.readData(mView.getContext(), new DataSource.Callback<ArrayList<UserData>>() {
             @Override
             public void onGetSuccess(ArrayList<UserData> data) {
                 mUserDatas = new ArrayList<>();
                 mUserDatas.addAll(data);
                 initPosition(data);
+                mView.dataEmpty(mPositions);
+                Log.d("TAG", "onGetSuccess: " + mPositions.size());
                 mView.getSuccess(mUserDatas);
             }
 
@@ -74,9 +77,10 @@ public class ListPassPresenter implements ListPassContract.Presenter {
         },mView.getContext(),mPositions.get(i));
     }
 
+    @Override
     public void initPosition(ArrayList<UserData> userData){
         mPositions = new ArrayList<>();
-        for (int i=0;i<=userData.size();i++){
+        for (int i=0;i<userData.size();i++){
             mPositions.add(i);
         }
     }
@@ -89,6 +93,7 @@ public class ListPassPresenter implements ListPassContract.Presenter {
                 mPositions.add(i);
             }
         }
+        mView.dataEmpty(mPositions);
     }
 
     @Override
@@ -106,10 +111,16 @@ public class ListPassPresenter implements ListPassContract.Presenter {
                 mPositions.add(i);
             }
         }
+        mView.dataEmpty(mPositions);
     }
 
     @Override
     public void showWindow(UserData userData) {
         mView.showFloatingWindow(userData);
+    }
+
+    @Override
+    public ArrayList<Integer> getPositionList() {
+        return mPositions;
     }
 }
