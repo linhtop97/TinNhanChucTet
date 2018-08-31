@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_more"
+        android:icon="@drawable/ic_more_list"
+        android:orderInCategory="100"
+        android:title="More"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/item_all"
+                android:icon="@drawable/ic_list_menu"
+                android:orderInCategory="100"
+                android:title="All"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/item_category"
+                android:icon="@drawable/ic_category_menu"
+                android:orderInCategory="100"
+                android:title="Category"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+    <item android:id="@+id/action_search"
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView">
+    </item>
+
+</menu>
