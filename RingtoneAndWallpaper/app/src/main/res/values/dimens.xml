@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dp_124">124dp</dimen>
+    <dimen name="dp_0">0dp</dimen>
+    <dimen name="dp_64">64dp</dimen>
+    <dimen name="dp_256">256dp</dimen>
+    <dimen name="dp_86">86dp</dimen>
+    <dimen name="sp_24">24sp</dimen>
+    <dimen name="dp_32">32dp</dimen>
+</resources>

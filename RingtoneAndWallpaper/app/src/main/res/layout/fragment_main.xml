@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_marginTop="@dimen/dp_64"
+            android:id="@+id/button_ringtone"
+            android:layout_width="@dimen/dp_256"
+            android:layout_height="@dimen/dp_86"
+            android:background="@drawable/bg_ringtone_button"
+            android:text="@string/ringtone"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_24"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintBottom_toTopOf="@id/button_wallpaper"
+            bind:layout_constraintRight_toRightOf="parent"
+            bind:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_wallpaper"
+            android:layout_width="@dimen/dp_256"
+            android:layout_height="@dimen/dp_86"
+            android:background="@drawable/bg_wallpaper_button"
+            android:text="@string/wallpaper"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_24"
+            android:layout_marginTop="@dimen/dp_64"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintRight_toRightOf="parent"
+            bind:layout_constraintTop_toBottomOf="@id/button_ringtone" />
+        <TextView
+            android:textColor="@color/text_color_secondary"
+            android:layout_marginBottom="@dimen/dp_64"
+            bind:layout_constraintRight_toRightOf="parent"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/design_by_linh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
