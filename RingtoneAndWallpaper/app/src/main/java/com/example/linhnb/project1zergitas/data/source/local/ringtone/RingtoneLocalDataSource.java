@@ -1,5 +1,13 @@
 package com.example.linhnb.project1zergitas.data.source.local.ringtone;
 
+import com.example.linhnb.project1zergitas.MainApplication;
+import com.example.linhnb.project1zergitas.R;
+import com.example.linhnb.project1zergitas.data.model.Ringtone;
+import com.example.linhnb.project1zergitas.data.source.DataCallback;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class RingtoneLocalDataSource implements RingtoneDataSource.LocalDataSource {
 
     private static RingtoneLocalDataSource sInstance;
@@ -19,7 +27,12 @@ public class RingtoneLocalDataSource implements RingtoneDataSource.LocalDataSour
     }
 
     @Override
-    public void getRingtoneList(LoadTracksCallback callback) {
-        //get Ringtone list at here
+    public void getRingtoneList(DataCallback<List<Ringtone>> callback) {
+        List<Ringtone> ringtoneList = new ArrayList<>();
+        String[] arrRingtone = MainApplication.getInstance().getResources().getStringArray(R.array.ringtone_array);
+        for (String anArrRingtone : arrRingtone) {
+            ringtoneList.add(new Ringtone(anArrRingtone));
+        }
+        callback.onGetDataSuccess(ringtoneList);
     }
 }

@@ -7,8 +7,44 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintRight_toRightOf="parent"
+            bind:title="@string/ringtone"
+            bind:titleTextColor="@android:color/white"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_ringtone"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
+            android:layout_marginBottom="@dimen/dp_8"
+            bind:layout_constraintBottom_toTopOf="@id/button_apply"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintRight_toRightOf="parent"
+            bind:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+        <Button
+            android:id="@+id/button_apply"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_16"
+            android:background="@drawable/bg_apply_button"
+            android:text="@string/apply"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/sp_16"
+            bind:layout_constraintBottom_toBottomOf="parent"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintRight_toRightOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>

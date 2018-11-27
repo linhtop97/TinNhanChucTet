@@ -3,4 +3,54 @@
     <string name="ringtone">Ringtone</string>
     <string name="wallpaper">Wallpaper</string>
     <string name="design_by_linh">Design by Linh</string>
+    <string name="apply">Apply</string>
+    <string name="msg_loading">Loading…</string>
+
+    <string-array name="ringtone_array">
+        <item>astro.aac</item>
+        <item>basic_bell.aac</item>
+        <item>city_lights.aac</item>
+        <item>coffee.aac</item>
+        <item>constellation.aac</item>
+        <item>donkey.aac</item>
+        <item>friday.aac</item>
+        <item>holiday.aac</item>
+        <item>ice_cream.aac</item>
+        <item>meadow.aac</item>
+        <item>midnight_swing.aac</item>
+        <item>morning_glory.aac</item>
+        <item>orange.aac</item>
+        <item>over_the_horizon.aac</item>
+        <item>pick_it_up.aac</item>
+        <item>rose.aac</item>
+        <item>rubble_ball.aac</item>
+        <item>shimmer.aac</item>
+        <item>smooth_wave.aac</item>
+        <item>space_funk.aac</item>
+        <item>stairway.aac</item>
+        <item>starlight.aac</item>
+        <item>sunset.aac</item>
+        <item>travel.aac</item>
+        <item>wood.aac</item>
+        <item>zero_g.aac</item>
+    </string-array>
+
+    <string-array name="wallpaper_array">
+        <item>wall_1.png</item>
+        <item>wall_2.png</item>
+        <item>wall_3.png</item>
+        <item>wall_4.png</item>
+        <item>wall_5.png</item>
+        <item>wall_6.png</item>
+        <item>wall_7.png</item>
+        <item>wall_8.png</item>
+        <item>wall_9.png</item>
+        <item>wall_9.png</item>
+        <item>wall_10.png</item>
+        <item>wall_11.png</item>
+        <item>wall_12.png</item>
+        <item>wall_13.png</item>
+        <item>wall_14.png</item>
+        <item>wall_15.png</item>
+    </string-array>
 </resources>

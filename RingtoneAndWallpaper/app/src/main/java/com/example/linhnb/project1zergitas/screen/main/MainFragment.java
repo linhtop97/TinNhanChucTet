@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.linhnb.project1zergitas.R;
 import com.example.linhnb.project1zergitas.databinding.FragmentMainBinding;
@@ -32,6 +34,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mBinding.buttonRingtone.setOnClickListener(this);
         mBinding.buttonWallpaper.setOnClickListener(this);
         mNavigator = new Navigator(mMainActivity);
+        mMainActivity.setSupportActionBar(mBinding.toolbar);
         return mBinding.getRoot();
     }
 

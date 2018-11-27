@@ -7,46 +7,58 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintRight_toRightOf="parent"
+            bind:title="@string/app_name"
+            bind:titleTextColor="@android:color/white">
+        </android.support.v7.widget.Toolbar>
 
         <Button
-            android:layout_marginTop="@dimen/dp_64"
             android:id="@+id/button_ringtone"
             android:layout_width="@dimen/dp_256"
-            android:layout_height="@dimen/dp_86"
+            android:layout_height="@dimen/dp_64"
+            android:layout_marginTop="@dimen/dp_64"
             android:background="@drawable/bg_ringtone_button"
             android:text="@string/ringtone"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/sp_24"
-            bind:layout_constraintLeft_toLeftOf="parent"
             bind:layout_constraintBottom_toTopOf="@id/button_wallpaper"
+            bind:layout_constraintLeft_toLeftOf="parent"
             bind:layout_constraintRight_toRightOf="parent"
-            bind:layout_constraintTop_toTopOf="parent" />
+            bind:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <Button
             android:id="@+id/button_wallpaper"
             android:layout_width="@dimen/dp_256"
-            android:layout_height="@dimen/dp_86"
+            android:layout_height="@dimen/dp_64"
+            android:layout_marginTop="@dimen/dp_64"
             android:background="@drawable/bg_wallpaper_button"
             android:text="@string/wallpaper"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="@dimen/sp_24"
-            android:layout_marginTop="@dimen/dp_64"
             bind:layout_constraintLeft_toLeftOf="parent"
             bind:layout_constraintRight_toRightOf="parent"
             bind:layout_constraintTop_toBottomOf="@id/button_ringtone" />
+
         <TextView
-            android:textColor="@color/text_color_secondary"
-            android:layout_marginBottom="@dimen/dp_64"
-            bind:layout_constraintRight_toRightOf="parent"
-            bind:layout_constraintLeft_toLeftOf="parent"
-            bind:layout_constraintBottom_toBottomOf="parent"
-            android:text="@string/design_by_linh"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_64"
+            android:text="@string/design_by_linh"
+            android:textColor="@color/text_color_secondary"
+            bind:layout_constraintBottom_toBottomOf="parent"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            bind:layout_constraintRight_toRightOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>
