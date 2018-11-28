@@ -13,8 +13,14 @@ public class DimensionUtil {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;
-        return width;
+        return dm.widthPixels;
+    }
+
+    public static int getScreenHeightInPixels(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(dm);
+        return dm.heightPixels;
     }
 
     public static float convertDpToPixel(float dp) {
@@ -25,7 +31,6 @@ public class DimensionUtil {
 
     public static int setWidthForImageView(Context context) {
         int width = getScreenWidthInPixels(context);
-        int imageWith = (int) (width - convertDpToPixel(6)) / 2;
-        return imageWith;
+        return (int) (width - convertDpToPixel(6)) / 2;
     }
 }

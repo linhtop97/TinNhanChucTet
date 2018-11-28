@@ -1,19 +1,16 @@
 package com.example.linhnb.project1zergitas.screen.wallpaper;
 
+import android.app.WallpaperManager;
 import android.content.Context;
-import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.util.Log;
 
 import com.example.linhnb.project1zergitas.data.source.DataCallback;
-import com.example.linhnb.project1zergitas.data.source.local.sharedprf.SharedPrefsImpl;
-import com.example.linhnb.project1zergitas.data.source.local.sharedprf.SharedPrefsKey;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 public class WallpaperHelper {
     private Context mContext;
@@ -22,79 +19,39 @@ public class WallpaperHelper {
         mContext = context;
     }
 
-    public boolean setWallpaper(String fileName) {
-        File file = new File(Environment.getExternalStorageDirectory().getAbsoluteFile() + "/MyWallpaper/" + fileName);
-        if (file.exists()) {
-            return true;
-        } else {
-            return false;
-        }
-
-
-    }
-
-    public void copyWallpaper(DataCallback<String> callback) {
+    public void setWallpaper(Bitmap bitmap, String fileName, DataCallback<String> callback) {
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MyWallpaper";
         File dir = new File(dirPath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-
-        AssetManager assetManager = mContext.getAssets();
-
-        String[] files = null;
+        File file = new File(dirPath, fileName);
+        if (file.exists())
+            file.delete();
         try {
-            files = assetManager.list("wallpaper");
-
-        } catch (IOException e) {
-            Log.e("tag", "Failed to get asset file list.", e);
-        }
-
-        if (files != null) {
-            for (String filename : files) {
-                InputStream in = null;
-                OutputStream out = null;
-
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+            WallpaperManager myWallpaperManager = WallpaperManager
+                    .getInstance(mContext);
+            String imageFilePath = dirPath + "/" + fileName;
+            Bitmap myBitmap = BitmapFactory.decodeFile(imageFilePath);
+            if (myBitmap != null) {
                 try {
-                    in = assetManager.open("wallpaper/" + filename);
-                    File f = new File(dirPath + "/" + filename);
-                    if (f.exists()) {
-                        return;
-                    }
-                    File outFile = new File(dirPath, filename);
-                    out = new FileOutputStream(outFile);
-                    copyFile(in, out);
+                    myWallpaperManager.setBitmap(myBitmap);
+                    callback.onGetDataSuccess("OK");
                 } catch (IOException e) {
                     e.printStackTrace();
-                } finally {
-                    if (in != null) {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (out != null) {
-                        try {
-                            out.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    callback.onGetDataSuccess("Failed");
                 }
+            } else {
+                callback.onGetDataSuccess("Failed");
             }
-            new SharedPrefsImpl(mContext).put(SharedPrefsKey.WALLPAPER_COPIED, true);
-            callback.onGetDataSuccess("");
+        } catch (Exception e) {
+            e.printStackTrace();
+            callback.onGetDataSuccess("Failed");
         }
-
     }
 
-    public void copyFile(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
-        }
-
-    }
 }

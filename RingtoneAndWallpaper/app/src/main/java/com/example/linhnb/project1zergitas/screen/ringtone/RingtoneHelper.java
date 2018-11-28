@@ -90,8 +90,12 @@ public class RingtoneHelper {
         InputStream in = null;
         OutputStream out = null;
         try {
-            in = assetManager.open("ringtone/" + fileName);
             File outFile = new File(dirPath, fileName);
+            if (outFile.exists()) {
+                outFile.delete();
+                return;
+            }
+            in = assetManager.open("ringtone/" + fileName);
             out = new FileOutputStream(outFile);
             copyFile(in, out);
         } catch (IOException e) {

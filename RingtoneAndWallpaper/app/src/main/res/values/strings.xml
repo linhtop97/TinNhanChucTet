@@ -1,11 +1,13 @@
 <resources>
-    <string name="app_name">Zer Theme</string>
+    <string name="app_name">Galaxy S9 Theme</string>
     <string name="ringtone">Ringtone</string>
     <string name="wallpaper">Wallpaper</string>
     <string name="design_by_linh">Design by Linh</string>
     <string name="apply">Apply</string>
     <string name="msg_loading">Loading…</string>
     <string name="setting_wallpaper">Setting Wallpaper</string>
+    <string name="applying">applying…</string>
+    <string name="zergitas">Light up the world</string>
 
     <string-array name="ringtone_array">
         <item>astro.aac</item>
