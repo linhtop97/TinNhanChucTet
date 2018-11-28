@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -127,8 +128,11 @@ public class RingtoneFragment extends Fragment implements RingtoneContract.View,
         snackbar.setAction("OK", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                startActivity(intent);
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                Uri uri2 = Uri.fromParts("package", mMainActivity.getPackageName(), null);
+                intent.setData(uri2);
+                startActivityForResult(intent, 13);
                 snackbar.dismiss();
             }
         });

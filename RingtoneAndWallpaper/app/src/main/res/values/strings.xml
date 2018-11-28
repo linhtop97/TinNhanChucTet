@@ -5,6 +5,7 @@
     <string name="design_by_linh">Design by Linh</string>
     <string name="apply">Apply</string>
     <string name="msg_loading">Loading…</string>
+    <string name="setting_wallpaper">Setting Wallpaper</string>
 
     <string-array name="ringtone_array">
         <item>astro.aac</item>
@@ -44,7 +45,6 @@
         <item>wall_6.png</item>
         <item>wall_7.png</item>
         <item>wall_8.png</item>
-        <item>wall_9.png</item>
         <item>wall_9.png</item>
         <item>wall_10.png</item>
         <item>wall_11.png</item>
