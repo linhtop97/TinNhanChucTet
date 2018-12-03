@@ -4,6 +4,9 @@
 
     <data>
 
+        <variable
+            name="textLed"
+            type="com.ledbanner.ledmobile.models.TextLed" />
     </data>
 
     <LinearLayout
@@ -17,25 +20,28 @@
             android:id="@+id/led_container"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_200sdp"
-            android:background="@android:color/holo_red_dark">
+            android:background="@android:color/holo_green_dark">
 
-            <com.ledbanner.ledmobile.widgets.ScrollTextView
+            <com.ledbanner.ledmobile.widgets.MyTextView
+                android:id="@+id/text_content"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_0dp"
-                android:gravity="center"
-                android:text="@string/app_name"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@{textLed.content}"
                 android:textColor="@android:color/white"
-                android:textSize="50sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:setTextSizeLed="@{textLed.size}" />
 
             <FrameLayout
                 android:id="@+id/background_infrontof"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:backgroundLed="@{textLed.led}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -66,6 +72,7 @@
                     android:paddingLeft="@dimen/_8sdp"
                     android:paddingRight="@dimen/_8sdp"
                     android:singleLine="true"
+                    android:text="@{textLed.content}"
                     android:textAlignment="center"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
@@ -92,7 +99,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:progress="30"
-                android:theme="@style/MySeekBarTheme" />
+                android:theme="@style/MySeekBarTheme"
+                app:progressTextSpeed="@{textLed.textSpeed}" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="@dimen/_256sdp"
@@ -106,6 +114,7 @@
                     android:layout_height="@dimen/_42sdp"
                     android:background="@drawable/edt_background"
                     android:src="@drawable/ic_scroll_ltr"
+                    app:iconLTR="@{textLed.rightToLeft}"
                     app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/btn_scroll_rtl"
@@ -117,6 +126,7 @@
                     android:layout_height="@dimen/_42sdp"
                     android:background="@drawable/edt_background"
                     android:src="@drawable/ic_scroll_rtl"
+                    app:iconRTL="@{textLed.rightToLeft}"
                     app:layout_constraintLeft_toRightOf="@id/btn_scroll_ltr"
                     app:layout_constraintRight_toLeftOf="@id/btn_pause"
                     app:layout_constraintTop_toTopOf="@id/btn_scroll_ltr" />
@@ -127,6 +137,7 @@
                     android:layout_height="@dimen/_42sdp"
                     android:background="@drawable/edt_background"
                     android:src="@drawable/ic_pause"
+                    app:iconPauseOrPlay="@{textLed.running}"
                     app:layout_constraintLeft_toRightOf="@id/btn_scroll_rtl"
                     app:layout_constraintRight_toLeftOf="@id/btn_des"
                     app:layout_constraintTop_toTopOf="@id/btn_scroll_ltr" />
@@ -178,6 +189,7 @@
                     android:layout_height="@dimen/_42sdp"
                     android:background="@drawable/edt_background"
                     android:src="@drawable/ic_flash_inactive"
+                    app:iconBlinking="@{textLed.blinking}"
                     app:layout_constraintLeft_toRightOf="@id/btn_bg_color"
                     app:layout_constraintRight_toLeftOf="@id/btn_hd_led"
                     app:layout_constraintTop_toTopOf="@id/btn_text_color" />
@@ -188,6 +200,7 @@
                     android:layout_height="@dimen/_42sdp"
                     android:background="@drawable/edt_background"
                     android:src="@drawable/ic_hd"
+                    app:iconLedorHd="@{textLed.led}"
                     app:layout_constraintLeft_toRightOf="@id/btn_blink"
                     app:layout_constraintRight_toLeftOf="@id/btn_help"
                     app:layout_constraintTop_toTopOf="@id/btn_text_color" />
@@ -203,6 +216,7 @@
             </android.support.constraint.ConstraintLayout>
 
             <ImageButton
+                android:id="@+id/btn_play"
                 android:layout_width="@dimen/_256sdp"
                 android:layout_height="@dimen/_42sdp"
                 android:background="@drawable/edt_background"
