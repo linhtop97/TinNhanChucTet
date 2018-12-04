@@ -26,12 +26,15 @@ import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsImpl;
 import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsKey;
 import com.ledbanner.ledmobile.databinding.ActivitySettingBinding;
 import com.ledbanner.ledmobile.models.TextLed;
+import com.ledbanner.ledmobile.ui.dialogs.ColorFragment;
+import com.ledbanner.ledmobile.utils.Constans;
 
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
     private ActivitySettingBinding mBinding;
     private TextLed mTextLed;
     private SharedPrefsImpl mSharedPrefs;
+    private static final String COLOR_DIALOG = "ColorDialog";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,17 +55,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mBinding.textContent.setTypeface(mBinding.textContent.getTypeface(), Typeface.BOLD);
         String content = mSharedPrefs.get(SharedPrefsKey.PREF_CONTENT, String.class);
         if (TextUtils.isEmpty(content)) {
-            content = "Hi!";
+            content = Constans.DEFAULT_CONTENT;
         }
 
         long speed = mSharedPrefs.get(SharedPrefsKey.PREF_TEXT_SPEED, Long.class);
         if (speed == 0) {
-            speed = 4000;
+            speed = Constans.DEFAULT_DURATION;
         }
 
         int textSize = mSharedPrefs.get(SharedPrefsKey.PREF_TEXT_SIZE, Integer.class);
         if (textSize == 0) {
-            textSize = 115;
+            textSize = Constans.DEFAULT_TEXT_SIZE;
         }
         mTextLed = new TextLed.Builder().setLed(mSharedPrefs.get(SharedPrefsKey.PREF_STYLE_LED, Boolean.class))
                 .setBlinking(mSharedPrefs.get(SharedPrefsKey.PREF_IS_BLINK, Boolean.class))
@@ -73,6 +76,19 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 .setSize(textSize)
                 .build();
         mBinding.setTextLed(mTextLed);
+        int bgColor = mSharedPrefs.get(SharedPrefsKey.PREF_BG_COLOR, Integer.class);
+        if (bgColor != 0) {
+            mTextLed.setBackgroundColor(bgColor);
+        } else {
+            mTextLed.setBackgroundColor(R.color.colorAccent);
+        }
+        int txtColor = mSharedPrefs.get(SharedPrefsKey.PREF_TEXT_COLOR, Integer.class);
+        if (txtColor != 0) {
+            mTextLed.setTextColor(txtColor);
+        } else {
+            mTextLed.setTextColor(R.color.colorWhite);
+        }
+
         mBinding.textContent.setRndDuration((int) mTextLed.getTextSpeed());
         if (mTextLed.isBlinking()) {
             mBinding.textContent.addAnimationBlinking();
@@ -124,7 +140,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                long speed = 4500 - seekBar.getProgress();
+                long speed = Constans.MAX_DURATION - seekBar.getProgress();
                 mBinding.textContent.setRndDuration((int) speed);
                 mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_SPEED, speed);
             }
@@ -147,15 +163,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (!TextUtils.isEmpty(editText.getText().toString())) {
-                    imageButton.setVisibility(View.GONE);
-                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!TextUtils.isEmpty(editText.getText().toString())) {
-                    imageButton.setVisibility(View.VISIBLE);
+                    if (editText.isFocused()) {
+                        imageButton.setVisibility(View.VISIBLE);
+                    }
                     mTextLed.setContent(editText.getText().toString());
                 } else {
                     imageButton.setVisibility(View.GONE);
@@ -219,12 +234,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_SIZE, size);
     }
 
-    public void setColorOfText(int color) {
-
+    public void setColorOfText() {
+        ColorFragment f = ColorFragment.getInstance(true);
+        getSupportFragmentManager().beginTransaction().add(f, COLOR_DIALOG).commit();
     }
 
-    public void setColorOfBackground(int color) {
-
+    public void setColorOfBackground() {
+        ColorFragment f = ColorFragment.getInstance(false);
+        getSupportFragmentManager().beginTransaction().add(f, COLOR_DIALOG).commit();
     }
 
     public void setBlink(boolean isBlinking) {
@@ -254,7 +271,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void play() {
-
+        startActivity(MainActivity.getMainIntent(this));
     }
 
     @Override
@@ -293,10 +310,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 increaseTextSize();
                 break;
             case R.id.btn_text_color:
-                setColorOfText(0);
+                setColorOfText();
                 break;
             case R.id.btn_bg_color:
-                setColorOfBackground(0);
+                setColorOfBackground();
                 break;
             case R.id.btn_blink:
                 setBlink(mTextLed.isBlinking());
@@ -313,6 +330,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
         }
+    }
+
+    public void setTextColor(int color) {
+        mTextLed.setTextColor(color);
+        mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_COLOR, color);
+    }
+
+    public void setBGColor(int color) {
+        mTextLed.setBackgroundColor(color);
+        mSharedPrefs.put(SharedPrefsKey.PREF_BG_COLOR, color);
     }
 
     @Override

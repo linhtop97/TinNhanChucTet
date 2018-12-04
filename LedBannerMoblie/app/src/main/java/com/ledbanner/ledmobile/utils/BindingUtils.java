@@ -1,6 +1,7 @@
 package com.ledbanner.ledmobile.utils;
 
 import android.databinding.BindingAdapter;
+import android.support.constraint.ConstraintLayout;
 import android.util.TypedValue;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -62,7 +63,7 @@ public final class BindingUtils {
 
     @BindingAdapter({"app:progressTextSpeed"})
     public static void setTextSpeed(SeekBar seekBar, long progress) {
-        seekBar.setProgress(4500 - (int) progress);
+        seekBar.setProgress(Constans.MAX_DURATION - (int) progress);
     }
 
     @BindingAdapter({"app:backgroundLed"})
@@ -77,5 +78,15 @@ public final class BindingUtils {
     @BindingAdapter({"app:setTextSizeLed"})
     public static void setTextSizeLed(TextView textView, int size) {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+    }
+
+    @BindingAdapter({"app:setTextColor"})
+    public static void setTextColor(TextView textView, int color) {
+        textView.setTextColor(textView.getResources().getColor(color));
+    }
+
+    @BindingAdapter({"app:setBGColor"})
+    public static void setBGColor(ConstraintLayout layout, int color) {
+        layout.setBackgroundColor(layout.getResources().getColor(color));
     }
 }

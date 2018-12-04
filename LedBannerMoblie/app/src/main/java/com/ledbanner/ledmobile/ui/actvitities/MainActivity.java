@@ -1,5 +1,7 @@
 package com.ledbanner.ledmobile.ui.actvitities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,12 @@ import com.ledbanner.ledmobile.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding mBinding;
+
+    public static Intent getMainIntent(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        //intent put extras
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

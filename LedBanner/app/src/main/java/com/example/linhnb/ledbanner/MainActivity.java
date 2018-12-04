@@ -1,6 +1,7 @@
 package com.example.linhnb.ledbanner;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,15 +10,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.TextView;
 
 import com.example.linhnb.ledbanner.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding mMainBinding;
-    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,20 +28,26 @@ public class MainActivity extends AppCompatActivity {
         }
         hideNavigationBar();
         mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        Animation animation = initAnimation();
-        mMainBinding.textContent.startAnimation(animation);
+        mMainBinding.textContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 225);
+        mMainBinding.textContent.setText("Hehe");
+        mMainBinding.textContent.setTypeface(mMainBinding.textContent.getTypeface(), Typeface.ITALIC | Typeface.BOLD);
+        Typeface type = Typeface.createFromAsset(getAssets(), "fonts/Bungee-Regular.otf");
+        mMainBinding.textContent.setTypeface(type);
+        mMainBinding.textContent.setRndDuration(4000);
+        mMainBinding.textContent.startScroll();
+//        Animation animation = initAnimation();
+//        mMainBinding.textContent.startAnimation(animation);
     }
 
     private Animation initAnimation() {
         float screenWidth = DimensionUtil.getScreenWidthInPixels(this);
-        mMainBinding.textContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 200);
         mMainBinding.textContent.measure(0, 0);
-
         float x = mMainBinding.textContent.getMeasuredWidth();
-        Animation animation = new TranslateAnimation(-x, screenWidth+ 100,
+        Animation animation = new TranslateAnimation(-x, screenWidth + 100,
                 0, 0);
-        animation.setDuration(3000);
-        animation.setFillAfter(true);
+        animation.setDuration(4000);
+        animation.setFillAfter(false);
+        animation.setInterpolator(new LinearInterpolator());
         animation.setRepeatCount(Animation.INFINITE);
 
         return animation;
