@@ -2,35 +2,59 @@ package com.ledbanner.ledmobile.widgets;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.widget.TextView;
+import android.widget.Scroller;
 
-import com.ledbanner.ledmobile.utils.DimensionUtil;
+import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsImpl;
+import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsKey;
 
 public class MyTextView extends android.support.v7.widget.AppCompatTextView {
 
-    private int mAdditionalPadding;
     private AnimationSet mAnimationSet;
-    private Context mContext;
+    private SharedPrefsImpl mSharedPrefs;
+
+    public boolean isRTL() {
+        return isRTL;
+    }
+
+    private boolean isRTL;
+    // scrolling feature
+    private Scroller mSlr;
+
+    // milliseconds for a round of scrolling
+    private int mRndDuration = 10000;
+
+    // the X offset when paused
+    private int mXPaused = 0;
+
+    // whether it's being paused
+    private boolean mPaused = true;
 
     public MyTextView(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public MyTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
-    private void init(Context context) {
-        mContext = context;
+    private void init() {
+        setSingleLine(true);
+        setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        setIncludeFontPadding(false);
+        setVisibility(GONE);
         mAnimationSet = new AnimationSet(true);
+        mSharedPrefs = new SharedPrefsImpl(getContext());
+        isRTL = mSharedPrefs.get(SharedPrefsKey.PREF_STYLE_SHOW, Boolean.class);
     }
 
     @Override
@@ -38,55 +62,143 @@ public class MyTextView extends android.support.v7.widget.AppCompatTextView {
         super.onDraw(canvas);
     }
 
+    public void startScroll() {
+        mXPaused = -1 * getWidth();
+        mPaused = true;
+        if (isRTL) {
+            resumeScroll();
+        } else {
+            resumeScrollRight();
+        }
+    }
+
+    public void resumeScroll() {
+        isRTL = true;
+        mSharedPrefs.put(SharedPrefsKey.PREF_STYLE_SHOW, isRTL);
+        if (!mPaused) return;
+
+
+        setHorizontallyScrolling(true);
+
+        mSlr = new Scroller(this.getContext(), new LinearInterpolator());
+        setScroller(mSlr);
+
+        int scrollingLen = calculateScrollingLen();
+        int distance = scrollingLen - (getWidth() + mXPaused);
+        int duration = (Double.valueOf(mRndDuration * distance * 1.00000
+                / scrollingLen)).intValue();
+
+        setVisibility(VISIBLE);
+        mSlr.startScroll(mXPaused, 0, distance, 0, duration);
+        invalidate();
+        mPaused = false;
+    }
+
+    public void resumeScrollRight() {
+        isRTL = false;
+        mSharedPrefs.put(SharedPrefsKey.PREF_STYLE_SHOW, isRTL);
+        if (!mPaused)
+            return;
+
+        setHorizontallyScrolling(true);
+
+        mSlr = new Scroller(this.getContext(), new LinearInterpolator());
+        setScroller(mSlr);
+
+        int scrollingLen = calculateScrollingLen();
+        int distance = scrollingLen - (getWidth() + mXPaused);
+        int duration = (Double.valueOf(mRndDuration * distance * 1.00000 / scrollingLen)).intValue();
+        setVisibility(VISIBLE);
+        if (mXPaused == 0) {
+            mSlr.startScroll(distance, 0, -distance, 0, duration);
+        } else {
+            mSlr.startScroll(distance + mXPaused, 0, -distance, 0, duration);
+        }
+        invalidate();
+        mPaused = false;
+    }
+
+    /**
+     * calculate the scrolling length of the text in pixel
+     *
+     * @return the scrolling length in pixels
+     */
+    private int calculateScrollingLen() {
+        TextPaint tp = getPaint();
+        Rect rect = new Rect();
+        String strTxt = getText().toString();
+        tp.getTextBounds(strTxt, 0, strTxt.length(), rect);
+        int scrollingLen = rect.width() + getWidth();
+        rect = null;
+        return scrollingLen;
+    }
+
+    /**
+     * pause scrolling the text
+     */
+    public void pauseScroll() {
+        if (null == mSlr) return;
+
+        if (mPaused)
+            return;
+
+        mPaused = true;
+
+        // abortAnimation sets the current X to be the final X,
+        // and sets isFinished to be true
+        // so current position shall be saved
+        mXPaused = mSlr.getCurrX();
+
+        mSlr.abortAnimation();
+    }
+
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        getAdditionalPadding();
+    /*
+     * override the computeScroll to restart scrolling when finished so as that
+     * the text is scrolled forever
+     */
+    public void computeScroll() {
+        super.computeScroll();
 
-        int mode = MeasureSpec.getMode(heightMeasureSpec);
-        if (mode != MeasureSpec.EXACTLY) {
-            int measureHeight = measureHeight(getText().toString(), widthMeasureSpec);
+        if (null == mSlr) return;
 
-            int height = measureHeight - mAdditionalPadding;
-            height += getPaddingTop() + getPaddingBottom();
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+        if (mSlr.isFinished() && (!mPaused)) {
+            startScroll();
+
         }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    private int measureHeight(String text, int widthMeasureSpec) {
-        float textSize = getTextSize();
-
-        TextView textView = new TextView(getContext());
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        textView.setText(text);
-        textView.measure(widthMeasureSpec, 0);
-        return textView.getMeasuredHeight();
+    public int getRndDuration() {
+        return mRndDuration;
     }
 
-    private int getAdditionalPadding() {
-        float textSize = getTextSize();
-        TextView textView = new TextView(getContext());
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        textView.setLines(1);
-        textView.measure(0, 0);
-        int measuredHeight = textView.getMeasuredHeight();
-        if (measuredHeight - textSize > 0) {
-            mAdditionalPadding = (int) (measuredHeight - textSize);
+    public void setRndDuration(int duration) {
+        this.mRndDuration = duration;
+        if (isRTL) {
+            pauseScroll();
+            resumeScroll();
+        } else {
+            pauseScroll();
+            resumeScrollRight();
         }
-        return mAdditionalPadding;
     }
 
-    public AnimationSet setAnimation() {
-        float screenWidth = DimensionUtil.getScreenWidthInPixels(mContext);
-        measure(0, 0);
-        float x = getMeasuredWidth();
-        Animation animation = new TranslateAnimation(-x, screenWidth + 100,
-                0, 0);
-        animation.setDuration(4000);
+    public boolean isPaused() {
+        return mPaused;
+    }
+
+
+    public void addAnimationBlinking() {
+        Animation animation = new AlphaAnimation(0.1f, 1f);
+        animation.setDuration(200);
         animation.setFillAfter(false);
         animation.setInterpolator(new LinearInterpolator());
         animation.setRepeatCount(Animation.INFINITE);
         mAnimationSet.addAnimation(animation);
+
+    }
+
+    public AnimationSet getAnimationSet() {
         return mAnimationSet;
     }
 }

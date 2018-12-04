@@ -62,7 +62,7 @@ public final class BindingUtils {
 
     @BindingAdapter({"app:progressTextSpeed"})
     public static void setTextSpeed(SeekBar seekBar, long progress) {
-        seekBar.setProgress((int) progress);
+        seekBar.setProgress(4500 - (int) progress);
     }
 
     @BindingAdapter({"app:backgroundLed"})
