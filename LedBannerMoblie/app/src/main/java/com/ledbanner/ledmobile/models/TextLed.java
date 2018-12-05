@@ -5,7 +5,9 @@ import android.databinding.Bindable;
 
 import com.ledbanner.ledmobile.BR;
 
-public class TextLed extends BaseObservable {
+import java.io.Serializable;
+
+public class TextLed extends BaseObservable implements Serializable {
     private String mContent;
 
     private int mSize;

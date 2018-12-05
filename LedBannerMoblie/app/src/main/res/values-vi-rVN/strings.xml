@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Led Banner</string>
+    <string name="input_text">Nhập chữ…</string>
+    <string name="app_name_title">Tên ứng dụng: Chữ điện tử</string>
+    <string name="developer">Nhà phát triển: Nguyễn Bá Linh</string>
+    <string name="leader_project">Người hướng dẫn: Trung TT</string>
+    <string name="description">Mô tả: Bạn có thể đem tới các buổi hòa nhạc, các trận đấu và nhiều hơn thế nữa.</string>
+</resources>

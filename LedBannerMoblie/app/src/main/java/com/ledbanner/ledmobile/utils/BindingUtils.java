@@ -1,8 +1,8 @@
 package com.ledbanner.ledmobile.utils;
 
 import android.databinding.BindingAdapter;
-import android.support.constraint.ConstraintLayout;
 import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -80,13 +80,18 @@ public final class BindingUtils {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
     }
 
+    @BindingAdapter({"app:setTextSizeLedMain"})
+    public static void setTextSizeLedMain(TextView textView, int size) {
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size + 65);
+    }
+
     @BindingAdapter({"app:setTextColor"})
     public static void setTextColor(TextView textView, int color) {
         textView.setTextColor(textView.getResources().getColor(color));
     }
 
     @BindingAdapter({"app:setBGColor"})
-    public static void setBGColor(ConstraintLayout layout, int color) {
+    public static void setBGColor(ViewGroup layout, int color) {
         layout.setBackgroundColor(layout.getResources().getColor(color));
     }
 }

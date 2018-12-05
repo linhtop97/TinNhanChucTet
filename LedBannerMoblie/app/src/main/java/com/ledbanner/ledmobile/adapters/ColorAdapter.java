@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.ledbanner.ledmobile.R;
+import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsImpl;
+import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsKey;
 import com.ledbanner.ledmobile.listeners.OnItemClickListener;
 
 import java.util.List;
@@ -17,19 +19,31 @@ public class ColorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private Context mContext;
     private List<Integer> mData;
-
+    private Boolean mIsSetTextColor;
+    private SharedPrefsImpl mSharedPrefs;
 
     private OnItemClickListener mListener;
 
-    public ColorAdapter(Context context, List<Integer> data) {
+    public ColorAdapter(Context context, List<Integer> data, boolean isSetTextColor) {
         mContext = context;
         mData = data;
+        mIsSetTextColor = isSetTextColor;
+        mSharedPrefs = new SharedPrefsImpl(mContext);
     }
 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ColorViewHolder colorViewHolder = (ColorViewHolder) holder;
+        if (mIsSetTextColor) {
+            if (position == mSharedPrefs.get(SharedPrefsKey.PREF_TEXT_COLOR_POS, Integer.class)) {
+                colorViewHolder.colorButton.setImageResource(R.drawable.ic_check_circle);
+            }
+        } else {
+            if (position == mSharedPrefs.get(SharedPrefsKey.PREF_BG_COLOR_POS, Integer.class)) {
+                colorViewHolder.colorButton.setImageResource(R.drawable.ic_check_circle);
+            }
+        }
         colorViewHolder.bind(mData.get(position));
     }
 

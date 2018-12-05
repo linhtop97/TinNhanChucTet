@@ -20,6 +20,8 @@ import android.view.Window;
 
 import com.ledbanner.ledmobile.R;
 import com.ledbanner.ledmobile.adapters.ColorAdapter;
+import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsImpl;
+import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsKey;
 import com.ledbanner.ledmobile.databinding.FragmentColorBinding;
 import com.ledbanner.ledmobile.listeners.OnItemClickListener;
 import com.ledbanner.ledmobile.ui.actvitities.SettingActivity;
@@ -31,12 +33,13 @@ import java.util.List;
 public class ColorFragment extends DialogFragment implements OnItemClickListener {
     private FragmentColorBinding mBinding;
     private List<Integer> mListColor;
-    private Integer[] mArraysColor = new Integer[]{R.color.color1, R.color.color2, R.color.color3,
+    public static Integer[] mArraysColor = new Integer[]{R.color.color1, R.color.color2, R.color.color3,
             R.color.color4, R.color.color5, R.color.color6, R.color.color7, R.color.color8,
             R.color.color9, R.color.color10, R.color.color11, R.color.color12,
             R.color.color13, R.color.color14, R.color.color15, R.color.color16};
     private boolean isSetTextColor;
     private SettingActivity mSettingActivity;
+    private SharedPrefsImpl mSharedPrefs;
 
     public static ColorFragment getInstance(Boolean isSetTextColor) {
         ColorFragment fragment = new ColorFragment();
@@ -50,6 +53,7 @@ public class ColorFragment extends DialogFragment implements OnItemClickListener
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mListColor = Arrays.asList(mArraysColor);
+        mSharedPrefs = new SharedPrefsImpl(mSettingActivity);
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_color, container, false);
         return mBinding.getRoot();
     }
@@ -62,7 +66,7 @@ public class ColorFragment extends DialogFragment implements OnItemClickListener
 
     private void initUI() {
         isSetTextColor = getArguments().getBoolean(Constans.ARGUMENT_IS_SET_TEXT_COLOR);
-        ColorAdapter adapter = new ColorAdapter(getContext(), mListColor);
+        ColorAdapter adapter = new ColorAdapter(getContext(), mListColor, isSetTextColor);
         LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 4);
         mBinding.rvColor.setLayoutManager(linearLayoutManager);
         adapter.setListener(this);
@@ -96,11 +100,13 @@ public class ColorFragment extends DialogFragment implements OnItemClickListener
     @Override
     public void onItemClick(int position) {
         if (isSetTextColor) {
+            mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_COLOR_POS, position);
             mSettingActivity.setTextColor(mListColor.get(position));
             dismiss();
             return;
         }
         mSettingActivity.setBGColor(mListColor.get(position));
+        mSharedPrefs.put(SharedPrefsKey.PREF_BG_COLOR_POS, position);
         dismiss();
     }
 

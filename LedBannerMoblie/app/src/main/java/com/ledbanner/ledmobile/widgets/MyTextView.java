@@ -63,6 +63,7 @@ public class MyTextView extends android.support.v7.widget.AppCompatTextView {
     }
 
     public void startScroll() {
+        setTextAlignment(TEXT_ALIGNMENT_GRAVITY);
         mXPaused = -1 * getWidth();
         mPaused = true;
         if (isRTL) {
@@ -73,6 +74,7 @@ public class MyTextView extends android.support.v7.widget.AppCompatTextView {
     }
 
     public void resumeScroll() {
+        setTextAlignment(TEXT_ALIGNMENT_GRAVITY);
         isRTL = true;
         mSharedPrefs.put(SharedPrefsKey.PREF_STYLE_SHOW, isRTL);
         if (!mPaused) return;
@@ -95,6 +97,7 @@ public class MyTextView extends android.support.v7.widget.AppCompatTextView {
     }
 
     public void resumeScrollRight() {
+        setTextAlignment(TEXT_ALIGNMENT_GRAVITY);
         isRTL = false;
         mSharedPrefs.put(SharedPrefsKey.PREF_STYLE_SHOW, isRTL);
         if (!mPaused)
@@ -147,9 +150,13 @@ public class MyTextView extends android.support.v7.widget.AppCompatTextView {
         // abortAnimation sets the current X to be the final X,
         // and sets isFinished to be true
         // so current position shall be saved
-        mXPaused = mSlr.getCurrX();
-
+        //mXPaused = mSlr.getCurrX();
+        setTextAlignment(TEXT_ALIGNMENT_CENTER);
         mSlr.abortAnimation();
+    }
+
+    public void stopScroll() {
+        mSlr = null;
     }
 
     @Override
@@ -189,8 +196,8 @@ public class MyTextView extends android.support.v7.widget.AppCompatTextView {
 
 
     public void addAnimationBlinking() {
-        Animation animation = new AlphaAnimation(0.1f, 1f);
-        animation.setDuration(200);
+        Animation animation = new AlphaAnimation(0.2f, 1f);
+        animation.setDuration(300);
         animation.setFillAfter(false);
         animation.setInterpolator(new LinearInterpolator());
         animation.setRepeatCount(Animation.INFINITE);

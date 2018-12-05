@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +26,7 @@ import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsKey;
 import com.ledbanner.ledmobile.databinding.ActivitySettingBinding;
 import com.ledbanner.ledmobile.models.TextLed;
 import com.ledbanner.ledmobile.ui.dialogs.ColorFragment;
+import com.ledbanner.ledmobile.ui.dialogs.InforFragment;
 import com.ledbanner.ledmobile.utils.Constans;
 
 
@@ -35,6 +35,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private TextLed mTextLed;
     private SharedPrefsImpl mSharedPrefs;
     private static final String COLOR_DIALOG = "ColorDialog";
+    private static final String INFOR_DIALOG = "INFOR_DIALOG";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +51,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
         mSharedPrefs = new SharedPrefsImpl(this);
+        if (!mSharedPrefs.get(SharedPrefsKey.PREF_FIRST_USING, Boolean.class)) {
+            mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_COLOR_POS, Constans.DEFAULT_TEXT_COLOR_POS);
+            mSharedPrefs.put(SharedPrefsKey.PREF_BG_COLOR_POS, Constans.DEFAULT_BG_COLOR_POS);
+            mSharedPrefs.put(SharedPrefsKey.PREF_STYLE_LED, true);
+            mSharedPrefs.put(SharedPrefsKey.PREF_IS_RUNNING, true);
+            mSharedPrefs.put(SharedPrefsKey.PREF_STYLE_SHOW, true);
+            mSharedPrefs.put(SharedPrefsKey.PREF_FIRST_USING, true);
+        }
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_setting);
         mBinding.textContent.clearFocus();
         mBinding.textContent.setTypeface(mBinding.textContent.getTypeface(), Typeface.BOLD);
@@ -72,31 +81,28 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 .setContent(content)
                 .setRightToLeft(mSharedPrefs.get(SharedPrefsKey.PREF_STYLE_SHOW, Boolean.class))
                 .setTextSpeed(speed)
-                .setRunning(true)
+                .setRunning(mSharedPrefs.get(SharedPrefsKey.PREF_IS_RUNNING, Boolean.class))
                 .setSize(textSize)
                 .build();
         mBinding.setTextLed(mTextLed);
-        int bgColor = mSharedPrefs.get(SharedPrefsKey.PREF_BG_COLOR, Integer.class);
-        if (bgColor != 0) {
-            mTextLed.setBackgroundColor(bgColor);
-        } else {
-            mTextLed.setBackgroundColor(R.color.colorAccent);
-        }
-        int txtColor = mSharedPrefs.get(SharedPrefsKey.PREF_TEXT_COLOR, Integer.class);
-        if (txtColor != 0) {
-            mTextLed.setTextColor(txtColor);
-        } else {
-            mTextLed.setTextColor(R.color.colorWhite);
-        }
+        int bgColor = ColorFragment.mArraysColor[mSharedPrefs.get(SharedPrefsKey.PREF_BG_COLOR_POS, Integer.class)];
+        mTextLed.setBackgroundColor(bgColor);
 
+        int textColor = ColorFragment.mArraysColor[mSharedPrefs.get(SharedPrefsKey.PREF_TEXT_COLOR_POS, Integer.class)];
+        mTextLed.setTextColor(textColor);
         mBinding.textContent.setRndDuration((int) mTextLed.getTextSpeed());
+//        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/ariblk.ttf");
+//        mBinding.textContent.setTypeface(font);
         if (mTextLed.isBlinking()) {
             mBinding.textContent.addAnimationBlinking();
             mBinding.textContent.startAnimation(mBinding.textContent.getAnimationSet());
         }
-        mBinding.textContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-        mBinding.textContent.startScroll();
-        mBinding.textContent.setSelected(false);
+        if (mTextLed.isRunning()) {
+            mBinding.textContent.startScroll();
+            mBinding.textContent.setSelected(false);
+        } else {
+            mBinding.textContent.pauseScroll();
+        }
 
     }
 
@@ -141,7 +147,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 long speed = Constans.MAX_DURATION - seekBar.getProgress();
+                mTextLed.setTextSpeed(speed);
                 mBinding.textContent.setRndDuration((int) speed);
+                if (!mTextLed.isRunning()) {
+                    mBinding.textContent.pauseScroll();
+                }
                 mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_SPEED, speed);
             }
         });
@@ -212,6 +222,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         mTextLed.setRunning(!isRun);
+        mSharedPrefs.put(SharedPrefsKey.PREF_IS_RUNNING, !isRun);
     }
 
     public void increaseTextSize() {
@@ -226,7 +237,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     public void decreaseTextSize() {
         int size = mTextLed.getSize();
-        if (size < 65) {
+        if (size < 55) {
             return;
         }
         size -= 10;
@@ -267,11 +278,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void help() {
-
+        InforFragment f = InforFragment.getInstance();
+        getSupportFragmentManager().beginTransaction().add(f, INFOR_DIALOG).commit();
     }
 
     public void play() {
-        startActivity(MainActivity.getMainIntent(this));
+        startActivity(MainActivity.getMainIntent(this, mTextLed));
     }
 
     @Override
@@ -286,6 +298,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         mBinding.edtContent.clearFocus();
 
+    }
+
+    @Override
+    protected void onPause() {
+        mSharedPrefs.put(SharedPrefsKey.PREF_IS_RUNNING, mTextLed.isRunning());
+        super.onPause();
     }
 
     @Override
@@ -334,17 +352,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     public void setTextColor(int color) {
         mTextLed.setTextColor(color);
-        mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_COLOR, color);
     }
 
     public void setBGColor(int color) {
         mTextLed.setBackgroundColor(color);
-        mSharedPrefs.put(SharedPrefsKey.PREF_BG_COLOR, color);
     }
 
     @Override
     protected void onStop() {
         mSharedPrefs.put(SharedPrefsKey.PREF_CONTENT, mTextLed.getContent());
+        mSharedPrefs.put(SharedPrefsKey.PREF_IS_RUNNING, mTextLed.isRunning());
         super.onStop();
     }
 }
