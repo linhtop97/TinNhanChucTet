@@ -24,6 +24,7 @@
 
             <com.ledbanner.ledmobile.widgets.MyTextView
                 android:id="@+id/text_content"
+                app:autoSizeTextType="none"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0dp"
                 android:gravity="center_vertical"
@@ -111,8 +112,8 @@
                     android:id="@+id/btn_scroll_rtl"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_scroll_rtl"
+                    android:background="@null"
+                    android:src="@drawable/ic_rtl"
                     app:iconRTL="@{textLed.rightToLeft}"
                     app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintLeft_toLeftOf="parent"

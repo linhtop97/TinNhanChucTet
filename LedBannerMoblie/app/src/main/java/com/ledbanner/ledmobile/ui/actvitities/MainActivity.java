@@ -3,6 +3,7 @@ package com.ledbanner.ledmobile.ui.actvitities;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mTextLed = (TextLed) getIntent().getBundleExtra(Constans.BUNDLE_TEXT_LED).getSerializable(Constans.EXTRA_TEXT_LED);
         mBinding.setTextLed(mTextLed);
+        mBinding.textContent.setRndDuration((int) mTextLed.getTextSpeed());
+        mBinding.textContent.setRndDuration((int) mTextLed.getTextSpeed());
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/20SEVEN.ttf");
+        mBinding.textContent.setTypeface(font);
         if (mTextLed.isBlinking()) {
             mBinding.textContent.addAnimationBlinking();
             mBinding.textContent.startAnimation(mBinding.textContent.getAnimationSet());

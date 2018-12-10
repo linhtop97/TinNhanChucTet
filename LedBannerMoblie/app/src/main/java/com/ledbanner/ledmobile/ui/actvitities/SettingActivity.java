@@ -91,9 +91,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         int textColor = ColorFragment.mArraysColor[mSharedPrefs.get(SharedPrefsKey.PREF_TEXT_COLOR_POS, Integer.class)];
         mTextLed.setTextColor(textColor);
         mBinding.textContent.setRndDuration((int) mTextLed.getTextSpeed());
-//        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/ariblk.ttf");
-//        mBinding.textContent.setTypeface(font);
-        if (mTextLed.isBlinking()) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/20SEVEN.ttf");
+        mBinding.textContent.setTypeface(font);
+            if (mTextLed.isBlinking()) {
             mBinding.textContent.addAnimationBlinking();
             mBinding.textContent.startAnimation(mBinding.textContent.getAnimationSet());
         }
@@ -230,7 +230,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         if (size >= 155) {
             return;
         }
-        size += 10;
+        size += 2;
         mTextLed.setSize(size);
         mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_SIZE, size);
     }
@@ -240,7 +240,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         if (size < 55) {
             return;
         }
-        size -= 10;
+        size -= 2;
         mTextLed.setSize(size);
         mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_SIZE, size);
     }

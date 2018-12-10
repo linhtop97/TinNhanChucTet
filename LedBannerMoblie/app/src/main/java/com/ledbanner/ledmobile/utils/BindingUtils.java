@@ -82,7 +82,7 @@ public final class BindingUtils {
 
     @BindingAdapter({"app:setTextSizeLedMain"})
     public static void setTextSizeLedMain(TextView textView, int size) {
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size + 65);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size +62);
     }
 
     @BindingAdapter({"app:setTextColor"})
