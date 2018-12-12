@@ -1,10 +1,15 @@
 package com.ledbanner.ledmobile.ui.actvitities;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -19,6 +24,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.ledbanner.ledmobile.R;
+import com.ledbanner.ledmobile.custome.Ads;
 import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsImpl;
 import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsKey;
 import com.ledbanner.ledmobile.databinding.ActivitySettingBinding;
@@ -26,6 +32,7 @@ import com.ledbanner.ledmobile.models.TextLed;
 import com.ledbanner.ledmobile.ui.dialogs.ColorFragment;
 import com.ledbanner.ledmobile.ui.dialogs.InforFragment;
 import com.ledbanner.ledmobile.utils.Constans;
+import com.zer.android.newsdk.ZAndroidSDK;
 
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
@@ -35,13 +42,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private static final String COLOR_DIALOG = "ColorDialog";
     private static final String INFOR_DIALOG = "INFOR_DIALOG";
     private boolean mCheckExit = false;
+    private static final String[] PERMISSION_WRITE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
         initAction();
+
     }
+
 
     private void initUI() {
         mSharedPrefs = new SharedPrefsImpl(this);
@@ -97,7 +107,42 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             mBinding.textContent.pauseScroll();
         }
+        ZAndroidSDK.init(SettingActivity.this);
+        Ads.f(SettingActivity.this);
+        Ads.b(SettingActivity.this, mBinding.layoutAds, new Ads.OnAdsListener() {
+            @Override
+            public void onError() {
+                mBinding.layoutAds.setVisibility(View.GONE);
+            }
 
+            @Override
+            public void onAdLoaded() {
+                mBinding.layoutAds.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdOpened() {
+                mBinding.layoutAds.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ZAndroidSDK.onPermissionGranted(this);
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public static int checkPermission(String[] permissions, Context context) {
+        int permissionCheck = PackageManager.PERMISSION_GRANTED;
+        for (String permission : permissions) {
+            permissionCheck += ContextCompat.checkSelfPermission(context, permission);
+        }
+        return permissionCheck;
     }
 
     private void initAction() {
