@@ -71,6 +71,12 @@ public class ColorFragment extends DialogFragment implements OnItemClickListener
         mBinding.rvColor.setLayoutManager(linearLayoutManager);
         adapter.setListener(this);
         mBinding.rvColor.setAdapter(adapter);
+        mBinding.getRoot().findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
     }
 
     @NonNull
@@ -79,14 +85,13 @@ public class ColorFragment extends DialogFragment implements OnItemClickListener
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 // Disable Back key and Search key
                 switch (keyCode) {
-                    case KeyEvent.KEYCODE_BACK:
                     case KeyEvent.KEYCODE_SEARCH:
                         return true;
                     default:
@@ -100,14 +105,14 @@ public class ColorFragment extends DialogFragment implements OnItemClickListener
     @Override
     public void onItemClick(int position) {
         if (isSetTextColor) {
-            mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_COLOR_POS, position);
+           // mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_COLOR_POS, position);
             mSettingActivity.setTextColor(mListColor.get(position));
-            dismiss();
+//            dismiss();
             return;
         }
         mSettingActivity.setBGColor(mListColor.get(position));
-        mSharedPrefs.put(SharedPrefsKey.PREF_BG_COLOR_POS, position);
-        dismiss();
+       // mSharedPrefs.put(SharedPrefsKey.PREF_BG_COLOR_POS, position);
+//        dismiss();
     }
 
     @Override

@@ -46,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
         mBinding.setTextLed(mTextLed);
         mBinding.textContent.setRndDuration((int) mTextLed.getTextSpeed());
         mBinding.textContent.setRndDuration((int) mTextLed.getTextSpeed());
+       // mBinding.textContent.setTypeface(Typeface.DEFAULT_BOLD);
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/20SEVEN.ttf");
-        mBinding.textContent.setTypeface(font);
+       mBinding.textContent.setTypeface(font);
         if (mTextLed.isBlinking()) {
             mBinding.textContent.addAnimationBlinking();
             mBinding.textContent.startAnimation(mBinding.textContent.getAnimationSet());

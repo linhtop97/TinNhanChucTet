@@ -12,24 +12,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black"
+        android:background="@color/colorBG"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/led_container"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_200sdp"
+            android:layout_height="@dimen/_180sdp"
             app:setBGColor="@{textLed.backgroundColor}">
 
             <com.ledbanner.ledmobile.widgets.MyTextView
                 android:id="@+id/text_content"
-                app:autoSizeTextType="none"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_0dp"
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:text="@{textLed.content}"
+                app:autoSizeTextType="none"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -52,7 +52,7 @@
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/_24sdp"
+            android:paddingBottom="@dimen/_12sdp"
             android:paddingTop="@dimen/_12sdp">
 
             <android.support.constraint.ConstraintLayout
@@ -71,10 +71,11 @@
                     android:paddingLeft="@dimen/_8sdp"
                     android:paddingRight="@dimen/_8sdp"
                     android:singleLine="true"
+                    android:textSize="@dimen/_16sdp"
                     android:text="@{textLed.content}"
                     android:textAlignment="center"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -85,70 +86,92 @@
                     android:id="@+id/clear_content_button"
                     android:layout_width="@dimen/_32sdp"
                     android:layout_height="@dimen/_32sdp"
-                    android:background="@drawable/ic_cancel"
+                    android:background="@null"
                     android:padding="@dimen/_8sdp"
+                    android:src="@drawable/ic_delete"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
-
-            <SeekBar
-                android:id="@+id/sb_text_speed"
-                android:layout_width="@dimen/_256sdp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:max="4000"
-                android:theme="@style/MySeekBarTheme"
-                app:progressTextSpeed="@{textLed.textSpeed}" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <SeekBar
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:id="@+id/sb_text_speed"
+                    android:layout_width="@dimen/_256sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:max="4000"
+                    android:theme="@style/MySeekBarTheme"
+                    app:progressTextSpeed="@{textLed.textSpeed}" />
+                <TextView
+                    android:textSize="@dimen/_12sdp"
+                    android:includeFontPadding="false"
+                    app:layout_constraintStart_toStartOf="@id/sb_text_speed"
+                    android:textColor="@color/colorText"
+                    app:layout_constraintTop_toBottomOf="@id/sb_text_speed"
+                    android:text="@string/slow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:includeFontPadding="false"
+                  app:layout_constraintEnd_toEndOf="@id/sb_text_speed"
+                    android:textColor="@color/colorText"
+                    app:layout_constraintTop_toBottomOf="@id/sb_text_speed"
+                    android:text="@string/fast"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="@dimen/_256sdp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_8sdp">
+                android:layout_marginTop="@dimen/_16sdp">
 
                 <ImageButton
                     android:id="@+id/btn_scroll_rtl"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@null"
-                    android:src="@drawable/ic_rtl"
+                    android:background="@drawable/ic_rtl"
                     app:iconRTL="@{textLed.rightToLeft}"
                     app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/btn_scroll_ltr"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageButton
-                    android:id="@+id/btn_scroll_ltr"
-                    android:layout_width="@dimen/_42sdp"
-                    android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_scroll_ltr"
-                    app:iconLTR="@{textLed.rightToLeft}"
-                    app:layout_constraintLeft_toRightOf="@id/btn_scroll_rtl"
                     app:layout_constraintRight_toLeftOf="@id/btn_pause"
-                    app:layout_constraintTop_toTopOf="@id/btn_scroll_rtl" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
                     android:id="@+id/btn_pause"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_pause"
+                    android:background="@drawable/ic_pause"
                     app:iconPauseOrPlay="@{textLed.running}"
-                    app:layout_constraintLeft_toRightOf="@id/btn_scroll_ltr"
+                    app:layout_constraintLeft_toRightOf="@id/btn_scroll_rtl"
+                    app:layout_constraintRight_toLeftOf="@id/btn_scroll_ltr"
+                    app:layout_constraintTop_toTopOf="@id/btn_scroll_rtl" />
+
+                <ImageButton
+                    android:id="@+id/btn_scroll_ltr"
+                    android:layout_width="@dimen/_42sdp"
+                    android:layout_height="@dimen/_42sdp"
+                    android:background="@drawable/ic_ltr_active"
+                    app:iconLTR="@{textLed.rightToLeft}"
+                    app:layout_constraintLeft_toRightOf="@id/btn_pause"
                     app:layout_constraintRight_toLeftOf="@id/btn_des"
                     app:layout_constraintTop_toTopOf="@id/btn_scroll_rtl" />
+
 
                 <ImageButton
                     android:id="@+id/btn_des"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_dec_inactive"
-                    app:layout_constraintLeft_toRightOf="@id/btn_pause"
+                    android:background="@drawable/reduce_background"
+                    app:layout_constraintLeft_toRightOf="@id/btn_scroll_ltr"
                     app:layout_constraintRight_toLeftOf="@id/btn_inc"
                     app:layout_constraintTop_toTopOf="@id/btn_scroll_rtl" />
 
@@ -156,8 +179,7 @@
                     android:id="@+id/btn_inc"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_inc_inactive"
+                    android:background="@drawable/add_background"
                     app:layout_constraintLeft_toRightOf="@id/btn_des"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/btn_scroll_rtl" />
@@ -167,8 +189,7 @@
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
                     android:layout_marginTop="@dimen/_16sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_text_color"
+                    android:background="@drawable/text_background"
                     app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btn_inc" />
@@ -177,8 +198,7 @@
                     android:id="@+id/btn_bg_color"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_bg_color"
+                    android:background="@drawable/bg_background"
                     app:layout_constraintLeft_toRightOf="@id/btn_text_color"
                     app:layout_constraintRight_toLeftOf="@id/btn_blink"
                     app:layout_constraintTop_toTopOf="@id/btn_text_color" />
@@ -187,8 +207,7 @@
                     android:id="@+id/btn_blink"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_flash_inactive"
+                    android:background="@drawable/ic_flash_off"
                     app:iconBlinking="@{textLed.blinking}"
                     app:layout_constraintLeft_toRightOf="@id/btn_bg_color"
                     app:layout_constraintRight_toLeftOf="@id/btn_hd_led"
@@ -198,8 +217,7 @@
                     android:id="@+id/btn_hd_led"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_hd"
+                    android:background="@drawable/ic_hd_active"
                     app:iconLedorHd="@{textLed.led}"
                     app:layout_constraintLeft_toRightOf="@id/btn_blink"
                     app:layout_constraintRight_toLeftOf="@id/btn_help"
@@ -209,18 +227,19 @@
                     android:id="@+id/btn_help"
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:background="@drawable/edt_background"
-                    android:src="@drawable/ic_help"
+                    android:background="@drawable/help_background"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/btn_text_color" />
             </android.support.constraint.ConstraintLayout>
 
-            <ImageButton
+            <Button
                 android:id="@+id/btn_play"
                 android:layout_width="@dimen/_256sdp"
                 android:layout_height="@dimen/_42sdp"
                 android:background="@drawable/edt_background"
-                android:src="@drawable/ic_play_arrow" />
+                android:text="@string/start"
+                android:textSize="@dimen/_16sdp"
+                android:textColor="@color/textColorPrimary" />
         </LinearLayout>
     </LinearLayout>
 </layout>

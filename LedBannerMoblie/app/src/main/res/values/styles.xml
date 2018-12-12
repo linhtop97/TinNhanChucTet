@@ -8,7 +8,8 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="MySeekBarTheme" parent="Widget.AppCompat.SeekBar" >
-        <item name="colorAccent">#17f1db</item>
+
+    <style name="MySeekBarTheme" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">#1AEE7D</item>
     </style>
 </resources>

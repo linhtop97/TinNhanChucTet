@@ -13,4 +13,5 @@ public final class SharedPrefsKey {
     public static final String PREF_BG_COLOR = "PREF_BG_COLOR";
     public static final String PREF_BG_COLOR_POS = "PREF_BG_COLOR_POS";
     public static final String PREF_IS_RUNNING = "PREF_IS_RUNNING";
+    public static final String PREF_BEFORE_POS = "PREF_BEFORE_POS" ;
 }

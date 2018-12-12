@@ -18,9 +18,9 @@ public final class BindingUtils {
     @BindingAdapter({"app:iconPauseOrPlay"})
     public static void setIconPause(ImageButton imageButton, boolean isRunning) {
         if (!isRunning) {
-            imageButton.setImageResource(R.drawable.ic_play_arrow_active);
+            imageButton.setBackgroundResource(R.drawable.ic_play);
         } else {
-            imageButton.setImageResource(R.drawable.ic_pause);
+            imageButton.setBackgroundResource(R.drawable.ic_pause);
         }
     }
 
@@ -28,36 +28,36 @@ public final class BindingUtils {
     @BindingAdapter({"app:iconRTL"})
     public static void setIconRTL(ImageButton imageButton, boolean isRtl) {
         if (!isRtl) {
-            imageButton.setImageResource(R.drawable.ic_scroll_rtl);
+            imageButton.setBackgroundResource(R.drawable.ic_rtl);
         } else {
-            imageButton.setImageResource(R.drawable.ic_scroll_rtl_actived);
+            imageButton.setBackgroundResource(R.drawable.ic_rtl_active);
         }
     }
 
     @BindingAdapter({"app:iconLTR"})
     public static void setIconLTR(ImageButton imageButton, boolean isRtl) {
         if (!isRtl) {
-            imageButton.setImageResource(R.drawable.ic_scroll_ltr_actived);
+            imageButton.setBackgroundResource(R.drawable.ic_ltr_active);
         } else {
-            imageButton.setImageResource(R.drawable.ic_scroll_ltr);
+            imageButton.setBackgroundResource(R.drawable.ic_ltr);
         }
     }
 
     @BindingAdapter({"app:iconLedorHd"})
     public static void setIconLedOrHd(ImageButton imageButton, boolean isLed) {
         if (!isLed) {
-            imageButton.setImageResource(R.drawable.ic_hd);
+            imageButton.setBackgroundResource(R.drawable.ic_hd_active);
         } else {
-            imageButton.setImageResource(R.drawable.ic_led);
+            imageButton.setBackgroundResource(R.drawable.ic_led_active);
         }
     }
 
     @BindingAdapter({"app:iconBlinking"})
     public static void setIconBlinking(ImageButton imageButton, boolean isBlinking) {
         if (!isBlinking) {
-            imageButton.setImageResource(R.drawable.ic_flash_inactive);
+            imageButton.setBackgroundResource(R.drawable.ic_flash_off);
         } else {
-            imageButton.setImageResource(R.drawable.ic_flash_active);
+            imageButton.setBackgroundResource(R.drawable.ic_flash_active);
         }
     }
 
@@ -82,7 +82,7 @@ public final class BindingUtils {
 
     @BindingAdapter({"app:setTextSizeLedMain"})
     public static void setTextSizeLedMain(TextView textView, int size) {
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size +62);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size + 20);
     }
 
     @BindingAdapter({"app:setTextColor"})

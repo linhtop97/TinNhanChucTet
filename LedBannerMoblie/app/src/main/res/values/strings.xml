@@ -2,7 +2,10 @@
     <string name="app_name">Led Banner</string>
     <string name="input_text">Input text…</string>
     <string name="app_name_title">App Name: Led Banner</string>
-    <string name="developer">Developer: Nguyen Ba Linh</string>
-    <string name="leader_project">Leader: TrungTT</string>
     <string name="description">Description: You can bring it to the concerts, the matches,  and so on.</string>
+    <string name="start">START</string>
+    <string name="ok">OK</string>
+    <string name="slow">Slow</string>
+    <string name="fast">Fast</string>
+    <string name="confirm_exit">Press back again to exit app</string>
 </resources>

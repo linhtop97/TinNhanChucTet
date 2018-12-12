@@ -3,7 +3,6 @@ package com.ledbanner.ledmobile.ui.actvitities;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +12,11 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.ledbanner.ledmobile.R;
 import com.ledbanner.ledmobile.data.local.sharedprf.SharedPrefsImpl;
@@ -36,6 +34,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private SharedPrefsImpl mSharedPrefs;
     private static final String COLOR_DIALOG = "ColorDialog";
     private static final String INFOR_DIALOG = "INFOR_DIALOG";
+    private boolean mCheckExit = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,11 +44,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initUI() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window w = getWindow();
-            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }
         mSharedPrefs = new SharedPrefsImpl(this);
         if (!mSharedPrefs.get(SharedPrefsKey.PREF_FIRST_USING, Boolean.class)) {
             mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_COLOR_POS, Constans.DEFAULT_TEXT_COLOR_POS);
@@ -93,7 +87,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mBinding.textContent.setRndDuration((int) mTextLed.getTextSpeed());
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/20SEVEN.ttf");
         mBinding.textContent.setTypeface(font);
-            if (mTextLed.isBlinking()) {
+        if (mTextLed.isBlinking()) {
             mBinding.textContent.addAnimationBlinking();
             mBinding.textContent.startAnimation(mBinding.textContent.getAnimationSet());
         }
@@ -227,10 +221,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     public void increaseTextSize() {
         int size = mTextLed.getSize();
-        if (size >= 155) {
+        if (size >= 145) {
             return;
         }
-        size += 2;
+        size += 3;
         mTextLed.setSize(size);
         mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_SIZE, size);
     }
@@ -240,7 +234,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         if (size < 55) {
             return;
         }
-        size -= 2;
+        size -= 3;
         mTextLed.setSize(size);
         mSharedPrefs.put(SharedPrefsKey.PREF_TEXT_SIZE, size);
     }
@@ -363,5 +357,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mSharedPrefs.put(SharedPrefsKey.PREF_CONTENT, mTextLed.getContent());
         mSharedPrefs.put(SharedPrefsKey.PREF_IS_RUNNING, mTextLed.isRunning());
         super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mCheckExit) {
+            Toast.makeText(this, R.string.confirm_exit, Toast.LENGTH_SHORT).show();
+            mCheckExit = true;
+            return;
+        }
+        super.onBackPressed();
     }
 }

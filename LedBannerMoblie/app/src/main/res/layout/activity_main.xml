@@ -19,7 +19,7 @@
         <com.ledbanner.ledmobile.widgets.MyTextView
             android:id="@+id/text_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             app:autoSizeTextType="none"
             android:singleLine="true"
