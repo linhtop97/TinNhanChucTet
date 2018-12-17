@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="message"
+            type="thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message" />
+
+        <variable
+            name="listener"
+            type="thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.OnItemClickListener" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:onClick="@{()-> listener.onItemClick(message)}"
+        android:padding="@dimen/_4sdp">
+
+        <TextView
+            android:id="@+id/txt_msg_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="@dimen/_16sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_content"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/background_msg"
+            android:ellipsize="end"
+            android:maxHeight="@dimen/_256sdp"
+            android:maxLines="12"
+            android:padding="@dimen/_8sdp"
+            android:text="@{message.content}"
+            android:textAlignment="center"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/_16sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_msg_num" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

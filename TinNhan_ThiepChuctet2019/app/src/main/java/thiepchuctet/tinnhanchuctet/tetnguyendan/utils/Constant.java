@@ -1,0 +1,11 @@
+package thiepchuctet.tinnhanchuctet.tetnguyendan.utils;
+
+public class Constant {
+
+    public static final String ARGUMENT_TBL_NAME = "ARGUMENT_TBL_NAME";
+    public static final String ARGUMENT_CATEGORY_NAME = "ARGUMENT_CATEGORY_NAME";
+    public static final String ARGUMENT_LIST_MSG = "ARGUMENT_LIST_MSG";
+    public static final String ARGUMENT_MSG_POS = "ARGUMENT_MSG_POS";
+    public static final String ARGUMENT_MSG = "ARGUMENT_MSG";
+    public static final String LABEL_CLIPBROAD = "LABLE_CLIPBROAD";
+}
