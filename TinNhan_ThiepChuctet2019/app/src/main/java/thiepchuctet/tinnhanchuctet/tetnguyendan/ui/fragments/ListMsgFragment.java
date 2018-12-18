@@ -25,7 +25,7 @@ import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.activities.MainActivity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Constant;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Navigator;
 
-public class ListMsgFragment extends Fragment implements OnItemClickListener<Message>, View.OnClickListener {
+public class ListMsgFragment extends Fragment implements OnItemClickListener, View.OnClickListener {
 
     private FragmentMsgListBinding mBinding;
     private MainActivity mMainActivity;
@@ -68,8 +68,8 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener<Mes
     }
 
     @Override
-    public void onItemClick(Message data) {
-        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, data.getId());
+    public void onItemClick(int pos) {
+        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, pos + 1, false);
         mNavigator.addFragment(R.id.main_container, messageFragment, true,
                 Navigator.NavigateAnim.NONE, MessageFragment.class.getSimpleName());
     }

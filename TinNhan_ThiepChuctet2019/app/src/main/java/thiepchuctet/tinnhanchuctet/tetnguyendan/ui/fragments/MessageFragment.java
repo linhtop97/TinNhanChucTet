@@ -36,15 +36,19 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
     private MainActivity mMainActivity;
     private List<Message> mMessages;
     private int mPosition;
+    private int mNum;
     private Navigator mNavigator;
     private DetectSwipeGestureListener mGestureListener;
     private int mSize;
+    private boolean mIsAddNew;
 
-    public static MessageFragment newInstance(List<Message> messages, int position) {
+    public static MessageFragment newInstance(List<Message> messages, int position, int num, boolean isAddNew) {
         MessageFragment fragment = new MessageFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(Constant.ARGUMENT_LIST_MSG, (ArrayList<? extends Parcelable>) messages);
         args.putInt(Constant.ARGUMENT_MSG_POS, position);
+        args.putInt(Constant.ARGUMENT_NUM, num);
+        args.putBoolean(Constant.ARGUMENT_IS_EDIT, isAddNew);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +66,17 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         mNavigator = new Navigator(mMainActivity);
         Bundle bundle = getArguments();
         mMessages = bundle.getParcelableArrayList(Constant.ARGUMENT_LIST_MSG);
-        mPosition = bundle.getInt(Constant.ARGUMENT_MSG_POS) - 1;
+        mPosition = bundle.getInt(Constant.ARGUMENT_MSG_POS);
+        mNum = bundle.getInt(Constant.ARGUMENT_NUM);
+        mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_EDIT);
+        if (mIsAddNew) {
+            mBinding.btnEdit.setText(R.string.add_to_my_collect);
+        } else {
+            mBinding.btnEdit.setText(R.string.edit_msg);
+        }
         mBinding.txtTitle.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         mSize = mMessages.size();
-        setCurrentMsg(mPosition + 1);
+        setCurrentMsg(mNum);
         mBinding.contentOfMsg.setMovementMethod(new ScrollingMovementMethod());
         mBinding.contentOfMsg.setText(mMessages.get(mPosition).getContent());
     }
@@ -109,7 +120,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                 shareMessage();
                 break;
             case R.id.btn_edit:
-                EditMessageFragment fragment = EditMessageFragment.newInstance(mMessages.get(mPosition));
+                EditMessageFragment fragment = EditMessageFragment.newInstance(mMessages.get(mPosition), true);
                 mNavigator.addFragment(R.id.main_container, fragment, true,
                         Navigator.NavigateAnim.NONE, EditMessageFragment.class.getSimpleName());
                 break;
@@ -144,24 +155,27 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
 
     public void onSwipeRight() {
         if (mPosition == mMessages.size() - 1) {
+            mNum = 0;
             mPosition = 0;
-            setCurrentMsg(mPosition + 1);
             mBinding.contentOfMsg.setText(mMessages.get(mPosition).getContent());
 
         } else {
             mBinding.contentOfMsg.setText(mMessages.get(++mPosition).getContent());
         }
-        setCurrentMsg(mPosition + 1);
+        setCurrentMsg(++mNum);
     }
 
     public void onSwipeLeft() {
         if (mPosition == 0) {
+            mNum = mSize;
+            setCurrentMsg(mNum);
             mPosition = mMessages.size() - 1;
             mBinding.contentOfMsg.setText(mMessages.get(mPosition).getContent());
         } else {
             mBinding.contentOfMsg.setText(mMessages.get(--mPosition).getContent());
+            setCurrentMsg(--mNum);
         }
-        setCurrentMsg(mPosition + 1);
+
     }
 
     private void setCurrentMsg(int position) {

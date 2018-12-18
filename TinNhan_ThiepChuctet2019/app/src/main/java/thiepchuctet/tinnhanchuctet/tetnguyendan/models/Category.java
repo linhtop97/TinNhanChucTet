@@ -46,9 +46,13 @@ public class Category {
 
     public static List<Category> initCategory() {
         List<Category> categories = new ArrayList<>();
-        Integer[] mArraysId = new Integer[]{1, 2, 3};
-        Integer[] mArraysIcon = new Integer[]{R.drawable.ic_flash_active, R.drawable.ic_hd_active, R.drawable.ic_ltr};
-        String[] mArraysName = new String[]{"Lời chúc tết hay và ý nghĩa", "lời chúc tết ông bà", "chúc tết bố mẹ"};
+        Integer[] mArraysId = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        Integer[] mArraysIcon = new Integer[]{R.drawable.ic_flash_active, R.drawable.ic_hd_active,
+                R.drawable.ic_ltr, R.drawable.ic_flash_active, R.drawable.ic_hd_active,
+                R.drawable.ic_ltr, R.drawable.ic_flash_active, R.drawable.ic_hd_active, R.drawable.ic_ltr};
+        String[] mArraysName = new String[]{"Lời chúc tết hay và ý nghĩa", "Ông Đồ chúc tết", "lời chúc tết ông bà",
+                "chúc tết bố mẹ", "Chúc tết thầy cô", "Chúc tết người yêu, vợ chồng", "Chúc tết sếp",
+                "Tin nhắn hình", "Lời chúc tết cute"};
         for (int i = 0; i < mArraysIcon.length; i++) {
             categories.add(new Category(mArraysId[i], mArraysName[i], mArraysIcon[i]));
         }

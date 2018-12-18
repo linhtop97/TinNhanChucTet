@@ -15,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import thiepchuctet.tinnhanchuctet.tetnguyendan.MyApplication;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMsgEditBinding;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.activities.MainActivity;
@@ -27,11 +29,13 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
     private FragmentMsgEditBinding mBinding;
     private MainActivity mMainActivity;
     private Navigator mNavigator;
+    private boolean mIsAddNew;
 
-    public static EditMessageFragment newInstance(Message message) {
+    public static EditMessageFragment newInstance(Message message, boolean isAddNew) {
         EditMessageFragment fragment = new EditMessageFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constant.ARGUMENT_MSG, message);
+        args.putBoolean(Constant.ARGUMENT_IS_EDIT, isAddNew);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,6 +53,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         mNavigator = new Navigator(mMainActivity);
         Bundle bundle = getArguments();
         Message msg = bundle.getParcelable(Constant.ARGUMENT_MSG);
+        mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_EDIT);
         mBinding.contentOfMsg.setText(msg.getContent());
     }
 
@@ -82,9 +87,31 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
                 shareMessage();
                 break;
             case R.id.btn_add:
-                Toast.makeText(mMainActivity, "chưa làm", Toast.LENGTH_SHORT).show();
+                if (mIsAddNew) {
+                    insertNewMessage();
+                    Toast.makeText(mMainActivity, R.string.add_success, Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    mBinding.btnAdd.setText(R.string.edit_msg);
+                    editMsg();
+                }
+
                 break;
         }
+    }
+
+    private void editMsg() {
+
+    }
+
+    private void insertNewMessage() {
+        String msg = mBinding.contentOfMsg.getText().toString();
+        if (TextUtils.isEmpty(msg)) {
+            mNavigator.showToast(R.string.cannot_empty);
+            return;
+        }
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
+        databaseHelper.insertNewMessage(msg);
     }
 
     private void shareMessage() {

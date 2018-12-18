@@ -8,4 +8,6 @@ public class Constant {
     public static final String ARGUMENT_MSG_POS = "ARGUMENT_MSG_POS";
     public static final String ARGUMENT_MSG = "ARGUMENT_MSG";
     public static final String LABEL_CLIPBROAD = "LABLE_CLIPBROAD";
+    public static final String ARGUMENT_NUM = "ARGUMENT_NUM";
+    public static final String ARGUMENT_IS_EDIT = "ARGUMENT_IS_EDIT";
 }

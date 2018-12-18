@@ -1,6 +1,6 @@
 package thiepchuctet.tinnhanchuctet.tetnguyendan.listeners;
 
-public interface OnItemClickListener<T> {
+public interface OnItemClickListener {
 
-    void onItemClick(T data);
+    void onItemClick(int pos);
 }

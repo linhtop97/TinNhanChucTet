@@ -19,4 +19,7 @@
     <string name="add_new_msg">Tạo lời chúc mới</string>
     <string name="cannot_empty">Nội dung không được trống</string>
     <string name="not_have_any_msg">Bạn chưa có lời chúc nào! hãy tạo lời chúc</string>
+    <string name="add_success">Thêm lời chúc thành công</string>
+    <string name="title_num">Lời chúc thứ: </string>
+    <string name="edit_msg">Chỉnh sửa lời chúc</string>
 </resources>

@@ -1,5 +1,6 @@
 package thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -95,5 +96,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return messages;
     }
 
-
+    public void insertNewMessage(String msg) {
+        openDataBase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TableEntity.GENERAL_CONTENT, msg);
+        mDatabase.insert(TableEntity.TBL_MY_MESSAGE, null, contentValues);
+    }
 }

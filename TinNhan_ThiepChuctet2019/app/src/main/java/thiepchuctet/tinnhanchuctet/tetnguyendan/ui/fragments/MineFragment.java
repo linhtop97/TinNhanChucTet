@@ -20,11 +20,12 @@ import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.TableEntity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMsgMineBinding;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.OnItemClickListener;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.OnItemLongClickListener;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.activities.MainActivity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Navigator;
 
-public class MineFragment extends Fragment implements OnItemClickListener<Message>, View.OnClickListener {
+public class MineFragment extends Fragment implements OnItemClickListener, View.OnClickListener, OnItemLongClickListener<Message> {
 
     private FragmentMsgMineBinding mBinding;
     private List<Message> mMessages;
@@ -56,13 +57,16 @@ public class MineFragment extends Fragment implements OnItemClickListener<Messag
         }
         MessageAdapter adapter = new MessageAdapter(mMainActivity, mMessages);
         adapter.setOnItemClick(this);
+        adapter.setOnItemLongClick(this);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mBinding.recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void onItemClick(Message data) {
-
+    public void onItemClick(int pos) {
+        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, pos + 1, false);
+        mNavigator.addFragment(R.id.main_container, messageFragment, true,
+                Navigator.NavigateAnim.NONE, MessageFragment.class.getSimpleName());
     }
 
     @Override
@@ -78,10 +82,15 @@ public class MineFragment extends Fragment implements OnItemClickListener<Messag
                 mMainActivity.getSupportFragmentManager().popBackStackImmediate();
                 break;
             case R.id.btn_add_new:
-                EditMessageFragment fragment = EditMessageFragment.newInstance(new Message(0, ""));
+                EditMessageFragment fragment = EditMessageFragment.newInstance(new Message(0, ""), true);
                 mNavigator.addFragment(R.id.main_container, fragment, true,
                         Navigator.NavigateAnim.NONE, EditMessageFragment.class.getSimpleName());
                 break;
         }
+    }
+
+    @Override
+    public void onItemLongClick(Message message) {
+        mNavigator.showToast(message.getContent() + " id: " + message.getId());
     }
 }
