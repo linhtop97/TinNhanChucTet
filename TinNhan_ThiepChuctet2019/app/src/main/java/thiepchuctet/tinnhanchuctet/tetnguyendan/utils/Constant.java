@@ -9,5 +9,5 @@ public class Constant {
     public static final String ARGUMENT_MSG = "ARGUMENT_MSG";
     public static final String LABEL_CLIPBROAD = "LABLE_CLIPBROAD";
     public static final String ARGUMENT_NUM = "ARGUMENT_NUM";
-    public static final String ARGUMENT_IS_EDIT = "ARGUMENT_IS_EDIT";
+    public static final String ARGUMENT_IS_ADD_NEW = "ARGUMENT_IS_ADD_NEW";
 }

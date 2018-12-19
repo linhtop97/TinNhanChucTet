@@ -102,4 +102,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(TableEntity.GENERAL_CONTENT, msg);
         mDatabase.insert(TableEntity.TBL_MY_MESSAGE, null, contentValues);
     }
+
+    public int updateMessage(Message msg) {
+        openDataBase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TableEntity.GENERAL_CONTENT, msg.getContent());
+        return mDatabase.update(TableEntity.TBL_MY_MESSAGE, contentValues,
+                TableEntity.GENERAL_ID + "=?", new String[]{String.valueOf(msg.getId())});
+    }
+
+    public int deleteMessage(String tblName, int id) {
+        openDataBase();
+        return mDatabase.delete(tblName, TableEntity.GENERAL_ID + "=?", new String[]{String.valueOf(id)});
+    }
 }

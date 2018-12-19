@@ -19,6 +19,7 @@ import thiepchuctet.tinnhanchuctet.tetnguyendan.MyApplication;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMsgEditBinding;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.EditMsgSuccessListener;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.activities.MainActivity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Constant;
@@ -30,12 +31,14 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
     private MainActivity mMainActivity;
     private Navigator mNavigator;
     private boolean mIsAddNew;
+    private Message mMessage;
+    private EditMsgSuccessListener mEditMsgSuccessListener;
 
     public static EditMessageFragment newInstance(Message message, boolean isAddNew) {
         EditMessageFragment fragment = new EditMessageFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constant.ARGUMENT_MSG, message);
-        args.putBoolean(Constant.ARGUMENT_IS_EDIT, isAddNew);
+        args.putBoolean(Constant.ARGUMENT_IS_ADD_NEW, isAddNew);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,9 +55,12 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
     private void initUI() {
         mNavigator = new Navigator(mMainActivity);
         Bundle bundle = getArguments();
-        Message msg = bundle.getParcelable(Constant.ARGUMENT_MSG);
-        mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_EDIT);
-        mBinding.contentOfMsg.setText(msg.getContent());
+        mMessage = bundle.getParcelable(Constant.ARGUMENT_MSG);
+        mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_ADD_NEW);
+        if (!mIsAddNew) {
+            mBinding.btnAdd.setText(R.string.done);
+        }
+        mBinding.contentOfMsg.setText(mMessage.getContent());
     }
 
     private void initAction() {
@@ -89,19 +95,28 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
             case R.id.btn_add:
                 if (mIsAddNew) {
                     insertNewMessage();
-                    Toast.makeText(mMainActivity, R.string.add_success, Toast.LENGTH_SHORT).show();
+                    mNavigator.showToast(R.string.add_success);
                     return;
                 } else {
-                    mBinding.btnAdd.setText(R.string.edit_msg);
-                    editMsg();
+                    if (editMsg() > 0) {
+                        mNavigator.showToast(R.string.edit_sucess);
+                        mEditMsgSuccessListener.msgEdited(mMessage);
+                    }
                 }
 
                 break;
         }
     }
 
-    private void editMsg() {
-
+    private int editMsg() {
+        String msg = mBinding.contentOfMsg.getText().toString();
+        if (TextUtils.isEmpty(msg)) {
+            mNavigator.showToast(R.string.cannot_empty);
+            return 0;
+        }
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
+        mMessage.setContent(msg);
+        return databaseHelper.updateMessage(mMessage);
     }
 
     private void insertNewMessage() {
@@ -138,6 +153,10 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         ClipData clip = ClipData.newPlainText(Constant.LABEL_CLIPBROAD, mBinding.contentOfMsg.getText().toString());
         clipboard.setPrimaryClip(clip);
         Toast.makeText(mMainActivity, R.string.copy_successful, Toast.LENGTH_SHORT).show();
+    }
+
+    public void setEditMsgSuccessListener(EditMsgSuccessListener listener) {
+        mEditMsgSuccessListener = listener;
     }
 
 

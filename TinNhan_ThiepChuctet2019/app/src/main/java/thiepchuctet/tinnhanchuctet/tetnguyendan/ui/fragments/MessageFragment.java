@@ -25,12 +25,13 @@ import java.util.List;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMsgBinding;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.DetectSwipeGestureListener;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.EditMsgSuccessListener;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.activities.MainActivity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Constant;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Navigator;
 
-public class MessageFragment extends Fragment implements View.OnClickListener {
+public class MessageFragment extends Fragment implements View.OnClickListener, EditMsgSuccessListener {
 
     private FragmentMsgBinding mBinding;
     private MainActivity mMainActivity;
@@ -48,7 +49,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         args.putParcelableArrayList(Constant.ARGUMENT_LIST_MSG, (ArrayList<? extends Parcelable>) messages);
         args.putInt(Constant.ARGUMENT_MSG_POS, position);
         args.putInt(Constant.ARGUMENT_NUM, num);
-        args.putBoolean(Constant.ARGUMENT_IS_EDIT, isAddNew);
+        args.putBoolean(Constant.ARGUMENT_IS_ADD_NEW, isAddNew);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,12 +69,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
         mMessages = bundle.getParcelableArrayList(Constant.ARGUMENT_LIST_MSG);
         mPosition = bundle.getInt(Constant.ARGUMENT_MSG_POS);
         mNum = bundle.getInt(Constant.ARGUMENT_NUM);
-        mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_EDIT);
-        if (mIsAddNew) {
-            mBinding.btnEdit.setText(R.string.add_to_my_collect);
-        } else {
-            mBinding.btnEdit.setText(R.string.edit_msg);
-        }
+        mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_ADD_NEW);
         mBinding.txtTitle.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         mSize = mMessages.size();
         setCurrentMsg(mNum);
@@ -120,7 +116,14 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
                 shareMessage();
                 break;
             case R.id.btn_edit:
-                EditMessageFragment fragment = EditMessageFragment.newInstance(mMessages.get(mPosition), true);
+                EditMessageFragment fragment;
+                if (mIsAddNew) {
+                    fragment = EditMessageFragment.newInstance(mMessages.get(mPosition), true);
+                } else {
+                    fragment = EditMessageFragment.newInstance(mMessages.get(mPosition), false);
+                    fragment.setEditMsgSuccessListener(this);
+                }
+
                 mNavigator.addFragment(R.id.main_container, fragment, true,
                         Navigator.NavigateAnim.NONE, EditMessageFragment.class.getSimpleName());
                 break;
@@ -180,5 +183,13 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
 
     private void setCurrentMsg(int position) {
         mBinding.txtTitle.setText("".concat(position + "/").concat(mMessages.size() + ""));
+    }
+
+
+    @Override
+    public void msgEdited(Message message) {
+        //update list msg
+        mMessages.get(mPosition).setContent(message.getContent());
+        mBinding.contentOfMsg.setText(message.getContent());
     }
 }

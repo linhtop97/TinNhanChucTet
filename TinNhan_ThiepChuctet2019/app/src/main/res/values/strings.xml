@@ -22,4 +22,13 @@
     <string name="add_success">Thêm lời chúc thành công</string>
     <string name="title_num">Lời chúc thứ: </string>
     <string name="edit_msg">Chỉnh sửa lời chúc</string>
+    <string name="edit_sucess">Sửa thành công</string>
+    <string name="i_want">Tôi muốn</string>
+    <string name="delete_msg">Xóa lời chúc</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Không</string>
+    <string name="delete_success">Xóa lời chúc thành công</string>
+    <string name="notifi">Xóa lời chúc</string>
+    <string name="delete_confirm_msg">Bạn có muốn xóa lời chúc này?</string>
+    <string name="delete_failed">Xóa thất bại</string>
 </resources>

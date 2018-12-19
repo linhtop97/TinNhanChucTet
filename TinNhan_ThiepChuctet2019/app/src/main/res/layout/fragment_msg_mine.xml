@@ -53,8 +53,6 @@
             android:background="@android:color/holo_red_dark"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/_50sdp"
-            android:paddingLeft="@dimen/_16sdp"
-            android:paddingRight="@dimen/_16sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -75,11 +73,11 @@
 
         <Button
             android:id="@+id/btn_add_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_48sdp"
+            android:layout_height="@dimen/_48sdp"
             android:layout_marginBottom="@dimen/_24sdp"
             android:layout_marginEnd="@dimen/_12sdp"
-            android:text="Thêm mới"
+            android:background="@drawable/ic_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
     </android.support.constraint.ConstraintLayout>

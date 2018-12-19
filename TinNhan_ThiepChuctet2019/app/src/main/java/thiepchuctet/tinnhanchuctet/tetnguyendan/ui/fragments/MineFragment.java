@@ -1,11 +1,13 @@
 package thiepchuctet.tinnhanchuctet.tetnguyendan.ui.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
     private List<Message> mMessages;
     private MainActivity mMainActivity;
     private Navigator mNavigator;
+    private MessageAdapter mAdapter;
 
     public static MineFragment newInstance() {
         return new MineFragment();
@@ -55,11 +58,11 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
         } else {
             mBinding.txtNone.setVisibility(View.GONE);
         }
-        MessageAdapter adapter = new MessageAdapter(mMainActivity, mMessages);
-        adapter.setOnItemClick(this);
-        adapter.setOnItemLongClick(this);
+        mAdapter = new MessageAdapter(mMainActivity, mMessages);
+        mAdapter.setOnItemClick(this);
+        mAdapter.setOnItemLongClick(this);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
-        mBinding.recyclerView.setAdapter(adapter);
+        mBinding.recyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -91,6 +94,45 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
 
     @Override
     public void onItemLongClick(Message message) {
-        mNavigator.showToast(message.getContent() + " id: " + message.getId());
+        confirmDelete(message);
+    }
+
+    private void confirmDelete(final Message message) {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(mMainActivity);
+        dialog.setTitle(R.string.notifi);
+        dialog.setMessage(R.string.delete_confirm_msg);
+        dialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (deleteMsg(TableEntity.TBL_MY_MESSAGE, message) > 0) {
+                    int size = mMessages.size();
+                    for (int j = 0; j < size; j++) {
+                        if (mMessages.get(j).getId() == message.getId()) {
+                            mMessages.remove(j);
+                            mAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                    mNavigator.showToast(R.string.delete_success);
+                } else {
+                    mNavigator.showToast(R.string.delete_failed);
+                }
+
+            }
+        });
+
+        dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+    private int deleteMsg(String tblName, Message message) {
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
+        return databaseHelper.deleteMessage(tblName, message.getId());
     }
 }
