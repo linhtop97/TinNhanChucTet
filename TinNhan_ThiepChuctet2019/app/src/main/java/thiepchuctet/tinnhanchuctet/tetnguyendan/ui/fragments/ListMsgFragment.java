@@ -19,7 +19,6 @@ import thiepchuctet.tinnhanchuctet.tetnguyendan.adapters.MessageAdapter;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf.SharedPrefsImpl;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf.SharedPrefsKey;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
-import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.TableEntity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMsgListBinding;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.DeleteCallBack;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.OnItemClickListener;
@@ -43,10 +42,11 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
     private static final String OPTION_DIALOG = "OPTION_DIALOG";
     private static final String GUIDE_DIALOG = "GUIDE_DIALOG";
 
-    public static ListMsgFragment newInstance(String categoryName) {
+    public static ListMsgFragment newInstance(String categoryName, String tblName) {
         ListMsgFragment fragment = new ListMsgFragment();
         Bundle args = new Bundle();
         args.putString(Constant.ARGUMENT_CATEGORY_NAME, categoryName);
+        args.putString(Constant.ARGUMENT_TBL_NAME, tblName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,13 +60,14 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
     }
 
     private void initUI() {
+        Bundle bundle = getArguments();
         mSharedPrefs = new SharedPrefsImpl(mMainActivity);
         mNavigator = new Navigator(mMainActivity);
-        mBinding.txtTitle.setText(getArguments().getString(Constant.ARGUMENT_CATEGORY_NAME));
+        mBinding.txtTitle.setText(bundle.getString(Constant.ARGUMENT_CATEGORY_NAME));
         mBinding.btnHome.setOnClickListener(this);
         mBinding.btnBack.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mMainActivity);
-        mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_GENERAL);
+        mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(bundle.getString(Constant.ARGUMENT_TBL_NAME));
         mAdapter = new MessageAdapter(mMainActivity, mMessages);
         mAdapter.setOnItemClick(this);
         mAdapter.setOnItemLongClick(this);

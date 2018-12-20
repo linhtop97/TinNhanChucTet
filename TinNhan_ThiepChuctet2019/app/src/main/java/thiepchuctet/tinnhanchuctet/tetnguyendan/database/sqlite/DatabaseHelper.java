@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +18,7 @@ import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "TetNguyenDan.sqlite";
     private static DatabaseHelper sInstance;
-    //public static final String DBLOCATION = "/data/data/thiepchuctet.tinnhanchuctet.tetnguyendan/databases/";
+    public static final String DBLOCATION = "/data/data/thiepchuctet.tinnhanchuctet.tetnguyendan/databases/";
     private static final int DBVERSION = 1;
     private Context mContext;
     private SQLiteDatabase mDatabase;
@@ -64,8 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean copyDatabase(Context context) {
         try {
             InputStream inputStream = context.getAssets().open("database/" + DatabaseHelper.DBNAME);
-            File outFile = context.getDatabasePath(DatabaseHelper.DBNAME);
-            String outFileName = outFile.getPath();
+            String outFileName = DatabaseHelper.DBLOCATION + DatabaseHelper.DBNAME;
             OutputStream outputStream = new FileOutputStream(outFileName);
             byte[] buff = new byte[1024];
             int lenght = 0;

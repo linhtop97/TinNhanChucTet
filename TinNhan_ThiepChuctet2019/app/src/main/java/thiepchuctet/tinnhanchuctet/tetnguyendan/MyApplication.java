@@ -15,11 +15,16 @@ public class MyApplication extends Application {
     public static MyApplication getInstance() {
         return sInstance;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        requestPermision();
         initDB();
+    }
+
+    private void requestPermision() {
     }
 
     private void initDB() {
@@ -27,6 +32,7 @@ public class MyApplication extends Application {
         File database = this.getDatabasePath(DatabaseHelper.DBNAME);
         if (!database.exists()) {
             databaseHelper.getReadableDatabase();
+            databaseHelper.close();
             //copyDB
             if (databaseHelper.copyDatabase(this)) {
                 Toast.makeText(this, "Copy sucessful", Toast.LENGTH_SHORT).show();

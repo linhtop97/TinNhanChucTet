@@ -95,7 +95,6 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
             case R.id.btn_add:
                 if (mIsAddNew) {
                     insertNewMessage();
-                    mNavigator.showToast(R.string.add_success);
                     return;
                 } else {
                     if (editMsg() > 0) {
@@ -127,6 +126,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         }
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
         databaseHelper.insertNewMessage(msg);
+        mNavigator.showToast(R.string.add_success);
     }
 
     private void shareMessage() {

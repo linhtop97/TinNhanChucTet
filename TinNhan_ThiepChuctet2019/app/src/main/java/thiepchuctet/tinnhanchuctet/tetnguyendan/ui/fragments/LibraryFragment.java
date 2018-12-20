@@ -15,6 +15,7 @@ import java.util.List;
 
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.adapters.CategoryAdapter;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.TableEntity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMsgLibBinding;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.OnCategoryClickListener;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Category;
@@ -59,13 +60,34 @@ public class LibraryFragment extends Fragment implements OnCategoryClickListener
 
     @Override
     public void onItemClick(Category category) {
+        String tblName = "";
         switch (category.getId()) {
             case 1:
-                ListMsgFragment listMsgFragment = ListMsgFragment.newInstance(category.getName());
-                mNavigator.addFragment(R.id.main_container, listMsgFragment, true,
-                        Navigator.NavigateAnim.NONE, ListMsgFragment.class.getSimpleName());
+                tblName = TableEntity.TBL_GENERAL;
+                break;
+            case 2:
+                tblName = TableEntity.TBL_ONG_DO;
+                break;
+            case 3:
+                tblName = TableEntity.TBL_GIA_DINH;
+                break;
+            case 4:
+                tblName = TableEntity.TBL_THAY_CO;
+                break;
+            case 5:
+                tblName = TableEntity.TBL_SEP;
+                break;
+            case 6:
+                tblName = TableEntity.TBL_VO_CHONG;
+                break;
+            case 7:
+                tblName = TableEntity.TBL_SMS_CUTE;
                 break;
         }
+
+        ListMsgFragment listMsgFragment = ListMsgFragment.newInstance(category.getName(), tblName);
+        mNavigator.addFragment(R.id.main_container, listMsgFragment, true,
+                Navigator.NavigateAnim.NONE, ListMsgFragment.class.getSimpleName());
     }
 
     @Override

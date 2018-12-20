@@ -10,7 +10,7 @@
     <string name="edit">Sửa</string>
     <string name="share">Chia sẻ</string>
     <string name="copy">Sao chép</string>
-    <string name="swipe"><![CDATA[<< trượt trái hoặc phải để xem tiếp>>\"]]></string>
+    <string name="swipe"><![CDATA[<< trượt trái hoặc phải để xem tiếp>>\]]></string>
     <string name="copy_successful">Sao chép thành công</string>
     <string name="share_with">Chia sẻ</string>
     <string name="done">Xong</string>
