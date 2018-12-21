@@ -1,5 +1,6 @@
 package thiepchuctet.tinnhanchuctet.tetnguyendan.ui.activities;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,12 +13,19 @@ import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf.SharedPrefsKe
 import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.fragments.EditMessageFragment;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.fragments.MainFragment;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.fragments.MessageFragment;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.fragments.SplashFragment;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Navigator;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
     private Navigator mNavigator;
     private SharedPrefsImpl mSharedPrefs;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
         DataBindingUtil.setContentView(this, R.layout.activity_main);
         mNavigator = new Navigator(this);
         mSharedPrefs = new SharedPrefsImpl(this);
-        addMainFragment();
+        addSplashFragment();
     }
 
-    private void addMainFragment() {
-        MainFragment mainFragment = MainFragment.newInstance();
-        mNavigator.addFragment(R.id.main_container, mainFragment, false, Navigator.NavigateAnim.NONE, MainFragment.class.getSimpleName());
+    private void addSplashFragment() {
+        SplashFragment splashFragment = SplashFragment.newInstance();
+        mNavigator.addFragment(R.id.main_container, splashFragment, false, Navigator.NavigateAnim.NONE, SplashFragment.class.getSimpleName());
     }
 
     public void onSwipeRight() {
@@ -76,18 +84,11 @@ public class MainActivity extends AppCompatActivity {
         mNavigator.addFragment(R.id.main_container, mainFragment, false, Navigator.NavigateAnim.NONE, MainFragment.class.getSimpleName());
     }
 
-    private Fragment getCurrentFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
-        Fragment currentFragment = fragmentManager.findFragmentByTag(fragmentTag);
-        return currentFragment;
-    }
-
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(EditMessageFragment.class.getSimpleName());
-        if (fragmentManager.getBackStackEntryCount() > 1) {
+        if (fragmentManager.getBackStackEntryCount() >= 1) {
             String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
             if (fragment != null && EditMessageFragment.class.getSimpleName().equals(fragmentTag)) {
                 EditMessageFragment editMessageFragment = (EditMessageFragment) fragment;

@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -64,6 +65,9 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
         Bundle bundle = getArguments();
         mSharedPrefs = new SharedPrefsImpl(mMainActivity);
         mNavigator = new Navigator(mMainActivity);
+        Glide.with(this)
+                .load(R.drawable.bg_1)
+                .into(mBinding.imgBackground);
         mBinding.txtTitle.setText(bundle.getString(Constant.ARGUMENT_CATEGORY_NAME));
         mBinding.btnHome.setOnClickListener(this);
         mBinding.btnBack.setOnClickListener(this);
@@ -88,7 +92,7 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
 
     @Override
     public void onItemClick(int pos) {
-        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, pos + 1, true);
+        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, pos + 1, true, false);
         mNavigator.addFragment(R.id.main_container, messageFragment, true,
                 Navigator.NavigateAnim.NONE, MessageFragment.class.getSimpleName());
     }

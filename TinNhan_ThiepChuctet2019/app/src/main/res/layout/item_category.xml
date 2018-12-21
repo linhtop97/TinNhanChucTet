@@ -20,9 +20,9 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_category"
-            android:layout_width="@dimen/_286sdp"
+            android:layout_width="@dimen/_280sdp"
             android:layout_height="@dimen/_52sdp"
-            android:background="@android:color/holo_red_dark"
+            android:background="@drawable/bg_header"
             android:onClick="@{()-> listener.onItemClick(category)}"
             android:padding="@dimen/_4sdp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -40,10 +40,10 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
                 android:singleLine="true"
                 android:text="@{category.name}"
-                android:textColor="@color/colorText"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/_16sdp"
                 app:layout_constraintBottom_toBottomOf="@id/img_msg_mine"
                 app:layout_constraintLeft_toRightOf="@id/img_msg_mine"

@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,14 +44,16 @@ public class MessageFragment extends Fragment implements View.OnClickListener, E
     private DetectSwipeGestureListener mGestureListener;
     private int mSize;
     private boolean mIsAddNew;
+    private boolean mIsFromMine;
 
-    public static MessageFragment newInstance(List<Message> messages, int position, int num, boolean isAddNew) {
+    public static MessageFragment newInstance(List<Message> messages, int position, int num, boolean isAddNew, Boolean isFromMine) {
         MessageFragment fragment = new MessageFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(Constant.ARGUMENT_LIST_MSG, (ArrayList<? extends Parcelable>) messages);
         args.putInt(Constant.ARGUMENT_MSG_POS, position);
         args.putInt(Constant.ARGUMENT_NUM, num);
         args.putBoolean(Constant.ARGUMENT_IS_ADD_NEW, isAddNew);
+        args.putBoolean(Constant.ARGUMENT_IS_FROM_MINE, isFromMine);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,11 +69,15 @@ public class MessageFragment extends Fragment implements View.OnClickListener, E
 
     private void initUI() {
         mNavigator = new Navigator(mMainActivity);
+        Glide.with(this)
+                .load(R.drawable.bg_1)
+                .into(mBinding.imgBackground);
         Bundle bundle = getArguments();
         mMessages = bundle.getParcelableArrayList(Constant.ARGUMENT_LIST_MSG);
         mPosition = bundle.getInt(Constant.ARGUMENT_MSG_POS);
         mNum = bundle.getInt(Constant.ARGUMENT_NUM);
         mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_ADD_NEW);
+        mIsFromMine = bundle.getBoolean(Constant.ARGUMENT_IS_FROM_MINE);
         mBinding.txtTitle.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         mSize = mMessages.size();
         setCurrentMsg(mNum);
@@ -118,9 +126,9 @@ public class MessageFragment extends Fragment implements View.OnClickListener, E
             case R.id.btn_edit:
                 EditMessageFragment fragment;
                 if (mIsAddNew) {
-                    fragment = EditMessageFragment.newInstance(mMessages.get(mPosition), true);
+                    fragment = EditMessageFragment.newInstance(mMessages.get(mPosition), true, mIsFromMine);
                 } else {
-                    fragment = EditMessageFragment.newInstance(mMessages.get(mPosition), false);
+                    fragment = EditMessageFragment.newInstance(mMessages.get(mPosition), false, mIsFromMine);
                     fragment.setEditMsgSuccessListener(this);
                 }
 

@@ -17,15 +17,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
+import java.util.List;
+
 import thiepchuctet.tinnhanchuctet.tetnguyendan.MyApplication;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf.SharedPrefsImpl;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.TableEntity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentOptionBinding;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.DeleteCallBack;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.activities.MainActivity;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.ui.fragments.MineFragment;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Constant;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Navigator;
 
 public class OptionFragment extends DialogFragment implements View.OnClickListener {
     private FragmentOptionBinding mBinding;
@@ -33,6 +38,8 @@ public class OptionFragment extends DialogFragment implements View.OnClickListen
     private Message mMessage;
     private MainActivity mMainActivity;
     private DeleteCallBack mDeleteCallBack;
+    private Navigator mNavigator;
+    private SharedPrefsImpl mSharedPrefs;
 
     public static OptionFragment getInstance(Message message) {
         OptionFragment fragment = new OptionFragment();
@@ -51,6 +58,8 @@ public class OptionFragment extends DialogFragment implements View.OnClickListen
     }
 
     private void initUI() {
+        mNavigator = new Navigator(mMainActivity);
+        mSharedPrefs = new SharedPrefsImpl(mMainActivity);
         mMessage = getArguments().getParcelable(Constant.ARGUMENT_MSG);
         mBinding.btnOK.setOnClickListener(this);
         mBinding.btnCancel.setOnClickListener(this);
@@ -100,22 +109,42 @@ public class OptionFragment extends DialogFragment implements View.OnClickListen
                 dismiss();
                 break;
             case R.id.txt_add_collection:
-                mBinding.txtAddCollection.setBackgroundColor(mMainActivity.getResources().getColor(R.color.colorOptionBG));
-                mBinding.txtDeleteMsg.setBackgroundColor(0);
+                mBinding.txtAddCollection.setBackgroundResource(R.drawable.background_button_option);
+                mBinding.txtDeleteMsg.setBackgroundResource(R.drawable.background_button_option_unselect);
+                mBinding.txtDeleteMsg.setTextColor(mMainActivity.getResources().getColor(R.color.colorText));
+                mBinding.txtAddCollection.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
+
                 mIsDeleteMsg = false;
                 break;
             case R.id.txt_delete_msg:
-                mBinding.txtDeleteMsg.setBackgroundColor(mMainActivity.getResources().getColor(R.color.colorOptionBG));
-                mBinding.txtAddCollection.setBackgroundColor(0);
+                mBinding.txtDeleteMsg.setBackgroundResource(R.drawable.background_button_option);
+                mBinding.txtAddCollection.setBackgroundResource(R.drawable.background_button_option_unselect);
+                mBinding.txtDeleteMsg.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
+                mBinding.txtAddCollection.setTextColor(mMainActivity.getResources().getColor(R.color.colorText));
                 mIsDeleteMsg = true;
                 break;
         }
     }
 
     private void insertMsg(Message message) {
-        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
-        databaseHelper.insertNewMessage(message.getContent());
-        Toast.makeText(mMainActivity, R.string.add_success, Toast.LENGTH_SHORT).show();
+        List<Message> mMessageList = mSharedPrefs.getListMsg();
+        int size = mMessageList.size();
+        String msg = message.getContent();
+        boolean ok = true;
+        for (int i = 0; i < size; i++) {
+            if (msg.equals(mMessageList.get(i).getContent())) {
+                Toast.makeText(mMainActivity, R.string.msg_is_exists, Toast.LENGTH_SHORT).show();
+                ok = false;
+                break;
+            }
+        }
+        if (ok) {
+            DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
+            databaseHelper.insertNewMessage(msg);
+            mNavigator.showToast(R.string.add_success);
+            MineFragment mineFragment = MineFragment.newInstance();
+            mNavigator.addFragment(R.id.main_container, mineFragment, false, Navigator.NavigateAnim.RIGHT_LEFT, MineFragment.class.getSimpleName());
+        }
     }
 
     private int deleteMsg(String tblName, Message message) {

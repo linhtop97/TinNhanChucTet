@@ -10,4 +10,5 @@ public class Constant {
     public static final String LABEL_CLIPBROAD = "LABLE_CLIPBROAD";
     public static final String ARGUMENT_NUM = "ARGUMENT_NUM";
     public static final String ARGUMENT_IS_ADD_NEW = "ARGUMENT_IS_ADD_NEW";
+    public static final String ARGUMENT_IS_FROM_MINE = "ARGUMENT_IS_FROM_MINE";
 }

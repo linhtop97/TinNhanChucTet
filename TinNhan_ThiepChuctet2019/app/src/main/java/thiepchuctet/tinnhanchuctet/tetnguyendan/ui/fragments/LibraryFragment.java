@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
@@ -44,9 +46,13 @@ public class LibraryFragment extends Fragment implements OnCategoryClickListener
     private void initUI() {
         mNavigator = new Navigator(mMainActivity);
         List<Category> categories = Category.initCategory();
+        Glide.with(this)
+                .load(R.drawable.bg_1)
+                .into(mBinding.imgBackground);
         mLinearLayoutManager = new LinearLayoutManager(mMainActivity);
         CategoryAdapter categoryAdapter = new CategoryAdapter(mMainActivity, categories);
         mBinding.btnBack.setOnClickListener(this);
+        mBinding.btnHome.setOnClickListener(this);
         categoryAdapter.setOnItemClick(this);
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         mBinding.recyclerView.setAdapter(categoryAdapter);
@@ -97,7 +103,7 @@ public class LibraryFragment extends Fragment implements OnCategoryClickListener
                 mMainActivity.getSupportFragmentManager().popBackStackImmediate();
                 break;
             case R.id.btn_home:
-                mNavigator.startActivity(MainActivity.class, Navigator.ActivityTransition.FINISH);
+                mMainActivity.getSupportFragmentManager().popBackStackImmediate();
                 break;
         }
     }

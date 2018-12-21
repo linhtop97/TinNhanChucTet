@@ -47,10 +47,10 @@ public class Category {
     public static List<Category> initCategory() {
         List<Category> categories = new ArrayList<>();
         Integer[] mArraysId = new Integer[]{1, 2, 3, 4, 5, 6, 7};
-        Integer[] mArraysIcon = new Integer[]{R.drawable.ic_flash_active, R.drawable.ic_hd_active,
-                R.drawable.ic_ltr, R.drawable.ic_flash_active, R.drawable.ic_hd_active,
-                R.drawable.ic_ltr, R.drawable.ic_flash_active};
-        String[] mArraysName = new String[]{"Lời chúc tết hay và ý nghĩa", "Ông Đồ chúc tết", "lời chúc tết gia đình"
+        Integer[] mArraysIcon = new Integer[]{R.drawable.ic_loichuchay, R.drawable.ic_ongdo,
+                R.drawable.ic_giadinh, R.drawable.ic_thayco, R.drawable.ic_sep,
+                R.drawable.ic_nguoiyeu, R.drawable.ic_cute};
+        String[] mArraysName = new String[]{"Lời chúc tết hay và ý nghĩa", "Ông Đồ chúc tết", "Lời chúc tết gia đình"
                 , "Chúc tết thầy cô", "Chúc tết sếp", "Chúc tết người yêu, vợ chồng",
                 "Lời chúc tết cute"};
         for (int i = 0; i < mArraysIcon.length; i++) {

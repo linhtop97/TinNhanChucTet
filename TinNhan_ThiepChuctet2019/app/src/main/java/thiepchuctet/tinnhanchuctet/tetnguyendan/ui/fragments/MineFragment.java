@@ -13,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import thiepchuctet.tinnhanchuctet.tetnguyendan.MyApplication;
@@ -52,10 +55,18 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
     private void initUI() {
         mSharedPrefs = new SharedPrefsImpl(mMainActivity);
         mNavigator = new Navigator(mMainActivity);
+        Glide.with(this)
+                .load(R.drawable.bg_1)
+                .into(mBinding.imgBackground);
         mBinding.btnBack.setOnClickListener(this);
         mBinding.btnAddNew.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mMainActivity);
-        mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
+        mMessages = new ArrayList<>();
+        List<Message> messages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
+        int size = messages.size();
+        for (int i = size - 1; i >= 0; i--) {
+            mMessages.add(messages.get(i));
+        }
         mSharedPrefs.putListMsg(mMessages);
         if (mMessages.size() == 0) {
             mBinding.txtNone.setVisibility(View.VISIBLE);
@@ -67,11 +78,22 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
         mAdapter.setOnItemLongClick(this);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mBinding.recyclerView.setAdapter(mAdapter);
+        //rm edit fragment
     }
+
+//    private void removeEditfragment() {
+//        FragmentManager fragmentManager = mMainActivity.getSupportFragmentManager();
+//        Fragment fragment = fragmentManager.findFragmentByTag(EditMessageFragment.class.getSimpleName());
+//        if (fragment != null) {
+//            FragmentTransaction trans = fragmentManager.beginTransaction();
+//            trans.remove(fragment);
+//            trans.commit();
+//        }
+//    }
 
     @Override
     public void onItemClick(int pos) {
-        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, pos + 1, false);
+        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, pos + 1, false, true);
         mNavigator.addFragment(R.id.main_container, messageFragment, true,
                 Navigator.NavigateAnim.NONE, MessageFragment.class.getSimpleName());
     }
@@ -89,7 +111,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
                 mMainActivity.getSupportFragmentManager().popBackStackImmediate();
                 break;
             case R.id.btn_add_new:
-                EditMessageFragment fragment = EditMessageFragment.newInstance(new Message(0, ""), true);
+                EditMessageFragment fragment = EditMessageFragment.newInstance(new Message(0, ""), true, true);
                 mNavigator.addFragment(R.id.main_container, fragment, true,
                         Navigator.NavigateAnim.NONE, EditMessageFragment.class.getSimpleName());
                 break;

@@ -8,34 +8,67 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/darker_gray">
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_background"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_0"
+            android:scaleType="fitXY"
+            android:src="@drawable/bg_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/img_banner"
             android:layout_width="@dimen/dp_0"
-            android:layout_height="@dimen/_86sdp"
-            android:background="@android:color/holo_red_dark"
+            android:layout_height="@dimen/_140sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/bg_cover"
             app:layout_constraintBottom_toTopOf="@id/layout_msg_lib"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="@dimen/_48sdp"
-            android:layout_height="@dimen/_48sdp"
-            android:background="@color/colorText"
-            app:layout_constraintBottom_toBottomOf="@id/img_banner"
-            app:layout_constraintLeft_toLeftOf="@id/img_banner"
+            android:id="@+id/dao_flower"
+            android:layout_width="@dimen/_165sdp"
+            android:layout_height="@dimen/_120sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_cover"
             app:layout_constraintRight_toRightOf="@id/img_banner"
             app:layout_constraintTop_toTopOf="@id/img_banner" />
 
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:layout_marginEnd="@dimen/_24sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:text="@string/chuc_tet_2019"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="@id/img_banner"
+            app:layout_constraintRight_toRightOf="@id/img_banner"
+            app:layout_constraintTop_toBottomOf="@id/dao_flower" />
+
+        <ImageView
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_130sdp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_pig"
+            app:layout_constraintBottom_toBottomOf="@id/img_banner"
+            app:layout_constraintLeft_toLeftOf="@id/img_banner" />
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_msg_lib"
-            android:layout_width="@dimen/_286sdp"
+            android:layout_width="@dimen/_280sdp"
             android:layout_height="@dimen/_52sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:background="@android:color/holo_red_dark"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/background_button"
             android:padding="@dimen/_4sdp"
             app:layout_constraintBottom_toTopOf="@id/layout_msg_mine"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -46,14 +79,16 @@
                 android:id="@+id/img_msg_lib"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:background="@color/colorText"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:src="@drawable/ic_thuvien"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginLeft="@dimen/_12sdp"
                 android:singleLine="true"
                 android:text="@string/msg_lib"
                 android:textColor="@color/colorText"
@@ -66,10 +101,10 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_msg_mine"
-            android:layout_width="@dimen/_286sdp"
+            android:layout_width="@dimen/_280sdp"
             android:layout_height="@dimen/_52sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:background="@android:color/holo_red_dark"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/background_button"
             android:padding="@dimen/_4sdp"
             app:layout_constraintBottom_toTopOf="@id/layout_msg_mine"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -80,14 +115,16 @@
                 android:id="@+id/img_msg_mine"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:background="@color/colorPrimary"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:src="@drawable/ic_loichuc"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginLeft="@dimen/_12sdp"
                 android:singleLine="true"
                 android:text="@string/msg_mine"
                 android:textColor="@color/colorText"
@@ -100,10 +137,10 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_rate"
-            android:layout_width="@dimen/_286sdp"
+            android:layout_width="@dimen/_280sdp"
             android:layout_height="@dimen/_52sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:background="@android:color/holo_red_dark"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/background_button"
             android:padding="@dimen/_4sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -113,14 +150,16 @@
                 android:id="@+id/img_msg_rate"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
-                android:background="@android:color/holo_green_light"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:src="@drawable/ic_danhgia"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginLeft="@dimen/_12sdp"
                 android:singleLine="true"
                 android:text="@string/msg_rate"
                 android:textColor="@color/colorText"

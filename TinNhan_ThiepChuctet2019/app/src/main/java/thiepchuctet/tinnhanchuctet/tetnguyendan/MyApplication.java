@@ -1,12 +1,12 @@
 package thiepchuctet.tinnhanchuctet.tetnguyendan;
 
 import android.app.Application;
-import android.content.Context;
 import android.widget.Toast;
 
 import java.io.File;
 
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class MyApplication extends Application {
 
@@ -22,6 +22,12 @@ public class MyApplication extends Application {
         sInstance = this;
         requestPermision();
         initDB();
+        CalligraphyConfig.initDefault(
+                new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/font_app.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
     }
 
     private void requestPermision() {
@@ -43,8 +49,4 @@ public class MyApplication extends Application {
         }
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-    }
 }

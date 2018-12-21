@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import thiepchuctet.tinnhanchuctet.tetnguyendan.MyApplication;
@@ -37,16 +39,18 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
     private MainActivity mMainActivity;
     private Navigator mNavigator;
     private boolean mIsAddNew;
+    private boolean mIsFromMine;
     private Message mMessage;
     private List<Message> mMessageList;
     private SharedPrefsImpl mSharedPrefs;
     private EditMsgSuccessListener mEditMsgSuccessListener;
 
-    public static EditMessageFragment newInstance(Message message, boolean isAddNew) {
+    public static EditMessageFragment newInstance(Message message, boolean isAddNew, boolean isFromMine) {
         EditMessageFragment fragment = new EditMessageFragment();
         Bundle args = new Bundle();
         args.putParcelable(Constant.ARGUMENT_MSG, message);
         args.putBoolean(Constant.ARGUMENT_IS_ADD_NEW, isAddNew);
+        args.putBoolean(Constant.ARGUMENT_IS_FROM_MINE, isFromMine);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,9 +68,13 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         mSharedPrefs = new SharedPrefsImpl(mMainActivity);
         mMessageList = mSharedPrefs.getListMsg();
         mNavigator = new Navigator(mMainActivity);
+        Glide.with(this)
+                .load(R.drawable.bg_1)
+                .into(mBinding.imgBackground);
         Bundle bundle = getArguments();
         mMessage = bundle.getParcelable(Constant.ARGUMENT_MSG);
         mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_ADD_NEW);
+        mIsFromMine = bundle.getBoolean(Constant.ARGUMENT_IS_FROM_MINE);
         mSharedPrefs.put(SharedPrefsKey.KEY__MSG_EDIT, mMessage.getContent());
         mSharedPrefs.put(SharedPrefsKey.KEY_IS_ADD_NEW, mIsAddNew);
         if (!mIsAddNew) {
@@ -115,6 +123,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
                     if (edit > 0 && edit != 100) {
                         mNavigator.showToast(R.string.edit_sucess);
                         mEditMsgSuccessListener.msgEdited(mMessage);
+                        mMainActivity.getSupportFragmentManager().popBackStackImmediate();
                     }
                 }
 
@@ -156,9 +165,11 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
             DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
             databaseHelper.insertNewMessage(msg);
             mNavigator.showToast(R.string.add_success);
-            MineFragment mineFragment = MineFragment.newInstance();
-            mNavigator.addFragment(R.id.main_container, mineFragment, false, Navigator.NavigateAnim.RIGHT_LEFT, MineFragment.class.getSimpleName());
-
+            mMainActivity.getSupportFragmentManager().popBackStackImmediate();
+            if (!mIsFromMine) {
+                MineFragment mineFragment = MineFragment.newInstance();
+                mNavigator.addFragment(R.id.main_container, mineFragment, true, Navigator.NavigateAnim.RIGHT_LEFT, MineFragment.class.getSimpleName());
+            }
         }
     }
 
