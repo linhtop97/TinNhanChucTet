@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tin nhắn chúc tết - Thiệp chúc tết 2019</string>
+    <string name="app_name">Tin nhắn chúc tết 2019</string>
     <string name="cung_chuc_tan_nien">Cung chúc tân niên</string>
     <string name="confirm_exit">Nhấn Back 1 lần nữa để thoát</string>
     <string name="msg_lib">Thư viện lời chúc</string>
@@ -31,4 +31,10 @@
     <string name="notifi">Xóa lời chúc</string>
     <string name="delete_confirm_msg">Bạn có muốn xóa lời chúc này?</string>
     <string name="delete_failed">Xóa thất bại</string>
+    <string name="add_msg">Thêm lời chúc mới</string>
+    <string name="msg_is_exists">Lời chúc này đã tồn tại!</string>
+    <string name="msg_not_change">Nội dung chưa thay đổi!</string>
+    <string name="leave">Hủy tác vụ</string>
+    <string name="cancel_add">Bạn có muốn hủy việc thêm mới?</string>
+    <string name="cancel_edit">Bạn có muốn hủy việc sửa?</string>
 </resources>

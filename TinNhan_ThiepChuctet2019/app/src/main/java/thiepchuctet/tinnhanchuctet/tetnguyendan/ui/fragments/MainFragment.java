@@ -9,10 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
 import java.util.Objects;
 
+import thiepchuctet.tinnhanchuctet.tetnguyendan.MyApplication;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf.SharedPrefsImpl;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.TableEntity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMainBinding;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.utils.Navigator;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
@@ -33,6 +39,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initUI() {
+        List<Message> mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
+        new SharedPrefsImpl(MyApplication.getInstance()).putListMsg(mMessages);
         mNavigator = new Navigator(Objects.requireNonNull(getActivity()));
         mBinding.layoutMsgLib.setOnClickListener(this);
         mBinding.layoutMsgMine.setOnClickListener(this);

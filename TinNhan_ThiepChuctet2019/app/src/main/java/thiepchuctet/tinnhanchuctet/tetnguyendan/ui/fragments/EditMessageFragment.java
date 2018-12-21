@@ -3,20 +3,26 @@ package thiepchuctet.tinnhanchuctet.tetnguyendan.ui.fragments;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 import thiepchuctet.tinnhanchuctet.tetnguyendan.MyApplication;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf.SharedPrefsImpl;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf.SharedPrefsKey;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMsgEditBinding;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.listeners.EditMsgSuccessListener;
@@ -32,6 +38,8 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
     private Navigator mNavigator;
     private boolean mIsAddNew;
     private Message mMessage;
+    private List<Message> mMessageList;
+    private SharedPrefsImpl mSharedPrefs;
     private EditMsgSuccessListener mEditMsgSuccessListener;
 
     public static EditMessageFragment newInstance(Message message, boolean isAddNew) {
@@ -53,12 +61,18 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
     }
 
     private void initUI() {
+        mSharedPrefs = new SharedPrefsImpl(mMainActivity);
+        mMessageList = mSharedPrefs.getListMsg();
         mNavigator = new Navigator(mMainActivity);
         Bundle bundle = getArguments();
         mMessage = bundle.getParcelable(Constant.ARGUMENT_MSG);
         mIsAddNew = bundle.getBoolean(Constant.ARGUMENT_IS_ADD_NEW);
+        mSharedPrefs.put(SharedPrefsKey.KEY__MSG_EDIT, mMessage.getContent());
+        mSharedPrefs.put(SharedPrefsKey.KEY_IS_ADD_NEW, mIsAddNew);
         if (!mIsAddNew) {
             mBinding.btnAdd.setText(R.string.done);
+        } else {
+            mBinding.txtTitle.setText(R.string.add_msg);
         }
         mBinding.contentOfMsg.setText(mMessage.getContent());
     }
@@ -81,10 +95,10 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_back:
-                mMainActivity.getSupportFragmentManager().popBackStackImmediate();
+                confirmLeave(mIsAddNew, false);
                 break;
             case R.id.btn_home:
-                mNavigator.startActivity(MainActivity.class, Navigator.ActivityTransition.FINISH);
+                confirmLeave(mIsAddNew, true);
                 break;
             case R.id.btn_copy:
                 copyTextToClipbroad();
@@ -97,7 +111,8 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
                     insertNewMessage();
                     return;
                 } else {
-                    if (editMsg() > 0) {
+                    int edit = editMsg();
+                    if (edit > 0 && edit != 100) {
                         mNavigator.showToast(R.string.edit_sucess);
                         mEditMsgSuccessListener.msgEdited(mMessage);
                     }
@@ -113,6 +128,10 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
             mNavigator.showToast(R.string.cannot_empty);
             return 0;
         }
+        if (msg.equals(mSharedPrefs.get(SharedPrefsKey.KEY__MSG_EDIT, String.class))) {
+            mNavigator.showToast(R.string.msg_not_change);
+            return 100;
+        }
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
         mMessage.setContent(msg);
         return databaseHelper.updateMessage(mMessage);
@@ -124,9 +143,23 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
             mNavigator.showToast(R.string.cannot_empty);
             return;
         }
-        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
-        databaseHelper.insertNewMessage(msg);
-        mNavigator.showToast(R.string.add_success);
+        int size = mMessageList.size();
+        boolean ok = true;
+        for (int i = 0; i < size; i++) {
+            if (msg.equals(mMessageList.get(i).getContent())) {
+                Toast.makeText(mMainActivity, R.string.msg_is_exists, Toast.LENGTH_SHORT).show();
+                ok = false;
+                break;
+            }
+        }
+        if (ok) {
+            DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
+            databaseHelper.insertNewMessage(msg);
+            mNavigator.showToast(R.string.add_success);
+            MineFragment mineFragment = MineFragment.newInstance();
+            mNavigator.addFragment(R.id.main_container, mineFragment, false, Navigator.NavigateAnim.RIGHT_LEFT, MineFragment.class.getSimpleName());
+
+        }
     }
 
     private void shareMessage() {
@@ -159,5 +192,47 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         mEditMsgSuccessListener = listener;
     }
 
+    public void confirmLeave(boolean isAddNew, final boolean isHome) {
+        boolean check = true;
+        String msg = mBinding.contentOfMsg.getText().toString();
 
+        if (msg.equals(mSharedPrefs.get(SharedPrefsKey.KEY__MSG_EDIT, String.class)) || TextUtils.isEmpty(msg)) {
+            check = false;
+        }
+        if (!check) {
+            if (isHome) {
+                mMainActivity.gotoHomeFragment();
+            } else {
+                mMainActivity.getSupportFragmentManager().popBackStackImmediate();
+            }
+            return;
+        }
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(mMainActivity);
+        dialog.setTitle(R.string.leave);
+        if (isAddNew) {
+            dialog.setMessage(R.string.cancel_add);
+        } else {
+            dialog.setMessage(R.string.cancel_edit);
+        }
+
+        dialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (isHome) {
+                    mMainActivity.gotoHomeFragment();
+                } else {
+                    mMainActivity.getSupportFragmentManager().popBackStackImmediate();
+                }
+
+            }
+        });
+
+        dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        dialog.show();
+    }
 }

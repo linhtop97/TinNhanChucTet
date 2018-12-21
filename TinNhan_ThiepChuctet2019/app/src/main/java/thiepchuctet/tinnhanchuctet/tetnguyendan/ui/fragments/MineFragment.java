@@ -18,6 +18,7 @@ import java.util.List;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.MyApplication;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.R;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.adapters.MessageAdapter;
+import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf.SharedPrefsImpl;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.DatabaseHelper;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.database.sqlite.TableEntity;
 import thiepchuctet.tinnhanchuctet.tetnguyendan.databinding.FragmentMsgMineBinding;
@@ -34,6 +35,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
     private MainActivity mMainActivity;
     private Navigator mNavigator;
     private MessageAdapter mAdapter;
+    private SharedPrefsImpl mSharedPrefs;
 
     public static MineFragment newInstance() {
         return new MineFragment();
@@ -48,11 +50,13 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
     }
 
     private void initUI() {
+        mSharedPrefs = new SharedPrefsImpl(mMainActivity);
         mNavigator = new Navigator(mMainActivity);
         mBinding.btnBack.setOnClickListener(this);
         mBinding.btnAddNew.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mMainActivity);
         mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
+        mSharedPrefs.putListMsg(mMessages);
         if (mMessages.size() == 0) {
             mBinding.txtNone.setVisibility(View.VISIBLE);
         } else {
@@ -113,6 +117,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
                             break;
                         }
                     }
+                    mSharedPrefs.putListMsg(mMessages);
                     mNavigator.showToast(R.string.delete_success);
                 } else {
                     mNavigator.showToast(R.string.delete_failed);

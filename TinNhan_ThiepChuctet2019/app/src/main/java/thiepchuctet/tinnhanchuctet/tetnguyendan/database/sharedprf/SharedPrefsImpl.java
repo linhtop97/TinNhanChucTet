@@ -3,6 +3,15 @@ package thiepchuctet.tinnhanchuctet.tetnguyendan.database.sharedprf;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import thiepchuctet.tinnhanchuctet.tetnguyendan.models.Message;
+
 public class SharedPrefsImpl implements SharedPrefsApi {
 
     private static final String PREFS_NAME = "Codia";
@@ -50,5 +59,17 @@ public class SharedPrefsImpl implements SharedPrefsApi {
     @Override
     public void clear() {
         mSharedPreferences.edit().clear().apply();
+    }
+
+    public List<Message> getListMsg() {
+        String tracks = mSharedPreferences.getString(SharedPrefsKey.KEY_LIST_MSG, null);
+        Type listType = new TypeToken<ArrayList<Message>>() {
+        }.getType();
+        return new Gson().fromJson(tracks, listType);
+    }
+
+    public void putListMsg(List<Message> messages) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(SharedPrefsKey.KEY_LIST_MSG, new Gson().toJson(messages)).apply();
     }
 }

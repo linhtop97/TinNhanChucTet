@@ -107,7 +107,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener, E
                 mMainActivity.getSupportFragmentManager().popBackStackImmediate();
                 break;
             case R.id.btn_home:
-                mNavigator.startActivity(MainActivity.class, Navigator.ActivityTransition.FINISH);
+                mMainActivity.gotoHomeFragment();
                 break;
             case R.id.btn_copy:
                 copyTextToClipbroad();
