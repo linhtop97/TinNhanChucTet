@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog"
+        android:padding="@dimen/_12sdp">
+
+        <TextView
+            android:id="@+id/txt_add_collection"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:background="@drawable/background_button_option"
+            android:gravity="center"
+            android:padding="@dimen/_6sdp"
+            android:text="@string/add_to_my_collect"
+            android:textColor="@color/colorTextDetail"
+            android:textSize="@dimen/_16sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_delete_msg"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/select_option_ef"
+            android:gravity="center"
+            android:padding="@dimen/_6sdp"
+            android:text="@string/delete_msg"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/_16sdp"
+            app:layout_constraintLeft_toLeftOf="@id/txt_add_collection"
+            app:layout_constraintRight_toRightOf="@id/txt_add_collection"
+            app:layout_constraintTop_toBottomOf="@id/txt_add_collection" />
+
+        <Button
+            android:id="@+id/btn_Cancel"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/select_option_ef"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="@id/txt_delete_msg"
+            app:layout_constraintTop_toBottomOf="@id/txt_delete_msg" />
+
+        <Button
+            android:id="@+id/btn_OK"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:background="@drawable/select_option_ef"
+            android:text="@string/ok"
+            android:textAllCaps="false"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/txt_delete_msg" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

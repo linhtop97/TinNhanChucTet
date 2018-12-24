@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog"
+        android:padding="@dimen/_10sdp">
+
+        <TextView
+            android:textAlignment="textStart"
+            android:id="@+id/txt_title"
+            android:layout_width="@dimen/_155sdp"
+            android:layout_height="wrap_content"
+            android:text="Bạn có thể thêm/xóa lời chúc bằng cách ấn giữ vào lời chúc đó tại đây!"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/ck_remember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:button="@drawable/cb_selector"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đã nhớ và không nhắc lại"
+            android:textColor="@color/colorText"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintBottom_toBottomOf="@id/ck_remember"
+            app:layout_constraintLeft_toRightOf="@id/ck_remember"
+            app:layout_constraintTop_toTopOf="@id/ck_remember" />
+
+        <Button
+            android:id="@+id/btn_OK"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:textSize="@dimen/_16sdp"
+            android:background="@drawable/select_option_ef"
+            android:text="@string/ok"
+            android:textAllCaps="false"
+            android:textColor="@color/colorText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ck_remember" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
