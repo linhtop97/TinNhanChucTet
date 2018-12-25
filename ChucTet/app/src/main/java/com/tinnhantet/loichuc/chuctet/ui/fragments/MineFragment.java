@@ -81,7 +81,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
 
     @Override
     public void onItemClick(int pos) {
-        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, pos + 1, false, true);
+        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, false, true);
         mNavigator.addFragment(R.id.main_container, messageFragment, true,
                 Navigator.NavigateAnim.NONE, MessageFragment.class.getSimpleName());
     }

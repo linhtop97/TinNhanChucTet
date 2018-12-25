@@ -11,4 +11,12 @@
     <style name="AppTheme.TextAppearance">
         <item name="fontPath">@string/font_app</item>
     </style>
+    <style name="SelectableItemTheme">
+        <item name="colorControlHighlight">@color/hightlightControl</item>
+    </style>
+
+    <style name="SelectableItemBackground">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
 </resources>

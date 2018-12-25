@@ -15,11 +15,11 @@
         <TextView
             android:textAlignment="textStart"
             android:id="@+id/txt_title"
-            android:layout_width="@dimen/_155sdp"
+            android:layout_width="@dimen/_220sdp"
             android:layout_height="wrap_content"
             android:text="Bạn có thể thêm/xóa lời chúc bằng cách ấn giữ vào lời chúc đó tại đây!"
             android:textColor="@color/colorText"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_16sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +38,7 @@
             android:text="Đã nhớ và không nhắc lại"
             android:textColor="@color/colorText"
             android:layout_marginStart="@dimen/_8sdp"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_16sdp"
             app:layout_constraintBottom_toBottomOf="@id/ck_remember"
             app:layout_constraintLeft_toRightOf="@id/ck_remember"
             app:layout_constraintTop_toTopOf="@id/ck_remember" />

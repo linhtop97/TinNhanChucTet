@@ -4,8 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -20,8 +20,8 @@ import com.tinnhantet.loichuc.chuctet.database.sharedprf.SharedPrefsKey;
 import com.tinnhantet.loichuc.chuctet.databinding.ActivityMainBinding;
 import com.tinnhantet.loichuc.chuctet.ui.fragments.EditMessageFragment;
 import com.tinnhantet.loichuc.chuctet.ui.fragments.MainFragment;
-import com.tinnhantet.loichuc.chuctet.ui.fragments.MessageFragment;
 import com.tinnhantet.loichuc.chuctet.ui.fragments.SplashFragment;
+import com.tinnhantet.loichuc.chuctet.utils.Constant;
 import com.tinnhantet.loichuc.chuctet.utils.Navigator;
 import com.zer.android.newsdk.ZAndroidSDK;
 
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Navigator mNavigator;
     private SharedPrefsImpl mSharedPrefs;
-    private static final String[] PERMISSION_WRITE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    public static final String[] PERMISSION_WRITE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private ActivityMainBinding mainBinding;
 
     @Override
@@ -42,19 +42,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkPermission();
-    }
-
-    private void checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkPermission(PERMISSION_WRITE, MainActivity.this) != PackageManager.PERMISSION_GRANTED) {
-                MainActivity.this.requestPermissions(PERMISSION_WRITE, 12);
-            } else {
-                initUI();
-            }
-        } else {
-            initUI();
-        }
+        initUI();
+        //checkPermission();
     }
 
     private void initUI() {
@@ -62,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigator = new Navigator(this);
         mSharedPrefs = new SharedPrefsImpl(this);
         addSplashFragment();
-        ads();
+        //ads();
     }
 
     public void ads() {
@@ -86,12 +75,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static int checkPermission(String[] permissions, Context context) {
-        int permissionCheck = PackageManager.PERMISSION_GRANTED;
-        for (String permission : permissions) {
-            permissionCheck += ContextCompat.checkSelfPermission(context, permission);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag(SplashFragment.class.getSimpleName());
+        if (requestCode == Constant.REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    if (fragment != null) {
+                        SplashFragment splashFragment = (SplashFragment) fragment;
+                        splashFragment.addMainFragment();
+                    }
+                }
+
+            } else {
+                if (fragment != null) {
+                    SplashFragment splashFragment = (SplashFragment) fragment;
+                    splashFragment.showSnackbar();
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-        return permissionCheck;
+
     }
 
     private void addSplashFragment() {
@@ -99,22 +106,22 @@ public class MainActivity extends AppCompatActivity {
         mNavigator.addFragment(R.id.main_container, splashFragment, false, Navigator.NavigateAnim.NONE, SplashFragment.class.getSimpleName());
     }
 
-    public void onSwipeRight() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MessageFragment.class.getSimpleName());
-        if (fragment != null) {
-            MessageFragment messageFragment = (MessageFragment) fragment;
-            messageFragment.onSwipeLeft();
-        }
-
-    }
-
-    public void onSwipeLeft() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MessageFragment.class.getSimpleName());
-        if (fragment != null) {
-            MessageFragment messageFragment = (MessageFragment) fragment;
-            messageFragment.onSwipeRight();
-        }
-    }
+//    public void onSwipeRight() {
+//        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MessageFragment.class.getSimpleName());
+//        if (fragment != null) {
+//            MessageFragment messageFragment = (MessageFragment) fragment;
+//            messageFragment.onSwipeLeft();
+//        }
+//
+//    }
+//
+//    public void onSwipeLeft() {
+//        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MessageFragment.class.getSimpleName());
+//        if (fragment != null) {
+//            MessageFragment messageFragment = (MessageFragment) fragment;
+//            messageFragment.onSwipeRight();
+//        }
+//    }
 
     public void onSwipeUp() {
 

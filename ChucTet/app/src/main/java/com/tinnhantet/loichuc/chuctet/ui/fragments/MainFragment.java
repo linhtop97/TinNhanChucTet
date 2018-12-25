@@ -16,9 +16,15 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.tinnhantet.loichuc.chuctet.MyApplication;
 import com.tinnhantet.loichuc.chuctet.R;
+import com.tinnhantet.loichuc.chuctet.database.sharedprf.SharedPrefsImpl;
+import com.tinnhantet.loichuc.chuctet.database.sqlite.DatabaseHelper;
+import com.tinnhantet.loichuc.chuctet.database.sqlite.TableEntity;
 import com.tinnhantet.loichuc.chuctet.databinding.FragmentMainBinding;
+import com.tinnhantet.loichuc.chuctet.models.Message;
 import com.tinnhantet.loichuc.chuctet.ui.activities.MainActivity;
 import com.tinnhantet.loichuc.chuctet.utils.Navigator;
+
+import java.util.List;
 import java.util.Objects;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
@@ -52,11 +58,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         Glide.with(this)
                 .load(R.drawable.bg_cover)
                 .into(mBinding.imgBanner);
-//        List<Message> mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
-//        new SharedPrefsImpl(MyApplication.getInstance()).putListMsg(mMessages);
+        List<Message> mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
+        new SharedPrefsImpl(MyApplication.getInstance()).putListMsg(mMessages);
         mNavigator = new Navigator(Objects.requireNonNull(getActivity()));
         Typeface font = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_tieude.ttf");
         mBinding.txtTitle.setTypeface(font);
+        mMainActivity.ads();
         //mMainActivity.ads();
         mBinding.layoutMsgLib.setOnClickListener(this);
         mBinding.layoutMsgMine.setOnClickListener(this);

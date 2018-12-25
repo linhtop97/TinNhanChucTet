@@ -42,8 +42,8 @@
                 android:layout_marginStart="@dimen/_4sdp"
                 android:padding="@dimen/_4sdp"
                 android:id="@+id/img_msg_mine"
-                android:layout_width="@dimen/_32sdp"
-                android:layout_height="@dimen/_32sdp"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>

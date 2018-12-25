@@ -112,6 +112,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.btn_home:
                 confirmLeave(mIsAddNew, true);
+                mMainActivity.hideSoftKeyboard();
                 break;
             case R.id.btn_copy:
                 if (copyTextToClipbroad()) {
@@ -162,7 +163,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         int size = mMessageList.size();
         boolean ok = true;
         for (int i = 0; i < size; i++) {
-            if (msg.equals(mMessageList.get(i).getContent())) {
+            if ((msg.toLowerCase()).equals(mMessageList.get(i).getContent().toLowerCase())) {
                 Toast.makeText(mMainActivity, R.string.msg_is_exists, Toast.LENGTH_SHORT).show();
                 ok = false;
                 break;
@@ -177,6 +178,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
                 MineFragment mineFragment = MineFragment.newInstance();
                 mNavigator.addFragment(R.id.main_container, mineFragment, true, Navigator.NavigateAnim.RIGHT_LEFT, MineFragment.class.getSimpleName());
             }
+            mMainActivity.hideSoftKeyboard();
         }
     }
 
@@ -189,7 +191,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         copyTextToClipbroad();
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, mBinding.contentOfMsg.getText().toString());
+        sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_with)));
 

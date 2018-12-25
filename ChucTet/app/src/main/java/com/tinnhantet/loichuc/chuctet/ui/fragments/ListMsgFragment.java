@@ -42,6 +42,7 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
     private SharedPrefsImpl mSharedPrefs;
     private static final String OPTION_DIALOG = "OPTION_DIALOG";
     private static final String GUIDE_DIALOG = "GUIDE_DIALOG";
+    private String tblName;
 
     public static ListMsgFragment newInstance(String categoryName, String tblName) {
         ListMsgFragment fragment = new ListMsgFragment();
@@ -71,7 +72,8 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
         mBinding.btnHome.setOnClickListener(this);
         mBinding.btnBack.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mMainActivity);
-        mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(bundle.getString(Constant.ARGUMENT_TBL_NAME));
+        tblName = bundle.getString(Constant.ARGUMENT_TBL_NAME);
+        mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(tblName);
         mAdapter = new MessageAdapter(mMainActivity, mMessages);
         mAdapter.setOnItemClick(this);
         mAdapter.setOnItemLongClick(this);
@@ -91,7 +93,7 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
 
     @Override
     public void onItemClick(int pos) {
-        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, pos + 1, true, false);
+        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos,true, false);
         mNavigator.addFragment(R.id.main_container, messageFragment, true,
                 Navigator.NavigateAnim.NONE, MessageFragment.class.getSimpleName());
     }
@@ -110,7 +112,7 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
 
     @Override
     public void onItemLongClick(Message msg) {
-        OptionFragment f = OptionFragment.getInstance(msg);
+        OptionFragment f = OptionFragment.getInstance(msg, tblName);
         f.setDeleteCallBack(this);
         mMainActivity.getSupportFragmentManager().beginTransaction().add(f, OPTION_DIALOG).commit();
     }

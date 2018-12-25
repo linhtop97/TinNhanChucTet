@@ -1,6 +1,8 @@
 package com.tinnhantet.loichuc.chuctet;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.tinnhantet.loichuc.chuctet.database.sqlite.DatabaseHelper;
 import com.zer.android.newsdk.ZAndroidSDK;
@@ -40,6 +42,12 @@ public class MyApplication extends Application {
             //copyDB
             databaseHelper.copyDatabase(this);
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
 }

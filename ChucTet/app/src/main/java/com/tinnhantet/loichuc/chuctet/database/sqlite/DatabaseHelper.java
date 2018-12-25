@@ -51,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (mDatabase != null && mDatabase.isOpen()) {
             return;
         }
-        mDatabase = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+        mDatabase = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS | SQLiteDatabase.OPEN_READWRITE);
     }
 
     public void closeDatabase() {
