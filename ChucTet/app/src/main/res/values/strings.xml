@@ -40,4 +40,6 @@
     <string name="chuc_tet_2019">Chúc Tết 2019</string>
     <string name="add">Thêm</string>
     <string name="share_msg">Chia sẻ lời chúc</string>
+    <string name="channel_name">mychanel</string>
+    <string name="channel_description">mychaneldescription</string>
 </resources>

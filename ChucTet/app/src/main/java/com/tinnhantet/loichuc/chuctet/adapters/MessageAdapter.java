@@ -56,7 +56,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         private TextView mTextViewNum;
         private TextView mTextViewContent;
-        private int mPos;
 
         public MessageViewHolder(View itemView) {
             super(itemView);

@@ -19,7 +19,6 @@ import com.tinnhantet.loichuc.chuctet.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.loichuc.chuctet.database.sharedprf.SharedPrefsKey;
 import com.tinnhantet.loichuc.chuctet.database.sqlite.DatabaseHelper;
 import com.tinnhantet.loichuc.chuctet.databinding.FragmentMsgListBinding;
-import com.tinnhantet.loichuc.chuctet.listeners.DeleteCallBack;
 import com.tinnhantet.loichuc.chuctet.listeners.OnItemClickListener;
 import com.tinnhantet.loichuc.chuctet.listeners.OnItemLongClickListener;
 import com.tinnhantet.loichuc.chuctet.models.Message;
@@ -32,7 +31,7 @@ import com.tinnhantet.loichuc.chuctet.utils.Navigator;
 import java.util.List;
 
 public class ListMsgFragment extends Fragment implements OnItemClickListener, View.OnClickListener,
-        OnItemLongClickListener<Message>, DeleteCallBack {
+        OnItemLongClickListener<Message> {
 
     private FragmentMsgListBinding mBinding;
     private MainActivity mMainActivity;
@@ -93,7 +92,7 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
 
     @Override
     public void onItemClick(int pos) {
-        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos,true, false);
+        MessageFragment messageFragment = MessageFragment.newInstance(mMessages, pos, true, false);
         mNavigator.addFragment(R.id.main_container, messageFragment, true,
                 Navigator.NavigateAnim.NONE, MessageFragment.class.getSimpleName());
     }
@@ -113,7 +112,6 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
     @Override
     public void onItemLongClick(Message msg) {
         OptionFragment f = OptionFragment.getInstance(msg, tblName);
-        f.setDeleteCallBack(this);
         mMainActivity.getSupportFragmentManager().beginTransaction().add(f, OPTION_DIALOG).commit();
     }
 
@@ -121,17 +119,5 @@ public class ListMsgFragment extends Fragment implements OnItemClickListener, Vi
     public void onResume() {
         super.onResume();
 
-    }
-
-    @Override
-    public void deleteSuccess(Message message) {
-        int size = mMessages.size();
-        for (int i = 0; i < size; i++) {
-            if (mMessages.get(i).getId() == message.getId()) {
-                mMessages.remove(i);
-                mAdapter.notifyDataSetChanged();
-                break;
-            }
-        }
     }
 }

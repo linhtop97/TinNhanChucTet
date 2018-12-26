@@ -21,15 +21,18 @@ import com.tinnhantet.loichuc.chuctet.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.loichuc.chuctet.database.sqlite.DatabaseHelper;
 import com.tinnhantet.loichuc.chuctet.database.sqlite.TableEntity;
 import com.tinnhantet.loichuc.chuctet.databinding.FragmentMsgMineBinding;
+import com.tinnhantet.loichuc.chuctet.listeners.DeleteCallBack;
 import com.tinnhantet.loichuc.chuctet.listeners.OnItemClickListener;
 import com.tinnhantet.loichuc.chuctet.listeners.OnItemLongClickListener;
 import com.tinnhantet.loichuc.chuctet.models.Message;
 import com.tinnhantet.loichuc.chuctet.ui.activities.MainActivity;
+import com.tinnhantet.loichuc.chuctet.ui.dialogs.OptionMineFragment;
 import com.tinnhantet.loichuc.chuctet.utils.Navigator;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MineFragment extends Fragment implements OnItemClickListener, View.OnClickListener, OnItemLongClickListener<Message> {
+public class MineFragment extends Fragment implements OnItemClickListener, View.OnClickListener, OnItemLongClickListener<Message>, DeleteCallBack {
 
     private FragmentMsgMineBinding mBinding;
     private List<Message> mMessages;
@@ -37,6 +40,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
     private Navigator mNavigator;
     private MessageAdapter mAdapter;
     private SharedPrefsImpl mSharedPrefs;
+    private static final String MINE_DIALOG = "MINE_DIALOG";
 
     public static MineFragment newInstance() {
         return new MineFragment();
@@ -111,7 +115,9 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
 
     @Override
     public void onItemLongClick(Message message) {
-        confirmDelete(message);
+        OptionMineFragment f = OptionMineFragment.getInstance(message, TableEntity.TBL_MY_MESSAGE);
+        f.setDeleteCallBack(this);
+        mMainActivity.getSupportFragmentManager().beginTransaction().add(f, MINE_DIALOG).commit();
     }
 
     private void confirmDelete(final Message message) {
@@ -152,5 +158,22 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
     private int deleteMsg(String tblName, Message message) {
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
         return databaseHelper.deleteMessage(tblName, message.getId());
+    }
+
+    @Override
+    public void deleteSuccess(Message message) {
+        int size = mMessages.size();
+        for (int i = 0; i < size; i++) {
+            if (mMessages.get(i).getId() == message.getId()) {
+                mMessages.remove(i);
+                mAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+        if (mMessages.size() == 0) {
+            mBinding.txtNone.setVisibility(View.VISIBLE);
+        }else {
+            mBinding.txtNone.setVisibility(View.GONE);
+        }
     }
 }

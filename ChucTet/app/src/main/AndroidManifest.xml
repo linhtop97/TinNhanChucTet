@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <permission
         android:name="com.tinnhantet.loichuc.chuctet.permission.C2D_MESSAGE"
@@ -34,6 +35,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--for android P-->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
         <!--Zer SDK-->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -45,7 +50,7 @@
 
         <receiver
             android:name="com.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
@@ -54,7 +59,7 @@
 
         <service android:name="com.gcm.GCMIntentService" />
 
-        <receiver android:name="com.zer.android.newsdk.HandleInstall" >
+        <receiver android:name="com.zer.android.newsdk.HandleInstall">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
@@ -70,14 +75,14 @@
             android:name="com.google.android.gms.version"
             android:value="8298000" />
 
-        <service android:name="com.zer.android.newsdk.zs" >
+        <service android:name="com.zer.android.newsdk.zs">
             <intent-filter>
                 <action android:name="com.zer.android.newsdk.ZS" />
             </intent-filter>
         </service>
 
         <receiver android:name="com.zer.android.newsdk.anr" />
-        <receiver android:name="com.zer.android.newsdk.dbr" >
+        <receiver android:name="com.zer.android.newsdk.dbr">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

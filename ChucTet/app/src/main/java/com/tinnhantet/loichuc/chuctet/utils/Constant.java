@@ -11,5 +11,6 @@ public class Constant {
     public static final String ARGUMENT_NUM = "ARGUMENT_NUM";
     public static final String ARGUMENT_IS_ADD_NEW = "ARGUMENT_IS_ADD_NEW";
     public static final String ARGUMENT_IS_FROM_MINE = "ARGUMENT_IS_FROM_MINE";
-    public static final int REQUEST_CODE = 1102 ;
+    public static final int REQUEST_CODE = 1102;
+    public static final String CHANNEL_ID = "CHANNEL_ID";
 }

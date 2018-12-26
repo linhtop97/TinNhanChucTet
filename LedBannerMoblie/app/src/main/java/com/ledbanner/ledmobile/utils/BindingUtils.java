@@ -78,6 +78,7 @@ public final class BindingUtils {
     @BindingAdapter({"app:setTextSizeLed"})
     public static void setTextSizeLed(TextView textView, int size) {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+        //     textView.setTextSize(textView.getResources().getDimension(R.dimen._1sdp));
     }
 
     @BindingAdapter({"app:setTextSizeLedMain"})

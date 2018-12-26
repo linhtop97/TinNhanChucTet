@@ -79,6 +79,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         if (!mIsAddNew) {
             mBinding.txtAdd.setText(R.string.done);
             mBinding.imgAdd.setImageResource(R.drawable.ic_done);
+            mBinding.txtTitle.setText(R.string.edit_msg);
         } else {
             mBinding.txtTitle.setText(R.string.add_msg);
         }
@@ -128,7 +129,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
                     return;
                 } else {
                     int edit = editMsg();
-                    if (edit > 0 && edit != 100) {
+                    if (edit > 0) {
                         mNavigator.showToast(R.string.edit_sucess);
                         mEditMsgSuccessListener.msgEdited(mMessage);
                         mMainActivity.getSupportFragmentManager().popBackStackImmediate();
@@ -144,10 +145,6 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         if (TextUtils.isEmpty(msg)) {
             mNavigator.showToast(R.string.cannot_empty);
             return 0;
-        }
-        if (msg.equals(mSharedPrefs.get(SharedPrefsKey.KEY__MSG_EDIT, String.class))) {
-            mNavigator.showToast(R.string.msg_not_change);
-            return 100;
         }
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
         mMessage.setContent(msg);

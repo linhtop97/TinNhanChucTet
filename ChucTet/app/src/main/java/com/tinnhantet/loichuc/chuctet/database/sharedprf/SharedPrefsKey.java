@@ -6,4 +6,5 @@ public final class SharedPrefsKey {
     public static final String KEY_LIST_MSG = "KEY_LIST_MSG";
     public static final String KEY__MSG_EDIT = "KEY__MSG_EDIT";
     public static final String KEY_IS_ADD_NEW = "KEY_IS_ADD_NEW";
+    public static final String PERMISSION_IS_DECLINE = "PERMISSION_IS_DECLINE" ;
 }

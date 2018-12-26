@@ -126,6 +126,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        //checkPermission(PERMISSION_WRITE, this);
+
     }
 
     @Override

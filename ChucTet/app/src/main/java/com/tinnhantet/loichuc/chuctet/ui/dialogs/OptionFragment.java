@@ -1,8 +1,11 @@
 package com.tinnhantet.loichuc.chuctet.ui.dialogs;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +68,7 @@ public class OptionFragment extends DialogFragment implements View.OnClickListen
         mMessage = bundle.getParcelable(Constant.ARGUMENT_MSG);
         tblName = bundle.getString(Constant.ARGUMENT_TBL_NAME);
         mBinding.txtAddCollection.setOnClickListener(this);
-        mBinding.txtDeleteMsg.setOnClickListener(this);
+        mBinding.txtShareMsg.setOnClickListener(this);
     }
 
     @NonNull
@@ -102,10 +104,10 @@ public class OptionFragment extends DialogFragment implements View.OnClickListen
                 insertMsg(mMessage);
                 dismiss();
                 break;
-            case R.id.txt_delete_msg:
-                mBinding.txtDeleteMsg.setBackgroundResource(R.drawable.background_button_option);
-                mBinding.txtDeleteMsg.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
-                confirmDelete();
+            case R.id.txt_share_msg:
+                mBinding.txtShareMsg.setBackgroundResource(R.drawable.background_button_option);
+                mBinding.txtShareMsg.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
+                shareMessage();
                 dismiss();
                 break;
         }
@@ -132,42 +134,26 @@ public class OptionFragment extends DialogFragment implements View.OnClickListen
         }
     }
 
-    private int deleteMsg(String tblName, Message message) {
-        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(MyApplication.getInstance());
-        return databaseHelper.deleteMessage(tblName, message.getId());
+    private void shareMessage() {
+        copyTextToClipbroad();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mMessage.getContent());
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_with)));
+
     }
 
-    public void setDeleteCallBack(DeleteCallBack callBack) {
-        mDeleteCallBack = callBack;
+    private boolean copyTextToClipbroad() {
+        ClipboardManager clipboard = (ClipboardManager) mMainActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(Constant.LABEL_CLIPBROAD, mMessage.getContent());
+        clipboard.setPrimaryClip(clip);
+        return true;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mMainActivity = (MainActivity) context;
-    }
-
-    private void confirmDelete() {
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(mMainActivity);
-        dialog.setTitle(R.string.notifi);
-        dialog.setMessage(R.string.delete_confirm_msg);
-        dialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (deleteMsg(tblName, mMessage) > 0) {
-                    mDeleteCallBack.deleteSuccess(mMessage);
-                    Toast.makeText(mMainActivity, R.string.delete_success, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
-        dialog.show();
     }
 }
