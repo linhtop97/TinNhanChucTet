@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,13 @@ import com.tinnhantet.loichuc.chuctet.R;
 import com.tinnhantet.loichuc.chuctet.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.loichuc.chuctet.database.sharedprf.SharedPrefsKey;
 import com.tinnhantet.loichuc.chuctet.database.sqlite.DatabaseHelper;
+import com.tinnhantet.loichuc.chuctet.database.sqlite.TableEntity;
 import com.tinnhantet.loichuc.chuctet.databinding.FragmentMsgEditBinding;
 import com.tinnhantet.loichuc.chuctet.listeners.EditMsgSuccessListener;
 import com.tinnhantet.loichuc.chuctet.models.Message;
 import com.tinnhantet.loichuc.chuctet.ui.activities.MainActivity;
+import com.tinnhantet.loichuc.chuctet.ui.dialogs.ConfirmEditFragment;
+import com.tinnhantet.loichuc.chuctet.ui.dialogs.OptionMineFragment;
 import com.tinnhantet.loichuc.chuctet.utils.Constant;
 import com.tinnhantet.loichuc.chuctet.utils.Navigator;
 
@@ -84,6 +88,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
             mBinding.txtTitle.setText(R.string.add_msg);
         }
         mBinding.contentOfMsg.setText(mMessage.getContent());
+        //mBinding.contentOfMsg.setMovementMethod(new ScrollingMovementMethod());
     }
 
     private void initAction() {
@@ -225,32 +230,35 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
             }
             return;
         }
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(mMainActivity);
-        dialog.setTitle(R.string.leave);
-        if (isAddNew) {
-            dialog.setMessage(R.string.cancel_add);
-        } else {
-            dialog.setMessage(R.string.cancel_edit);
-        }
-
-        dialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (isHome) {
-                    mMainActivity.gotoHomeFragment();
-                } else {
-                    mMainActivity.getSupportFragmentManager().popBackStackImmediate();
-                }
-
-            }
-        });
-
-        dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-
-        dialog.show();
+        ConfirmEditFragment f = ConfirmEditFragment.getInstance(isAddNew,isHome);
+        mMainActivity.getSupportFragmentManager().beginTransaction().add(f, "Editdialog").commit();
+        //chỗ này show dialog
+//        final AlertDialog.Builder dialog = new AlertDialog.Builder(mMainActivity);
+//        dialog.setTitle(R.string.leave);
+//        if (isAddNew) {
+//            dialog.setMessage(R.string.cancel_add);
+//        } else {
+//            dialog.setMessage(R.string.cancel_edit);
+//        }
+//
+//        dialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                if (isHome) {
+//                    mMainActivity.gotoHomeFragment();
+//                } else {
+//                    mMainActivity.getSupportFragmentManager().popBackStackImmediate();
+//                }
+//
+//            }
+//        });
+//
+//        dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//            }
+//        });
+//
+//        dialog.show();
     }
 }

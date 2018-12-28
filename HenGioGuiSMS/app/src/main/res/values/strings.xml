@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">HenGioGuiSMS</string>
+    <string name="pending">Đang chờ</string>
+    <string name="sent">Đã gửi</string>
+    <string name="send_to">Gửi tới:</string>
+    <string name="send_at">Gửi lúc:</string>
+    <string name="content">Nội dung</string>
+    <string name="cancel">Hủy</string>
+    <string name="done">Xong</string>
+    <string name="edit">Sửa</string>
+</resources>

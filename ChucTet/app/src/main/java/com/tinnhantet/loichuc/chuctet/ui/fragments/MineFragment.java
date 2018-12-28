@@ -65,11 +65,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
         mBinding.btnAddNew.setOnClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mMainActivity);
         mMessages = new ArrayList<>();
-        List<Message> messages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
-        int size = messages.size();
-        for (int i = size - 1; i >= 0; i--) {
-            mMessages.add(messages.get(i));
-        }
+        mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
         mSharedPrefs.putListMsg(mMessages);
         if (mMessages.size() == 0) {
             mBinding.txtNone.setVisibility(View.VISIBLE);
@@ -172,7 +168,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
         }
         if (mMessages.size() == 0) {
             mBinding.txtNone.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mBinding.txtNone.setVisibility(View.GONE);
         }
     }

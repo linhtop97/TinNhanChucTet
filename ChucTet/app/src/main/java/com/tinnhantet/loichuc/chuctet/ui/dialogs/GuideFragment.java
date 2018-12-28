@@ -27,6 +27,7 @@ public class GuideFragment extends DialogFragment implements View.OnClickListene
     private FragmentGuideFixBinding mBinding;
     private MainActivity mMainActivity;
     private SharedPrefsImpl mSharedPrefs;
+    private Boolean mIsChecked = false;
 
     public static GuideFragment getInstance() {
         GuideFragment fragment = new GuideFragment();
@@ -49,7 +50,7 @@ public class GuideFragment extends DialogFragment implements View.OnClickListene
         mBinding.ckRemember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mSharedPrefs.put(SharedPrefsKey.PREF_REMEMBER_GUIDE, isChecked);
+                mIsChecked = isChecked;
             }
         });
     }
@@ -60,8 +61,8 @@ public class GuideFragment extends DialogFragment implements View.OnClickListene
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -82,6 +83,7 @@ public class GuideFragment extends DialogFragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_OK:
+                mSharedPrefs.put(SharedPrefsKey.PREF_REMEMBER_GUIDE, mIsChecked);
                 dismiss();
                 break;
         }

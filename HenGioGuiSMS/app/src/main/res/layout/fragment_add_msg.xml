@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:padding="8sp">
+
+        <TextView
+            android:id="@+id/txt_send_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:text="@string/send_to"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/edt_phone_number"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edt_phone_number"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:background="@drawable/edt_background"
+            app:layout_constraintBottom_toBottomOf="@id/txt_send_to"
+            app:layout_constraintLeft_toRightOf="@id/txt_send_to"
+            app:layout_constraintRight_toLeftOf="@id/btn_contact"
+            app:layout_constraintTop_toTopOf="@id/txt_send_to" />
+
+        <ImageButton
+            android:id="@+id/btn_contact"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:src="@drawable/ic_person_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@id/txt_send_to"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/txt_send_to" />
+
+        <TextView
+            android:id="@+id/txt_send_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_32sdp"
+            android:text="@string/send_at"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintTop_toBottomOf="@id/txt_send_to" />
+
+        <TextView
+            android:id="@+id/txt_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_32sdp"
+            android:text="@string/content"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintTop_toBottomOf="@id/txt_send_at" />
+
+        <EditText
+            android:id="@+id/edt_content"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/_186sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/edt_background"
+            android:te="textStart"
+            android:text="sdfsfsfsdfsdf"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_content" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            app:layout_constraintRight_toLeftOf="@id/btn_done"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_content" />
+
+        <Button
+            android:id="@+id/btn_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="@string/done"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toRightOf="@id/btn_cancel"
+            app:layout_constraintRight_toLeftOf="@id/btn_edit"
+            app:layout_constraintTop_toBottomOf="@id/edt_content" />
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="@string/edit"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/btn_done"
+            app:layout_constraintTop_toBottomOf="@id/edt_content" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
