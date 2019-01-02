@@ -6,6 +6,16 @@
     <string name="send_at">Gửi lúc:</string>
     <string name="content">Nội dung</string>
     <string name="cancel">Hủy</string>
-    <string name="done">Xong</string>
     <string name="edit">Sửa</string>
+    <string name="time">Giờ:</string>
+    <string name="date">Ngày:</string>
+    <string name="search_contact">Tìm số liên lạc</string>
+    <string name="contact_name">name</string>
+    <string name="contact_number">phone number</string>
+    <string name="ok">OK</string>
+    <string name="select_all">Chọn tất cả</string>
+    <string name="un_select_all">Bỏ chọn tất</string>
+    <string name="confirm_cancel">Bạn có muốn hủy các lựa chọn này?</string>
+    <string name="done"><![CDATA[<u>Xong</u>]]></string>
+    <string name="loading_plz_wait">Đang tải dữ liệu, vui lòng chờ…</string>
 </resources>

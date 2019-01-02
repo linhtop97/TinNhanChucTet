@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.databinding.FragmentPendingBinding;
+import com.tinnhantet.nhantin.hengio.ui.activities.AddMsgActivity;
 import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 
@@ -49,9 +50,7 @@ public class PendingFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add:
-                AddMessageFragment fragment = AddMessageFragment.newInstance();
-                mNavigator.addFragment(R.id.main_container, fragment, true
-                        , Navigator.NavigateAnim.RIGHT_LEFT, AddMessageFragment.class.getSimpleName());
+                mNavigator.startActivity(AddMsgActivity.class, Navigator.NavigateAnim.BOTTOM_UP);
                 break;
         }
     }
