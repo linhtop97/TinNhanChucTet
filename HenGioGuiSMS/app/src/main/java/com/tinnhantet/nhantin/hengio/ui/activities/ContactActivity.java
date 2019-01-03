@@ -13,16 +13,14 @@ import android.text.Html;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.ContactAdapter;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.nhantin.hengio.databinding.ActivityContactBinding;
-import com.tinnhantet.nhantin.hengio.listeners.DataCallBack;
 import com.tinnhantet.nhantin.hengio.listeners.OnItemClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.ui.dialogs.ConfirmCancelDialog;
-import com.tinnhantet.nhantin.hengio.ui.dialogs.LoadingDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 
@@ -30,17 +28,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactActivity extends AppCompatActivity implements View.OnClickListener,
-        OnItemClickListener, DataCallBack<List<Contact>> {
+        OnItemClickListener {
     private static final String CANCEL_DIALOG = "CANCEL_DIALOG";
-    private static final String LOADING_DIALOG = "LOADING_DIALOG";
     private ActivityContactBinding mBinding;
     private List<Contact> mContacts;
     private List<Contact> mContactSelected;
     private boolean mIsHasContactSelected;
     private ContactAdapter mAdapter;
-    private LoadingDialog mLoadingDialog;
     private int mSize;
     private Navigator mNavigator;
+    private SharedPrefsImpl mSharedPrefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +55,32 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initUI() {
         mNavigator = new Navigator(this);
+        mSharedPrefs = new SharedPrefsImpl(this);
         mContactSelected = new ArrayList<>();
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_contact);
         mBinding.btnDone.setText(Html.fromHtml(getString(R.string.done)));
-        showDialogLoading();
+        mContacts = mSharedPrefs.getListContact();
+        if (mContacts == null) {
+            mContacts = new ArrayList<>();
+        }
+        Intent intent = getIntent();
+        List<Contact> contactReceive = intent.getParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT);
+        int sizeRoot = mContacts.size();
+        int sizeSend = contactReceive.size();
+        if (sizeRoot != 0 && sizeSend != 0) {
+            for (int i = 0; i < sizeRoot; i++) {
+                for (int j = 0; j < sizeSend; j++) {
+                    if (mContacts.get(i).getId() == contactReceive.get(j).getId()) {
+                        mContacts.get(i).setSelected(true);
+                    }
+                }
+            }
+        }
+        mSize = mContacts.size();
+        mAdapter = new ContactAdapter(this, mContacts);
+        mAdapter.setOnItemClickListener(this);
+        mBinding.recycleView.setLayoutManager(new LinearLayoutManager(this));
+        mBinding.recycleView.setAdapter(mAdapter);
     }
 
     @Override
@@ -138,32 +157,5 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         return mIsHasContactSelected;
-    }
-
-    private void showDialogLoading() {
-        mLoadingDialog = LoadingDialog.getInstance();
-        getSupportFragmentManager().beginTransaction().add(mLoadingDialog, LOADING_DIALOG).commit();
-        new Contact().getAllContact(this, this);
-
-    }
-
-    @Override
-    public void onDataSuccess(List<Contact> data) {
-        mContacts = data;
-        mSize = mContacts.size();
-        mAdapter = new ContactAdapter(this, mContacts);
-        mAdapter.setOnItemClickListener(this);
-        mBinding.recycleView.setLayoutManager(new LinearLayoutManager(this));
-        mBinding.recycleView.setAdapter(mAdapter);
-        if (mLoadingDialog != null) {
-            mLoadingDialog.dismiss();
-            Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onDataFailed(String msg) {
-
     }
 }

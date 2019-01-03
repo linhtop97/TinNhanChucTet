@@ -7,26 +7,25 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.tinnhantet.nhantin.hengio.MyApplication;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.databinding.DialogRequestBinding;
-import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
-import com.tinnhantet.nhantin.hengio.utils.Constant;
+import com.tinnhantet.nhantin.hengio.ui.activities.SplashActivity;
 
 public class DialogRequestFragment extends DialogFragment implements View.OnClickListener {
     private DialogRequestBinding mBinding;
-    private MainActivity mMainActivity;
+    private SplashActivity mSplashActivity;
 
     public static DialogRequestFragment getInstance() {
         DialogRequestFragment fragment = new DialogRequestFragment();
@@ -77,26 +76,17 @@ public class DialogRequestFragment extends DialogFragment implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ok:
-//                Intent intent = new Intent();
-//                intent.setAction("RequestPMS");
-//                LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
-                showDetailApp();
+                Intent intent = new Intent();
+                intent.setAction("RequestPMS");
+                LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
                 dismiss();
                 break;
         }
     }
 
-    private void showDetailApp() {
-        Intent intent1 = new Intent();
-        intent1.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri2 = Uri.fromParts("package", mMainActivity.getPackageName(), null);
-        intent1.setData(uri2);
-        startActivityForResult(intent1, Constant.REQUEST_PERMISSION_CODE);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mMainActivity = (MainActivity) context;
+        mSplashActivity = (SplashActivity) context;
     }
 }

@@ -3,6 +3,14 @@ package com.tinnhantet.nhantin.hengio.database.sharedprf;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.tinnhantet.nhantin.hengio.models.Contact;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 public class SharedPrefsImpl implements SharedPrefsApi {
 
     private static final String PREFS_NAME = "Codia";
@@ -50,5 +58,17 @@ public class SharedPrefsImpl implements SharedPrefsApi {
     @Override
     public void clear() {
         mSharedPreferences.edit().clear().apply();
+    }
+
+    public List<Contact> getListContact() {
+        String tracks = mSharedPreferences.getString(SharedPrefsKey.KEY_LIST_CONTACT, null);
+        Type listType = new TypeToken<ArrayList<Contact>>() {
+        }.getType();
+        return new Gson().fromJson(tracks, listType);
+    }
+
+    public void putListContact(List<Contact> messages) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(SharedPrefsKey.KEY_LIST_CONTACT, new Gson().toJson(messages)).apply();
     }
 }
