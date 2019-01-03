@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tinnhantet.nhantin.hengio.R;
-import com.tinnhantet.nhantin.hengio.listeners.OnContactClickListener;
+import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 
 import java.util.List;
@@ -17,14 +17,14 @@ public class PhoneNumberAdapter extends RecyclerView.Adapter<PhoneNumberAdapter.
     private LayoutInflater mLayoutInflater;
     private List<Contact> mContacts;
     private Context mContext;
-    private OnContactClickListener mListener;
+    private OnDataClickListener<Contact> mListener;
 
     public PhoneNumberAdapter(Context context, List<Contact> contacts) {
         mContacts = contacts;
         mContext = context;
     }
 
-    public void setOnContactListener(OnContactClickListener listener) {
+    public void setOnContactListener(OnDataClickListener listener) {
         mListener = listener;
     }
 

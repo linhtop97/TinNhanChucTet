@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_5sdp"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:layout_marginEnd="@dimen/_5sdp"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/txt_time_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="18h ngày 20/10/2019"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/_14sdp" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_background"
+        android:padding="@dimen/_4sdp"
+        app:layout_constraintTop_toBottomOf="@id/txt_time_send">
+
+        <TextView
+            android:id="@+id/txt_send_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_to"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
+
+        <TextView
+            android:id="@+id/txt_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4sp"
+            android:text="Nội dung"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constraintTop_toBottomOf="@id/txt_send_to" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

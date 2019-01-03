@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
 import com.zer.android.newsdk.ZAndroidSDK;
 
 public class MyApplication extends Application {
@@ -25,6 +26,7 @@ public class MyApplication extends Application {
 //                        .setFontAttrId(R.attr.fontPath)
 //                        .build()
 //        );
+        MessageDatabaseHelper messageDatabaseHelper = MessageDatabaseHelper.getInstance(this);
     }
 
 

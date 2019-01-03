@@ -18,9 +18,12 @@ import android.widget.TimePicker;
 
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.PhoneNumberAdapter;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
+import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
 import com.tinnhantet.nhantin.hengio.databinding.ActivityAddMsgBinding;
-import com.tinnhantet.nhantin.hengio.listeners.OnContactClickListener;
+import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
+import com.tinnhantet.nhantin.hengio.models.Message;
 import com.tinnhantet.nhantin.hengio.ui.dialogs.ContactOptionDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
@@ -30,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class AddMsgActivity extends AppCompatActivity implements View.OnClickListener, OnContactClickListener {
+public class AddMsgActivity extends AppCompatActivity implements View.OnClickListener, OnDataClickListener<Contact> {
 
     private static final String CONTACT_OPTION_DIALOG = "CONTACT_OPTION_DIALOG";
     private ActivityAddMsgBinding mBinding;
@@ -40,7 +43,10 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     private List<Contact> mContactSelected;
     private PhoneNumberAdapter mAdapter;
     private int mPosSelected;
+    private SharedPrefsImpl mSharedPrefs;
     private List<Integer> mPosSelectedPhone;
+    private Calendar mMyCalendar;
+    private int mHour, mMinute;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +56,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initAction() {
+        mBinding.txtDone.setOnClickListener(this);
         mBinding.time.setOnClickListener(this);
         mBinding.date.setOnClickListener(this);
         mBinding.time.setOnClickListener(this);
@@ -70,11 +77,13 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_msg);
         mBinding.txtDone.setText(Html.fromHtml(getString(R.string.done)));
         mNavigator = new Navigator(this);
+        mSharedPrefs = new SharedPrefsImpl(this);
         mContactSelected = new ArrayList<>();
         mBinding.edtContent.setMovementMethod(new ScrollingMovementMethod());
     }
 
     private void getDateSelect(Calendar calendar) {
+        mMyCalendar = calendar;
         String myFormat = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
         mBinding.date.setText(sdf.format(calendar.getTime()));
@@ -112,17 +121,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay,
                                           int minute) {
-                        String AM_PM;
-                        if (hourOfDay < 12) {
-                            AM_PM = "Sáng";
+                        mHour = hourOfDay;
+                        mMinute = minute;
+                        mBinding.time.setText(hourOfDay + "h : " + minute + "p");
 
-                        } else {
-                            AM_PM = "Chiều";
-                            hourOfDay = hourOfDay - 12;
-                        }
-                        mBinding.time.setText(hourOfDay + ":" + minute + " " + AM_PM);
                     }
-                }, hour, minute, false);
+                }, hour, minute, true);
         timePickerDialog.show();
     }
 
@@ -140,6 +144,13 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_contact:
                 showContactChooser();
+                break;
+            case R.id.txt_done:
+                MessageDatabaseHelper helper = MessageDatabaseHelper.getInstance(this);
+                mMyCalendar.set(mMyCalendar.YEAR, mMyCalendar.MONTH + 1, mMyCalendar.DAY_OF_MONTH, mHour, mMinute);
+                helper.addMsg(getMessage(mContactSelected, mBinding.txtContent.getText().toString(), mMyCalendar));
+                List<Message> msg = helper.getAllMsgPending();
+                finish();
                 break;
         }
     }
@@ -197,5 +208,15 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         mPosSelected = pos;
         ContactOptionDialog f = ContactOptionDialog.getInstance(contact);
         getSupportFragmentManager().beginTransaction().add(f, CONTACT_OPTION_DIALOG).commit();
+    }
+
+    private Message getMessage(List<Contact> contacts, String content, Calendar c) {
+        String listContact = mSharedPrefs.listContactString(contacts);
+        Message message = new Message();
+        message.setListContact(listContact);
+        message.setSend(false);
+        message.setTime(String.valueOf(c.getTimeInMillis()));
+        message.setContent(content);
+        return message;
     }
 }

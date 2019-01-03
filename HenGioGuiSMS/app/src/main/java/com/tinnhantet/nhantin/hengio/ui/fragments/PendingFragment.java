@@ -60,4 +60,10 @@ public class PendingFragment extends Fragment implements View.OnClickListener {
         super.onAttach(context);
         mMainActivity = (MainActivity) context;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //get All msg Schedule
+    }
 }

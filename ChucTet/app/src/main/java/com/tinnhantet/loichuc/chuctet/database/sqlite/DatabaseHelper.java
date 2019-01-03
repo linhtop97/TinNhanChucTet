@@ -23,13 +23,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context mContext;
     private SQLiteDatabase mDatabase;
 
+
     public static synchronized DatabaseHelper getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new DatabaseHelper(context.getApplicationContext());
         }
         return sInstance;
     }
-
     private DatabaseHelper(Context context) {
         super(context, DBNAME, null, DBVERSION);
         mContext = context;
