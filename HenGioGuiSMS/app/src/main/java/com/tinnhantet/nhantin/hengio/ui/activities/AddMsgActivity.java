@@ -3,6 +3,7 @@ package com.tinnhantet.nhantin.hengio.ui.activities;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -26,9 +29,9 @@ import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
 import com.tinnhantet.nhantin.hengio.ui.dialogs.ContactOptionDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
+import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -46,7 +49,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     private SharedPrefsImpl mSharedPrefs;
     private List<Integer> mPosSelectedPhone;
     private Calendar mMyCalendar;
-    private int mHour, mMinute;
+    private int mHour, mMinute, mYear, mMonth, mDay;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,14 +82,8 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         mNavigator = new Navigator(this);
         mSharedPrefs = new SharedPrefsImpl(this);
         mContactSelected = new ArrayList<>();
+        mMyCalendar = Calendar.getInstance();
         mBinding.edtContent.setMovementMethod(new ScrollingMovementMethod());
-    }
-
-    private void getDateSelect(Calendar calendar) {
-        mMyCalendar = calendar;
-        String myFormat = "dd/MM/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
-        mBinding.date.setText(sdf.format(calendar.getTime()));
     }
 
     private void showDatePicker() {
@@ -96,10 +93,10 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, monthOfYear);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                getDateSelect(calendar);
+                mYear = year;
+                mMonth = monthOfYear;
+                mDay = dayOfMonth;
+                mBinding.date.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
             }
 
         };
@@ -146,13 +143,48 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 showContactChooser();
                 break;
             case R.id.txt_done:
-                MessageDatabaseHelper helper = MessageDatabaseHelper.getInstance(this);
-                mMyCalendar.set(mMyCalendar.YEAR, mMyCalendar.MONTH + 1, mMyCalendar.DAY_OF_MONTH, mHour, mMinute);
-                helper.addMsg(getMessage(mContactSelected, mBinding.txtContent.getText().toString(), mMyCalendar));
-                List<Message> msg = helper.getAllMsgPending();
-                finish();
+                hideSoftKeyboard();
+                switch (invalidData()) {
+                    case 0:
+                        MessageDatabaseHelper helper = MessageDatabaseHelper.getInstance(this);
+                        helper.addMsg(getMessage(mContactSelected, mBinding.edtContent.getText().toString(), mMyCalendar));
+                        finish();
+                        break;
+                    case 1:
+                        mNavigator.showToast(R.string.contact_empty);
+                        mBinding.edtPhoneNumber.requestFocus();
+                        break;
+                    case 2:
+                        mNavigator.showToast(R.string.invalid_date);
+                        break;
+                    case 3:
+                        mNavigator.showToast(R.string.content_empty);
+                        mBinding.edtContent.requestFocus();
+                        break;
+
+                }
+
                 break;
         }
+    }
+
+    private int invalidData() {
+        if (mContactSelected.size() == 0) {
+            return 1;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDay, mHour, mMinute);
+        long timeSet = calendar.getTimeInMillis();
+        long timeNow = Calendar.getInstance().getTimeInMillis();
+        String s = DateTimeUtil.convertTimeToString(Calendar.getInstance().getTimeInMillis());
+        if ((timeSet - timeNow) < (60 * 1000)) {
+            return 2;
+        }else {
+            mMyCalendar = calendar;        }
+        if (TextUtils.isEmpty(mBinding.edtContent.getText().toString())) {
+            return 3;
+        }
+        return 0;
     }
 
     @Override
@@ -182,8 +214,9 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 if (name.equals("")) {
                     name = contact.getPhone();
                 }
-                s += name + ";";
+                s += name + ",";
             }
+            s = s.substring(0, s.length() - 1);
             mBinding.edtPhoneNumber.setText(s);
             mBinding.edtPhoneNumber.clearFocus();
 
@@ -218,5 +251,15 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         message.setTime(String.valueOf(c.getTimeInMillis()));
         message.setContent(content);
         return message;
+    }
+
+    public void hideSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.
+                INPUT_METHOD_SERVICE);
+        try {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        } catch (Exception ex) {
+
+        }
     }
 }

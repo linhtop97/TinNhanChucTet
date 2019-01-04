@@ -12,8 +12,8 @@ import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
+import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageScheduleAdapter.ViewHolder> {
@@ -29,7 +29,7 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
         mSharedPrefs = new SharedPrefsImpl(mContext);
     }
 
-    public void setOnContactListener(OnDataClickListener listener) {
+    public void setOnDataListener(OnDataClickListener listener) {
         mListener = listener;
     }
 
@@ -47,6 +47,10 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
         holder.bindData(mMessages.get(position));
     }
 
+    public void setMessages(List<Message> messages) {
+        mMessages = messages;
+        notifyDataSetChanged();
+    }
 
     public List<Message> getMessages() {
         return mMessages;
@@ -61,13 +65,13 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextTime;
         private TextView mTextSendTo;
-        private TextView mTextConent;
+        private TextView mTextContent;
 
         ViewHolder(View itemView) {
             super(itemView);
             mTextTime = itemView.findViewById(R.id.txt_time_send);
             mTextSendTo = itemView.findViewById(R.id.txt_send_to);
-            mTextConent = itemView.findViewById(R.id.txt_content);
+            mTextContent = itemView.findViewById(R.id.txt_content);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,15 +84,19 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
         void bindData(Message message) {
             if (message == null) return;
             List<Contact> contacts = mSharedPrefs.getAllContact(message.getListContact());
+            String name = "";
+            for (Contact c : contacts) {
+                String ten = c.getName();
+                if (ten.equals("")) {
+                    ten = c.getPhone();
+                }
+                name += ten + ",";
+            }
+            name = name.substring(0, name.length() - 1);
             String content = message.getContent();
-            String myFormat = "hh:mm dd/MM/yyyy";
-            SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
-            String datetime = (sdf.format(Long.parseLong(message.getTime())));
-            mTextTime.setText(datetime);
-            mTextConent.setText(content);
-            mTextSendTo.setText(contacts.toString());
-
-
+            mTextTime.setText(DateTimeUtil.convertTimeToString(Long.valueOf(message.getTime())));
+            mTextContent.setText("Nội dung: " + content);
+            mTextSendTo.setText("Gửi đến: " + name);
         }
     }
 }

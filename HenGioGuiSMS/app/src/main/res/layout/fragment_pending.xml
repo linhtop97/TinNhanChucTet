@@ -16,6 +16,8 @@
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_0"
             android:padding="@dimen/_8sdp"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/_50sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

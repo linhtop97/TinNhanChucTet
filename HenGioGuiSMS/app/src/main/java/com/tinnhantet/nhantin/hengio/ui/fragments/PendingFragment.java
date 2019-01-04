@@ -6,21 +6,32 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.tinnhantet.nhantin.hengio.R;
+import com.tinnhantet.nhantin.hengio.adapters.MessageScheduleAdapter;
+import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
 import com.tinnhantet.nhantin.hengio.databinding.FragmentPendingBinding;
+import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
+import com.tinnhantet.nhantin.hengio.models.Message;
 import com.tinnhantet.nhantin.hengio.ui.activities.AddMsgActivity;
 import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 
-public class PendingFragment extends Fragment implements View.OnClickListener {
+import java.util.List;
+
+public class PendingFragment extends Fragment implements View.OnClickListener, OnDataClickListener<Message> {
+    private static final String TAG = "PendingFragment";
     private FragmentPendingBinding mBinding;
     private MainActivity mMainActivity;
     private Navigator mNavigator;
-
+    private MessageScheduleAdapter mAdapter;
+    private List<Message> mMessages;
+    private MessageDatabaseHelper helper;
 
     public static PendingFragment newInstance() {
         PendingFragment fragment = new PendingFragment();
@@ -44,6 +55,12 @@ public class PendingFragment extends Fragment implements View.OnClickListener {
 
     private void initUI() {
         mNavigator = new Navigator(mMainActivity);
+        helper = MessageDatabaseHelper.getInstance(mMainActivity);
+        mMessages = helper.getAllMsgPending();
+        mAdapter = new MessageScheduleAdapter(mMainActivity, mMessages);
+        mAdapter.setOnDataListener(this);
+        mBinding.recycleView.setLayoutManager(new LinearLayoutManager(mMainActivity));
+        mBinding.recycleView.setAdapter(mAdapter);
     }
 
     @Override
@@ -64,6 +81,14 @@ public class PendingFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
+        Log.i(TAG, "onStart: ");
+        mAdapter.setMessages(helper.getAllMsgPending());
         //get All msg Schedule
+
+    }
+
+    @Override
+    public void onItemClick(Message message, int pos) {
+
     }
 }
