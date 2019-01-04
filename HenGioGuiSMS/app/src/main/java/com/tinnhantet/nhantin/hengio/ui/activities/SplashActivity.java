@@ -30,7 +30,7 @@ import com.tinnhantet.nhantin.hengio.utils.Navigator;
 import java.util.List;
 
 public class SplashActivity extends AppCompatActivity implements DataCallBack<List<Contact>> {
-    public static final String[] PERMISSION_STRING = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS};
+    public static final String[] PERMISSION_STRING = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS};
     private static final String REQUEST_DIALOG = "REQUEST_DIALOG";
     private static final int REQUEST_PERMISSION_CODE = 1012;
     private ActivitySplashBinding mBinding;
@@ -106,11 +106,13 @@ public class SplashActivity extends AppCompatActivity implements DataCallBack<Li
                             checkPermission();
                         } else if (Manifest.permission.READ_CONTACTS.equals(permission)) {
                             checkPermission();
+                        } else if (Manifest.permission.SEND_SMS.equals(permission)) {
+                            checkPermission();
                         }
                     }
 
                 } else if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                    if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission) || Manifest.permission.READ_CONTACTS.equals(permission)) {
+                    if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission) || Manifest.permission.READ_CONTACTS.equals(permission) || Manifest.permission.SEND_SMS.equals(permission)) {
                         check++;
                     }
                     if (check == PERMISSION_STRING.length) {

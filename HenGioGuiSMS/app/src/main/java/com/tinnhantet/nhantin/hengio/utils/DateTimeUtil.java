@@ -12,4 +12,18 @@ public class DateTimeUtil {
         String s2 = " Ngày: " + sdf2.format(time);
         return s1 + s2;
     }
+
+    public static String convertTimeToTime(Long time) {
+        String myFormat1 = "kk:mm";
+        SimpleDateFormat sdf1 = new SimpleDateFormat(myFormat1);
+        String s1 = sdf1.format(time);
+        return s1;
+    }
+
+    public static String convertTimeToDate(Long time) {
+        String myFormat2 = "dd/MM/yyyy";
+        SimpleDateFormat sdf2 = new SimpleDateFormat(myFormat2);
+        String s2 = sdf2.format(time);
+        return s2;
+    }
 }

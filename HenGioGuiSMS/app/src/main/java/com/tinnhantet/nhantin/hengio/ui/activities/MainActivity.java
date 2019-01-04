@@ -17,19 +17,13 @@ import com.tinnhantet.nhantin.hengio.utils.TabType;
 public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnTabSelectedListener {
     private ActivityMainBinding mBinding;
     private Navigator mNavigator;
+    public static boolean active = false;
+    public static MainActivity sInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
-    }
-
-    public static int checkPermission(String[] permissions, Context context) {
-        int permissionCheck = PackageManager.PERMISSION_GRANTED;
-        for (String permission : permissions) {
-            permissionCheck += ContextCompat.checkSelfPermission(context, permission);
-        }
-        return permissionCheck;
     }
 
     private void initUI() {
@@ -42,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
         mBinding.tablayout.setupWithViewPager(mBinding.viewPager);
         mBinding.tablayout.getTabAt(TabType.PENDING).setText(R.string.pending);
         mBinding.tablayout.getTabAt(TabType.SENT).setText(R.string.sent);
+        sInstance = this;
     }
 
     @Override
@@ -64,5 +59,17 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
     }
 }

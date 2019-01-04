@@ -21,4 +21,7 @@
     <string name="contact_empty">Bạn chưa chọn số điện thoại</string>
     <string name="invalid_date">Thời gian hẹn gửi phải lớn hơn thời gian hiện tại 1 phút</string>
     <string name="content_empty">Nội dung không được trống</string>
+    <string name="success">Thành công!</string>
+    <string name="foward">Chuyển tiếp</string>
+    <string name="delete">Xóa</string>
 </resources>

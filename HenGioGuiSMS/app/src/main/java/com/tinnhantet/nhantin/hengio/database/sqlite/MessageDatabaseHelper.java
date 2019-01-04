@@ -73,7 +73,15 @@ public class MessageDatabaseHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public int removeMsg(int id) {
+    public int removeMsgToSent(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(IS_SENT, 1);
+        return db.update(TBL_MSG, values,
+                ID + "=?", new String[]{String.valueOf(id)});
+    }
+
+    public int deleteMsg(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TBL_MSG, ID + "=?", new String[]{String.valueOf(id)});
     }

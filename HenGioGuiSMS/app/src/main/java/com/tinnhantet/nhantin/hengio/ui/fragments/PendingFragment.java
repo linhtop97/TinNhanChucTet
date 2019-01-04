@@ -20,6 +20,8 @@ import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Message;
 import com.tinnhantet.nhantin.hengio.ui.activities.AddMsgActivity;
 import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
+import com.tinnhantet.nhantin.hengio.ui.activities.ViewMsgActivity;
+import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 
 import java.util.List;
@@ -89,6 +91,9 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
 
     @Override
     public void onItemClick(Message message, int pos) {
-
+        //start Activity View Msg
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constant.EXTRA_MSG, message);
+        mNavigator.startActivity(ViewMsgActivity.class, bundle);
     }
 }

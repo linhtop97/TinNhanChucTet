@@ -1,7 +1,9 @@
 package com.tinnhantet.nhantin.hengio.ui.activities;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +29,7 @@ import com.tinnhantet.nhantin.hengio.databinding.ActivityAddMsgBinding;
 import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
+import com.tinnhantet.nhantin.hengio.services.MessageService;
 import com.tinnhantet.nhantin.hengio.ui.dialogs.ContactOptionDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
@@ -50,6 +53,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     private List<Integer> mPosSelectedPhone;
     private Calendar mMyCalendar;
     private int mHour, mMinute, mYear, mMonth, mDay;
+    private PendingIntent pIntent;
+    private AlarmManager aManager;
+    private boolean mIsEdit;
+    private Message mMessageEdit;
+    private Message mMessageComback;
+    private MessageDatabaseHelper mHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,9 +90,43 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         mBinding.txtDone.setText(Html.fromHtml(getString(R.string.done)));
         mNavigator = new Navigator(this);
         mSharedPrefs = new SharedPrefsImpl(this);
+        mHelper = MessageDatabaseHelper.getInstance(this);
         mContactSelected = new ArrayList<>();
         mMyCalendar = Calendar.getInstance();
         mBinding.edtContent.setMovementMethod(new ScrollingMovementMethod());
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                mMessageEdit = bundle.getParcelable(Constant.EXTRA_MSG);
+                if (mMessageEdit != null) {
+                    mIsEdit = true;
+                    mContactSelected = mSharedPrefs.getAllContact(mMessageEdit.getListContact());
+                    mAdapter = new PhoneNumberAdapter(this, mContactSelected);
+                    mAdapter.setOnContactListener(this);
+                    StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
+                            StaggeredGridLayoutManager.VERTICAL);
+                    mBinding.rvNumbers.setLayoutManager(layoutManager);
+                    mBinding.rvNumbers.setAdapter(mAdapter);
+                    Long time = Long.parseLong(mMessageEdit.getTime());
+                    String stime = DateTimeUtil.convertTimeToTime(time);
+                    String sdate = DateTimeUtil.convertTimeToDate(time);
+                    mBinding.time.setText(stime);
+                    mBinding.date.setText(sdate);
+                    mBinding.edtContent.setText(mMessageEdit.getContent());
+
+                    //set year, month, day, h, m
+                    String sTime1[] = stime.split(":");
+                    String sDate1[] = sdate.split("/");
+                    mHour = Integer.valueOf(sTime1[0]);
+                    mMinute = Integer.valueOf(sTime1[1]);
+                    mDay = Integer.valueOf(sDate1[0]);
+                    mMonth = Integer.valueOf(sDate1[1]);
+                    mYear = Integer.valueOf(sDate1[2]);
+                }
+            }
+
+        }
     }
 
     private void showDatePicker() {
@@ -146,9 +189,26 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 hideSoftKeyboard();
                 switch (invalidData()) {
                     case 0:
-                        MessageDatabaseHelper helper = MessageDatabaseHelper.getInstance(this);
-                        helper.addMsg(getMessage(mContactSelected, mBinding.edtContent.getText().toString(), mMyCalendar));
-                        finish();
+                        if (mIsEdit) {
+                            int id = mMessageEdit.getPendingId();
+                            mHelper.deleteMsg(id);
+                            Intent i = new Intent(this, MessageService.class);
+                            PendingIntent pIntent = PendingIntent.getService(getApplicationContext(), id, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                            AlarmManager aManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                            aManager.cancel(pIntent);
+                            doneMsg();
+                            Intent intent = new Intent();
+                            intent.setClass(this, ViewMsgActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable(Constant.EXTRA_MSG, mMessageComback);
+                            intent.putExtra(Constant.EXTRA_MSG, bundle);
+                            setResult(Activity.RESULT_OK, intent);
+                            finish();
+                        } else {
+                            doneMsg();
+                            finish();
+                        }
+
                         break;
                     case 1:
                         mNavigator.showToast(R.string.contact_empty);
@@ -168,19 +228,40 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+
+    private void doneMsg() {
+        Message message = getMessage(mContactSelected, mBinding.edtContent.getText().toString(), mMyCalendar);
+        long pIntentId = mHelper.addMsg(message);
+        //add msg to schedule
+        message.setPendingId((int) pIntentId);
+        sendMsg(message, pIntentId);
+        mMessageComback = message;
+    }
+
+    private void sendMsg(Message message, long pId) {
+        Intent i = new Intent(this, MessageService.class);
+        i.putExtra(Constant.EXTRA_MSG, message);
+        pIntent = PendingIntent.getService(getApplicationContext(), (int) pId, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        aManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        aManager.set(AlarmManager.RTC_WAKEUP, mMyCalendar.getTimeInMillis(), pIntent);
+        mNavigator.showToast(R.string.success);
+    }
+
     private int invalidData() {
         if (mContactSelected.size() == 0) {
             return 1;
         }
         Calendar calendar = Calendar.getInstance();
+
         calendar.set(mYear, mMonth, mDay, mHour, mMinute);
         long timeSet = calendar.getTimeInMillis();
         long timeNow = Calendar.getInstance().getTimeInMillis();
         String s = DateTimeUtil.convertTimeToString(Calendar.getInstance().getTimeInMillis());
         if ((timeSet - timeNow) < (60 * 1000)) {
             return 2;
-        }else {
-            mMyCalendar = calendar;        }
+        } else {
+            mMyCalendar = calendar;
+        }
         if (TextUtils.isEmpty(mBinding.edtContent.getText().toString())) {
             return 3;
         }
