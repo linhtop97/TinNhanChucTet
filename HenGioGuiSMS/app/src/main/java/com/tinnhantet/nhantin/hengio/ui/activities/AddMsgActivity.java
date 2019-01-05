@@ -16,6 +16,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
@@ -83,6 +84,63 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
+        mBinding.edtPhoneNumber.setOnKeyListener(new View.OnKeyListener() {
+
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    String pattern = "\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
+                    String num = mBinding.edtPhoneNumber.getText().toString();
+                    if (num.matches(pattern)) {
+                        boolean ok = true;
+                        if (mContactSelected != null) {
+                            int size = mContactSelected.size();
+                            for (int i = 0; i < size; i++) {
+                                Contact contact = mContactSelected.get(i);
+                                String phone = contact.getPhone();
+                                if (num.equals(phone)) {
+                                    mNavigator.showToast(contact.getName() + "(" + phone + ")" + "đã có");
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                            if (ok) {
+                                if (mAdapter != null) {
+                                    mContactSelected.add(new Contact(0, "", num));
+                                    mAdapter.notifyItemInserted(mContactSelected.size() - 1);
+                                } else {
+                                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
+                                    mAdapter.setOnContactListener(AddMsgActivity.this);
+                                    StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
+                                            StaggeredGridLayoutManager.VERTICAL);
+                                    mBinding.rvNumbers.setLayoutManager(layoutManager);
+                                    mBinding.rvNumbers.setAdapter(mAdapter);
+                                }
+
+                            }
+                        } else {
+                            mContactSelected = new ArrayList<>();
+                            mContactSelected.add(new Contact(0, "", num));
+                            mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
+                            mAdapter.setOnContactListener(AddMsgActivity.this);
+                            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
+                                    StaggeredGridLayoutManager.VERTICAL);
+                            mBinding.rvNumbers.setLayoutManager(layoutManager);
+                            mBinding.rvNumbers.setAdapter(mAdapter);
+                        }
+
+
+                    } else {
+
+                        mNavigator.showToast(R.string.invalid_phone);
+                    }
+                    hideSoftKeyboard();
+                    return true;
+                }
+                return false;
+            }
+        });
+        //
     }
 
     private void initUI() {

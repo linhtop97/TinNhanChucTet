@@ -24,4 +24,5 @@
     <string name="success">Thành công!</string>
     <string name="foward">Chuyển tiếp</string>
     <string name="delete">Xóa</string>
+    <string name="invalid_phone">Số điện thoại sai định dạng, vui lòng nhập lại</string>
 </resources>
