@@ -66,11 +66,14 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = getIntent();
         List<Contact> contactReceive = intent.getParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT);
         int sizeRoot = mContacts.size();
+        if (contactReceive == null) {
+            contactReceive = new ArrayList<>();
+        }
         int sizeSend = contactReceive.size();
         if (sizeRoot != 0 && sizeSend != 0) {
             for (int i = 0; i < sizeRoot; i++) {
                 for (int j = 0; j < sizeSend; j++) {
-                    if (mContacts.get(i).getId() == contactReceive.get(j).getId()) {
+                    if (mContacts.get(i).getPhone().equals(contactReceive.get(j).getPhone())) {
                         mContacts.get(i).setSelected(true);
                     }
                 }

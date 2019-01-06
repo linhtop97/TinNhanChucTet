@@ -16,6 +16,7 @@ import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
 import com.tinnhantet.nhantin.hengio.ui.fragments.PendingFragment;
 import com.tinnhantet.nhantin.hengio.ui.fragments.SentFragment;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
+import com.tinnhantet.nhantin.hengio.utils.StringUtils;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class MessageService extends Service {
     public int onStartCommand(Intent i, int flags, int startId) {
         Message message = i.getParcelableExtra(Constant.EXTRA_MSG);
         if (message != null) {
-            List<Contact> contacts = new SharedPrefsImpl(this).getAllContact(message.getListContact());
+            List<Contact> contacts = StringUtils.getAllContact(message.getListContact());
             String SSms = message.getContent();
             int size = contacts.size();
             for (int j = 0; j < size; j++) {

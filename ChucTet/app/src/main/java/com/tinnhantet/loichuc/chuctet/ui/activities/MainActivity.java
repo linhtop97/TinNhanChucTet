@@ -221,12 +221,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //check permision nếu ok thì cho dùng app, ko thì show snack bar
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag(SplashFragment.class.getSimpleName());
-        if (fragment != null) {
-            SplashFragment splashFragment = (SplashFragment) fragment;
-            splashFragment.showSnackbar();
-        }
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = fragmentManager.findFragmentByTag(SplashFragment.class.getSimpleName());
+            if (fragment != null) {
+                SplashFragment splashFragment = (SplashFragment) fragment;
+                splashFragment.showSnackbar();
+            }
     }
 
     @Override

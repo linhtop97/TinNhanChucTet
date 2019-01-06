@@ -35,6 +35,7 @@ import com.tinnhantet.nhantin.hengio.ui.dialogs.ContactOptionDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
+import com.tinnhantet.nhantin.hengio.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,20 +47,20 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     private ActivityAddMsgBinding mBinding;
     private DatePickerDialog.OnDateSetListener mOnDateSetListener;
     private Navigator mNavigator;
-    private List<Contact> mContacts;
     private List<Contact> mContactSelected;
     private PhoneNumberAdapter mAdapter;
     private int mPosSelected;
     private SharedPrefsImpl mSharedPrefs;
-    private List<Integer> mPosSelectedPhone;
     private Calendar mMyCalendar;
     private int mHour, mMinute, mYear, mMonth, mDay;
     private PendingIntent pIntent;
     private AlarmManager aManager;
     private boolean mIsEdit;
+    private boolean mIsForward;
     private Message mMessageEdit;
-    private Message mMessageComback;
+    private Message mMessageComeback;
     private MessageDatabaseHelper mHelper;
+    private List<Contact> typeContact;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,10 +81,18 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     mBinding.edtPhoneNumber.setText("");
+                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
+                    mAdapter.setOnContactListener(AddMsgActivity.this);
+                    StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
+                            StaggeredGridLayoutManager.VERTICAL);
+                    mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
+                    mBinding.rvNumbers.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                     mBinding.rvNumbers.setVisibility(View.VISIBLE);
                 }
             }
         });
+
         mBinding.edtPhoneNumber.setOnKeyListener(new View.OnKeyListener() {
 
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -93,54 +102,51 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     String num = mBinding.edtPhoneNumber.getText().toString();
                     if (num.matches(pattern)) {
                         boolean ok = true;
-                        if (mContactSelected != null) {
-                            int size = mContactSelected.size();
-                            for (int i = 0; i < size; i++) {
-                                Contact contact = mContactSelected.get(i);
-                                String phone = contact.getPhone();
+                        if (mContactSelected == null) {
+                            mContactSelected = new ArrayList<>();
+                        }
+                        int size = mContactSelected.size();
+                        for (int i = 0; i < size; i++) {
+                            Contact contact = mContactSelected.get(i);
+                            String phone = contact.getPhone();
+                            if (ok) {
                                 if (num.equals(phone)) {
                                     mNavigator.showToast(contact.getName() + "(" + phone + ")" + "đã có");
+                                    mBinding.edtPhoneNumber.requestFocus();
                                     ok = false;
                                     break;
                                 }
                             }
-                            if (ok) {
-                                if (mAdapter != null) {
-                                    mContactSelected.add(new Contact(0, "", num));
-                                    mAdapter.notifyItemInserted(mContactSelected.size() - 1);
-                                } else {
-                                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
-                                    mAdapter.setOnContactListener(AddMsgActivity.this);
-                                    StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
-                                            StaggeredGridLayoutManager.VERTICAL);
-                                    mBinding.rvNumbers.setLayoutManager(layoutManager);
-                                    mBinding.rvNumbers.setAdapter(mAdapter);
-                                }
-
-                            }
-                        } else {
-                            mContactSelected = new ArrayList<>();
-                            mContactSelected.add(new Contact(0, "", num));
-                            mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
-                            mAdapter.setOnContactListener(AddMsgActivity.this);
-                            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
-                                    StaggeredGridLayoutManager.VERTICAL);
-                            mBinding.rvNumbers.setLayoutManager(layoutManager);
-                            mBinding.rvNumbers.setAdapter(mAdapter);
                         }
+                        if (ok) {
+                            Contact contact = new Contact(0, "", num);
+                            contact.setSelected(true);
+                            mContactSelected.add(contact);
+                            typeContact.add(contact);
+                            mAdapter.notifyItemInserted(mContactSelected.size() - 1);
+                            mBinding.edtPhoneNumber.clearFocus();
+                            mBinding.edtPhoneNumber.setText("");
+                            if (mIsForward) {
+                                mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
+                                mAdapter.setOnContactListener(AddMsgActivity.this);
+                                StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
+                                        StaggeredGridLayoutManager.VERTICAL);
+                                mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
+                                mBinding.rvNumbers.setAdapter(mAdapter);
+                                mBinding.rvNumbers.setVisibility(View.VISIBLE);
+                            }
 
-
+                            hideSoftKeyboard();
+                        }
                     } else {
-
                         mNavigator.showToast(R.string.invalid_phone);
+                        mBinding.edtPhoneNumber.requestFocus();
                     }
-                    hideSoftKeyboard();
-                    return true;
+                    return false;
                 }
                 return false;
             }
         });
-        //
     }
 
     private void initUI() {
@@ -149,46 +155,70 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         mNavigator = new Navigator(this);
         mSharedPrefs = new SharedPrefsImpl(this);
         mHelper = MessageDatabaseHelper.getInstance(this);
-        mContactSelected = new ArrayList<>();
         mMyCalendar = Calendar.getInstance();
         mBinding.edtContent.setMovementMethod(new ScrollingMovementMethod());
+        typeContact = new ArrayList<>();
+        //set Data to UI when nothing
+        mContactSelected = new ArrayList<>();
+        mAdapter = new PhoneNumberAdapter(this, mContactSelected);
+        mAdapter.setOnContactListener(this);
+        StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
+                StaggeredGridLayoutManager.VERTICAL);
+        mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
+        mBinding.rvNumbers.setAdapter(mAdapter);
+        //getIntent from edit
         Intent intent = getIntent();
         if (intent != null) {
+            String action = intent.getAction();
+            if (action != null) {
+                if (action.equals(ViewMsgActivity.FORWARD)) {
+                    mIsForward = true;
+                }
+            }
+
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
                 mMessageEdit = bundle.getParcelable(Constant.EXTRA_MSG);
                 if (mMessageEdit != null) {
-                    mIsEdit = true;
-                    mContactSelected = mSharedPrefs.getAllContact(mMessageEdit.getListContact());
-                    mAdapter = new PhoneNumberAdapter(this, mContactSelected);
-                    mAdapter.setOnContactListener(this);
-                    StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
-                            StaggeredGridLayoutManager.VERTICAL);
-                    mBinding.rvNumbers.setLayoutManager(layoutManager);
-                    mBinding.rvNumbers.setAdapter(mAdapter);
-                    Long time = Long.parseLong(mMessageEdit.getTime());
-                    String stime = DateTimeUtil.convertTimeToTime(time);
-                    String sdate = DateTimeUtil.convertTimeToDate(time);
-                    mBinding.time.setText(stime);
-                    mBinding.date.setText(sdate);
-                    mBinding.edtContent.setText(mMessageEdit.getContent());
-
-                    //set year, month, day, h, m
-                    String sTime1[] = stime.split(":");
-                    String sDate1[] = sdate.split("/");
-                    mHour = Integer.valueOf(sTime1[0]);
-                    mMinute = Integer.valueOf(sTime1[1]);
-                    mDay = Integer.valueOf(sDate1[0]);
-                    mMonth = Integer.valueOf(sDate1[1]);
-                    mYear = Integer.valueOf(sDate1[2]);
+                    if (!mIsForward) {
+                        mIsEdit = true;
+                    }
+                    initData(mMessageEdit);
+//                    mContactSelected = mSharedPrefs.getAllContact(mMessageEdit.getListContact());
+//                    mAdapter = new PhoneNumberAdapter(this, mContactSelected);
+//                    mAdapter.setOnContactListener(this);
+//                    StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
+//                            StaggeredGridLayoutManager.VERTICAL);
+//                    mBinding.rvNumbers.setLayoutManager(layoutManager);
+//                    mBinding.rvNumbers.setAdapter(mAdapter);
+//                    Long time = Long.parseLong(mMessageEdit.getTime());
+//                    String stime = DateTimeUtil.convertTimeToTime(time);
+//                    String sdate = DateTimeUtil.convertTimeToDate(time);
+//                    mBinding.time.setText(stime);
+//                    mBinding.date.setText(sdate);
+//                    mBinding.edtContent.setText(mMessageEdit.getContent());
+//
+//                    //set year, month, day, h, m
+//                    String sTime1[] = stime.split(":");
+//                    String sDate1[] = sdate.split("/");
+//                    mHour = Integer.valueOf(sTime1[0]);
+//                    mMinute = Integer.valueOf(sTime1[1]);
+//                    mDay = Integer.valueOf(sDate1[0]);
+//                    mMonth = Integer.valueOf(sDate1[1]);
+//                    mYear = Integer.valueOf(sDate1[2]);
+                } else {
+                    initData(null);
                 }
+            } else {
+                initData(null);
             }
 
+        } else {
+            initData(null);
         }
     }
 
     private void showDatePicker() {
-        final Calendar calendar = Calendar.getInstance();
         mOnDateSetListener = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -201,18 +231,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         };
-        new DatePickerDialog(this, mOnDateSetListener, calendar
-                .get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(this, mOnDateSetListener, mYear, mMonth,
+                mDay).show();
 
     }
 
     private void showTimePicker() {
-        final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-
-        // Launch Time Picker Dialog
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 new TimePickerDialog.OnTimeSetListener() {
 
@@ -221,10 +245,10 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                                           int minute) {
                         mHour = hourOfDay;
                         mMinute = minute;
-                        mBinding.time.setText(hourOfDay + "h : " + minute + "p");
+                        mBinding.time.setText(mHour + " Giờ : " + mMinute + " Phút");
 
                     }
-                }, hour, minute, true);
+                }, mHour, mMinute, true);
         timePickerDialog.show();
     }
 
@@ -258,15 +282,21 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                             Intent intent = new Intent();
                             intent.setClass(this, ViewMsgActivity.class);
                             Bundle bundle = new Bundle();
-                            bundle.putParcelable(Constant.EXTRA_MSG, mMessageComback);
+                            bundle.putParcelable(Constant.EXTRA_MSG, mMessageComeback);
                             intent.putExtra(Constant.EXTRA_MSG, bundle);
                             setResult(Activity.RESULT_OK, intent);
                             finish();
-                        } else {
-                            doneMsg();
-                            finish();
+                            break;
                         }
-
+                        if (mIsForward) {
+                            doneMsg();
+                            ViewMsgActivity.mInstance.finish();
+                            mNavigator.startActivity(MainActivity.class);
+                            finish();
+                            break;
+                        }
+                        doneMsg();
+                        finish();
                         break;
                     case 1:
                         mNavigator.showToast(R.string.contact_empty);
@@ -288,12 +318,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private void doneMsg() {
-        Message message = getMessage(mContactSelected, mBinding.edtContent.getText().toString(), mMyCalendar);
+        Message message = Message.getMessage(mContactSelected, mBinding.edtContent.getText().toString(), mMyCalendar);
         long pIntentId = mHelper.addMsg(message);
         //add msg to schedule
         message.setPendingId((int) pIntentId);
         sendMsg(message, pIntentId);
-        mMessageComback = message;
+        mMessageComeback = message;
     }
 
     private void sendMsg(Message message, long pId) {
@@ -302,10 +332,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         pIntent = PendingIntent.getService(getApplicationContext(), (int) pId, i, PendingIntent.FLAG_UPDATE_CURRENT);
         aManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         aManager.set(AlarmManager.RTC_WAKEUP, mMyCalendar.getTimeInMillis(), pIntent);
-        mNavigator.showToast(R.string.success);
     }
 
     private int invalidData() {
+        if (mContactSelected == null) {
+            mContactSelected = new ArrayList<>();
+        }
         if (mContactSelected.size() == 0) {
             return 1;
         }
@@ -314,8 +346,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         calendar.set(mYear, mMonth, mDay, mHour, mMinute);
         long timeSet = calendar.getTimeInMillis();
         long timeNow = Calendar.getInstance().getTimeInMillis();
-        String s = DateTimeUtil.convertTimeToString(Calendar.getInstance().getTimeInMillis());
-        if ((timeSet - timeNow) < (60 * 1000)) {
+        if ((timeSet - timeNow) < (2 * 60 * 1000)) {
             return 2;
         } else {
             mMyCalendar = calendar;
@@ -330,35 +361,53 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.REQUEST_CODE_CONTACT && resultCode == Activity.RESULT_OK) {
+            //ko có sẵn r ->
+            if (mContactSelected == null) {
+                mContactSelected = new ArrayList<>();
+            }
+            int size1 = mContactSelected.size();
+            if (typeContact.size() == 0) {
+                for (int i = 0; i < size1; i++) {
+                    Contact contact = mContactSelected.get(i);
+                    if (contact.getName().equals("")) {
+                        typeContact.add(contact);
+                    }
+                }
+            }
+
             mContactSelected.clear();
-            mContacts = data.getParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT);
-            int size = mContacts.size();
-            String s = "";
+            List<Contact> newContactSelected = new ArrayList<>();
+            List<Contact> contacts = data.getParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT);
+            int size = contacts.size();
             for (int i = 0; i < size; i++) {
-                if (mContacts.get(i).isSelected()) {
-                    mContactSelected.add(mContacts.get(i));
+                if (contacts.get(i).isSelected()) {
+                    newContactSelected.add(contacts.get(i));
                 }
             }
 
-            mAdapter = new PhoneNumberAdapter(this, mContactSelected);
-            mAdapter.setOnContactListener(this);
-            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
-                    StaggeredGridLayoutManager.VERTICAL);
-            mBinding.rvNumbers.setLayoutManager(layoutManager);
-            mBinding.rvNumbers.setAdapter(mAdapter);
-            mBinding.rvNumbers.setVisibility(View.GONE);
-            for (int i = 0; i < mContactSelected.size(); i++) {
-                Contact contact = mContactSelected.get(i);
-                String name = contact.getName();
-                if (name.equals("")) {
-                    name = contact.getPhone();
+            int sizeOfSelected = typeContact.size();
+            int sizeOfNewSelected = newContactSelected.size();
+            for (int i = 0; i < sizeOfNewSelected; i++) {
+                for (int j = 0; j < sizeOfSelected; j++) {
+                    if (newContactSelected.get(i).getPhone().equals(typeContact.get(j).getPhone())) {
+                        typeContact.get(j).setSelected(false);
+                    }
                 }
-                s += name + ",";
             }
-            s = s.substring(0, s.length() - 1);
-            mBinding.edtPhoneNumber.setText(s);
+
+            //add all none Selected
+            for (int i = 0; i < sizeOfSelected; i++) {
+                Contact contact = typeContact.get(i);
+                if (contact.isSelected()) {
+                    newContactSelected.add(contact);
+                }
+            }
+            mContactSelected.addAll(newContactSelected);
+            mBinding.edtPhoneNumber.setText(StringUtils.getAllNameContact(mContactSelected));
             mBinding.edtPhoneNumber.clearFocus();
-
+            mAdapter = new PhoneNumberAdapter(this, mContactSelected);
+            mAdapter.notifyDataSetChanged();
+            mBinding.rvNumbers.setVisibility(View.GONE);
             //getResources().getDimension(R.dimen._1sdp)
         }
     }
@@ -371,6 +420,14 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void removeContact() {
+        Contact contact = mContactSelected.get(mPosSelected);
+        int size = typeContact.size();
+        for (int i = 0; i < size; i++) {
+            if (typeContact.get(i).getPhone().equals(contact.getPhone())) {
+                typeContact.remove(i);
+                break;
+            }
+        }
         mContactSelected.remove(mPosSelected);
         mAdapter.notifyItemRemoved(mPosSelected);
     }
@@ -382,16 +439,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         getSupportFragmentManager().beginTransaction().add(f, CONTACT_OPTION_DIALOG).commit();
     }
 
-    private Message getMessage(List<Contact> contacts, String content, Calendar c) {
-        String listContact = mSharedPrefs.listContactString(contacts);
-        Message message = new Message();
-        message.setListContact(listContact);
-        message.setSend(false);
-        message.setTime(String.valueOf(c.getTimeInMillis()));
-        message.setContent(content);
-        return message;
-    }
-
     public void hideSoftKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.
                 INPUT_METHOD_SERVICE);
@@ -399,6 +446,38 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         } catch (Exception ex) {
 
+        }
+    }
+
+    private void initData(Message message) {
+        if (message == null) {
+            Long time = Calendar.getInstance().getTimeInMillis() + (2 * 60 * 1000);
+            String[] dateTimeArr = DateTimeUtil.separateTime(time);
+            mHour = Integer.parseInt(dateTimeArr[0]);
+            mMinute = Integer.parseInt(dateTimeArr[1]);
+            mDay = Integer.parseInt(dateTimeArr[2]);
+            mMonth = Integer.parseInt(dateTimeArr[3])-1;
+            mYear = Integer.parseInt(dateTimeArr[4]);
+            mBinding.date.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
+            mBinding.time.setText(mHour + " Giờ : " + mMinute + " Phút");
+            mBinding.edtPhoneNumber.setText("");
+            mBinding.edtContent.setText("");
+        } else {
+            Long time = Long.valueOf(message.getTime());
+            String[] dateTimeArr = DateTimeUtil.separateTime(time);
+            mHour = Integer.parseInt(dateTimeArr[0]);
+            mMinute = Integer.parseInt(dateTimeArr[1]);
+            mDay = Integer.parseInt(dateTimeArr[2]);
+            mMonth = Integer.parseInt(dateTimeArr[3]) - 1;
+            mYear = Integer.parseInt(dateTimeArr[4]);
+            mBinding.date.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
+            mBinding.time.setText(mHour + " Giờ : " + mMinute + " Phút");
+            List<Contact> contacts = StringUtils.getAllContact(message.getListContact());
+            mBinding.edtPhoneNumber.setText(StringUtils.getAllNameContact(contacts));
+            mBinding.edtContent.setText(message.getContent());
+            mContactSelected = contacts;
+            mAdapter.notifyDataSetChanged();
+            mBinding.rvNumbers.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -26,4 +26,17 @@ public class DateTimeUtil {
         String s2 = sdf2.format(time);
         return s2;
     }
+
+    public static String[] separateTime(Long time) {
+        String myFormat1 = "kk:mm";
+        String myFormat2 = "dd/MM/yyyy";
+        SimpleDateFormat sdf1 = new SimpleDateFormat(myFormat1);
+        SimpleDateFormat sdf2 = new SimpleDateFormat(myFormat2);
+        String s1 = sdf1.format(time);
+        String s2 = sdf2.format(time);
+        String[] timeArr = s1.split(":");
+        String[] dateArr = s2.split("/");
+        String[] dateTimeArr = new String[]{timeArr[0], timeArr[1], dateArr[0], dateArr[1], dateArr[2]};
+        return dateTimeArr;
+    }
 }

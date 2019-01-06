@@ -3,6 +3,11 @@ package com.tinnhantet.nhantin.hengio.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tinnhantet.nhantin.hengio.utils.StringUtils;
+
+import java.util.Calendar;
+import java.util.List;
+
 public class Message implements Parcelable {
 
     public Message() {
@@ -101,5 +106,15 @@ public class Message implements Parcelable {
         dest.writeString(mTime);
         dest.writeString(mListContact);
         dest.writeByte((byte) (mIsSend == null ? 0 : mIsSend ? 1 : 2));
+    }
+
+    public static Message getMessage(List<Contact> contacts, String content, Calendar c) {
+        String listContact = StringUtils.listContactString((contacts));
+        Message message = new Message();
+        message.setListContact(listContact);
+        message.setSend(false);
+        message.setTime(String.valueOf(c.getTimeInMillis()));
+        message.setContent(content);
+        return message;
     }
 }

@@ -71,14 +71,4 @@ public class SharedPrefsImpl implements SharedPrefsApi {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(SharedPrefsKey.KEY_LIST_CONTACT, new Gson().toJson(messages)).apply();
     }
-
-    public String listContactString(List<Contact> contacts) {
-        return new Gson().toJson(contacts);
-    }
-
-    public List<Contact> getAllContact(String contacts) {
-        Type listType = new TypeToken<ArrayList<Contact>>() {
-        }.getType();
-        return new Gson().fromJson(contacts, listType);
-    }
 }

@@ -13,6 +13,7 @@ import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
 import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
+import com.tinnhantet.nhantin.hengio.utils.StringUtils;
 
 import java.util.List;
 
@@ -83,18 +84,14 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
 
         void bindData(Message message) {
             if (message == null) return;
-            List<Contact> contacts = mSharedPrefs.getAllContact(message.getListContact());
-            String name = "";
-            for (Contact c : contacts) {
-                String ten = c.getName();
-                if (ten.equals("")) {
-                    ten = c.getPhone();
-                }
-                name += ten + ",";
-            }
-            name = name.substring(0, name.length() - 1);
+            List<Contact> contacts = StringUtils.getAllContact(message.getListContact());
+            String name = StringUtils.getAllNameContact(contacts);
             String content = message.getContent();
-            mTextTime.setText(DateTimeUtil.convertTimeToString(Long.valueOf(message.getTime())));
+            String dateTime[] = DateTimeUtil.separateTime(Long.valueOf(message.getTime()));
+            StringBuilder builder = new StringBuilder();
+            builder.append("Vào lúc ").append(dateTime[0]).append(" Giờ : ").append(dateTime[1]).append(" Phút ")
+                    .append("Ngày ").append(dateTime[2]).append("/").append(dateTime[3]).append("/").append(dateTime[4]);
+            mTextTime.setText(builder);
             mTextContent.setText("Nội dung: " + content);
             mTextSendTo.setText("Gửi đến: " + name);
         }

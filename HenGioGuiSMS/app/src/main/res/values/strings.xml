@@ -15,14 +15,14 @@
     <string name="ok">OK</string>
     <string name="select_all">Chọn tất cả</string>
     <string name="un_select_all">Bỏ chọn tất</string>
-    <string name="confirm_cancel">Bạn có muốn hủy các lựa chọn này?</string>
+    <string name="confirm_cancel">Bạn có muốn gỡ bỏ tất cả các lựa chọn này?</string>
     <string name="done"><![CDATA[<u>Xong</u>]]></string>
     <string name="loading_plz_wait">Đang tải dữ liệu, vui lòng chờ…</string>
     <string name="contact_empty">Bạn chưa chọn số điện thoại</string>
-    <string name="invalid_date">Thời gian hẹn gửi phải lớn hơn thời gian hiện tại 1 phút</string>
+    <string name="invalid_date">Thời gian hẹn gửi phải lớn hơn thời gian hiện tại 2 phút</string>
     <string name="content_empty">Nội dung không được trống</string>
     <string name="success">Thành công!</string>
     <string name="foward">Chuyển tiếp</string>
     <string name="delete">Xóa</string>
-    <string name="invalid_phone">Số điện thoại sai định dạng, vui lòng nhập lại</string>
+    <string name="invalid_phone">Số điện thoại phải bao gồm 10 chữ số!</string>
 </resources>
