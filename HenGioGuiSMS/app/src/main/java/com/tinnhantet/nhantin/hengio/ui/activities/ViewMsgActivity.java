@@ -20,6 +20,7 @@ import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
 import com.tinnhantet.nhantin.hengio.services.MessageService;
+import com.tinnhantet.nhantin.hengio.ui.dialogs.ConfirmDeleteDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ViewMsgActivity extends AppCompatActivity implements View.OnClickListener, OnDataClickListener {
     private static final int REQUEST_EDIT = 108;
     public static final String FORWARD = "FORWARD";
+    private static final String DELETE_DIALOG = "DELETE_DIALOG";
     private ActivityViewMsgBinding mBinding;
     private Navigator mNavigator;
     private SharedPrefsImpl mSharedPrefs;
@@ -59,7 +61,12 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
         mNavigator = new Navigator(this);
         mSharedPrefs = new SharedPrefsImpl(this);
         mHelper = MessageDatabaseHelper.getInstance(this);
-        mMessage = getIntent().getExtras().getParcelable(Constant.EXTRA_MSG);
+        Bundle bundle = getIntent().getExtras();
+        mMessage = bundle.getParcelable(Constant.EXTRA_MSG);
+        boolean isEdit = bundle.getBoolean(Constant.EXTRA_IS_EDIT);
+        if (!isEdit) {
+            mBinding.txtEdit.setVisibility(View.GONE);
+        }
         if (mMessage != null) {
             List<Contact> contacts = StringUtils.getAllContact(mMessage.getListContact());
             mAdapter = new PhoneNumberAdapter(this, contacts);
@@ -102,15 +109,20 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btn_delete:
                 //delete this msg
-                int id = mMessage.getPendingId();
-                mHelper.deleteMsg(id);
-                Intent i = new Intent(this, MessageService.class);
-                PendingIntent pIntent = PendingIntent.getService(getApplicationContext(), id, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager aManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                aManager.cancel(pIntent);
-                finish();
+                ConfirmDeleteDialog f = ConfirmDeleteDialog.getInstance();
+                getSupportFragmentManager().beginTransaction().add(f, DELETE_DIALOG).commit();
                 break;
         }
+    }
+
+    public void deleteMsg() {
+        int id = mMessage.getPendingId();
+        mHelper.deleteMsg(id);
+        Intent i = new Intent(this, MessageService.class);
+        PendingIntent pIntent = PendingIntent.getService(getApplicationContext(), id, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager aManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        aManager.cancel(pIntent);
+        finish();
     }
 
     @Override

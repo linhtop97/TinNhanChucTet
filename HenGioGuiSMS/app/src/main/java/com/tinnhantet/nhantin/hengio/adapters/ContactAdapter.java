@@ -11,9 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tinnhantet.nhantin.hengio.R;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsKey;
 import com.tinnhantet.nhantin.hengio.listeners.OnItemClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
@@ -22,12 +25,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     private Context mContext;
     private OnItemClickListener mListener;
     private int mSize;
+    private int mSizeHolder;
     private int mPositionSelect;
     private boolean mIsSelectAll;
+    private List<Contact> mContactsHolder;
+    private SharedPrefsImpl mSharedPrefs;
 
     public ContactAdapter(Context context, List<Contact> contacts) {
         mContacts = contacts;
+        //mContactsHolder = contacts;
         mSize = contacts.size();
+        mSizeHolder = mSize;
         mContext = context;
     }
 
@@ -121,7 +129,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 public void onClick(View v) {
                     mPositionSelect = getAdapterPosition();
                     Boolean b = mIsSelected.isChecked();
+                    Contact contact = mContacts.get(mPositionSelect);
                     mContacts.get(mPositionSelect).setSelected(!b);
+//                    for (int i = 0; i < mSizeHolder; i++) {
+//                        if (mContactsHolder.get(i).getPhone().equals(contact.getPhone())) {
+//                            mContactsHolder.get(i).setSelected(!b);
+//                        }
+//                    }
                     mListener.onItemClick(mPositionSelect);
                     notifyItemChanged(mPositionSelect, "changed");
                 }
@@ -133,5 +147,29 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             mTextName.setText(contact.getName());
             mTextPhone.setText(contact.getPhone());
         }
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        mContacts.clear();
+        mContacts = contacts;
+        mSize = mContacts.size();
+        notifyDataSetChanged();
+    }
+
+    public void filterContact(String contactName) {
+        if (contactName.isEmpty()) {
+            mContactsHolder = mSharedPrefs.getListContact(SharedPrefsKey.KEY_LIST_CONTACT_HOLDER);
+            setContacts(mContactsHolder);
+            return;
+        }
+        List<Contact> results = new ArrayList<>();
+        contactName = contactName.toLowerCase();
+        for (int i = 0; i < mSizeHolder; i++) {
+            Contact contact = mContactsHolder.get(i);
+            if (contact.getPhone().contains(contactName) || contact.getName().contains(contactName)) {
+                results.add(contact);
+            }
+        }
+        setContacts(results);
     }
 }

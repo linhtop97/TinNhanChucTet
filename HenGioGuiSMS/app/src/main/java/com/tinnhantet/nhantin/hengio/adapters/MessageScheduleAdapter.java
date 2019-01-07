@@ -1,15 +1,18 @@
 package com.tinnhantet.nhantin.hengio.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
+import com.tinnhantet.nhantin.hengio.listeners.OnItemLongClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
 import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
@@ -22,16 +25,26 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
     private List<Message> mMessages;
     private Context mContext;
     private OnDataClickListener<Message> mListener;
+    private OnItemLongClickListener<String> mItemLongClickListener;
     private SharedPrefsImpl mSharedPrefs;
+    private boolean isShowCheckBox = false;
+    private boolean mIsSelectAll;
+    private int mSize;
 
-    public MessageScheduleAdapter(Context context, List<Message> messages) {
+    public MessageScheduleAdapter(Context context, List<Message> messages, boolean isShow) {
         mMessages = messages;
+        mSize = mMessages.size();
         mContext = context;
+        isShowCheckBox = isShow;
         mSharedPrefs = new SharedPrefsImpl(mContext);
     }
 
     public void setOnDataListener(OnDataClickListener listener) {
         mListener = listener;
+    }
+
+    public void setOnLongItemClickListner(OnItemLongClickListener<String> listner) {
+        mItemLongClickListener = listner;
     }
 
     @Override
@@ -46,6 +59,19 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.bindData(mMessages.get(position));
+        Message message = mMessages.get(position);
+        holder.mCheckBox.setChecked(message.getSelected());
+    }
+
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.contains("payload")) {
+            Message message = mMessages.get(position);
+            holder.mCheckBox.setChecked(message.getSelected());
+        } else {
+            super.onBindViewHolder(holder, position, payloads);
+        }
     }
 
     public void setMessages(List<Message> messages) {
@@ -62,24 +88,68 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
         return mMessages != null ? mMessages.size() : 0;
     }
 
+    public void setSelectedAll() {
+        if (!mIsSelectAll) {
+            for (int i = 0; i < mSize; i++) {
+                mMessages.get(i).setSelected(true);
+            }
+            mIsSelectAll = true;
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeSelectedAll() {
+        if (mIsSelectAll) {
+            for (int i = 0; i < mSize; i++) {
+                mMessages.get(i).setSelected(false);
+            }
+            mIsSelectAll = false;
+            notifyDataSetChanged();
+        }
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextTime;
         private TextView mTextSendTo;
         private TextView mTextContent;
+        private CheckBox mCheckBox;
 
         ViewHolder(View itemView) {
             super(itemView);
             mTextTime = itemView.findViewById(R.id.txt_time_send);
             mTextSendTo = itemView.findViewById(R.id.txt_send_to);
             mTextContent = itemView.findViewById(R.id.txt_content);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    mListener.onItemClick(mMessages.get(pos), pos);
-                }
-            });
+            mCheckBox = itemView.findViewById(R.id.cb_select_msg);
+            if (isShowCheckBox) {
+                mCheckBox.setVisibility(View.VISIBLE);
+                mCheckBox.setClickable(false);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = getAdapterPosition();
+                        Boolean b = mCheckBox.isChecked();
+                        mCheckBox.setChecked(!b);
+                        mMessages.get(pos).setSelected(!b);
+                        notifyItemChanged(pos, "changed");
+
+                    }
+                });
+            } else {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = getAdapterPosition();
+                        mListener.onItemClick(mMessages.get(pos), pos);
+                    }
+                });
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        mItemLongClickListener.onItemLongClick("");
+                        return true;
+                    }
+                });
+            }
         }
 
         void bindData(Message message) {

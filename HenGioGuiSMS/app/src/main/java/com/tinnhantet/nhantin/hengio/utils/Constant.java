@@ -8,4 +8,5 @@ public class Constant {
     public static final String EXTRA_LIST_CONTACT = "EXTRA_LIST_CONTACT";
     public static final String ARG_CONTACT = "ARG_CONTACT";
     public static final String EXTRA_MSG = "EXTRA_MSG";
+    public static final String EXTRA_IS_EDIT = "EXTRA_IS_EDIT";
 }

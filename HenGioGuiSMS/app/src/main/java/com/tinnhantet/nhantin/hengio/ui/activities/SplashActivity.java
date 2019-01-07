@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsKey;
 import com.tinnhantet.nhantin.hengio.databinding.ActivitySplashBinding;
 import com.tinnhantet.nhantin.hengio.listeners.DataCallBack;
 import com.tinnhantet.nhantin.hengio.models.Contact;
@@ -139,7 +140,7 @@ public class SplashActivity extends AppCompatActivity implements DataCallBack<Li
     }
 
     private void loadContacts() {
-        int SPLASH_DISPLAY_LENGTH = 2000;
+        int SPLASH_DISPLAY_LENGTH = 2500;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -174,7 +175,7 @@ public class SplashActivity extends AppCompatActivity implements DataCallBack<Li
 
     @Override
     public void onDataSuccess(List<Contact> data) {
-        mSharedPrefs.putListContact(data);
+        mSharedPrefs.putListContact(data, SharedPrefsKey.KEY_LIST_CONTACT);
     }
 
     @Override

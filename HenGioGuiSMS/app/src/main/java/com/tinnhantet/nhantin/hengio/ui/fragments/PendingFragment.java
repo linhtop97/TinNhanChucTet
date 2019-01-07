@@ -1,6 +1,9 @@
 package com.tinnhantet.nhantin.hengio.ui.fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,23 +20,31 @@ import com.tinnhantet.nhantin.hengio.adapters.MessageScheduleAdapter;
 import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
 import com.tinnhantet.nhantin.hengio.databinding.FragmentPendingBinding;
 import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
+import com.tinnhantet.nhantin.hengio.listeners.OnItemLongClickListener;
 import com.tinnhantet.nhantin.hengio.models.Message;
+import com.tinnhantet.nhantin.hengio.services.MessageService;
 import com.tinnhantet.nhantin.hengio.ui.activities.AddMsgActivity;
 import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
 import com.tinnhantet.nhantin.hengio.ui.activities.ViewMsgActivity;
+import com.tinnhantet.nhantin.hengio.ui.dialogs.ConfirmDeleteAllDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 
 import java.util.List;
 
-public class PendingFragment extends Fragment implements View.OnClickListener, OnDataClickListener<Message> {
+import static android.content.Context.ALARM_SERVICE;
+
+public class PendingFragment extends Fragment implements View.OnClickListener, OnDataClickListener<Message>, OnItemLongClickListener<String> {
     private static final String TAG = "PendingFragment";
+    private static final String DELETE_ALL_DIALOG = "DELETE_ALL_DIALOG";
     private FragmentPendingBinding mBinding;
     private MainActivity mMainActivity;
     private Navigator mNavigator;
     private MessageScheduleAdapter mAdapter;
     private List<Message> mMessages;
     private MessageDatabaseHelper helper;
+    private LinearLayoutManager mLinearLayoutManager;
+    private boolean mIsSelectAll = false;
 
     public static PendingFragment newInstance() {
         PendingFragment fragment = new PendingFragment();
@@ -53,16 +64,17 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
 
     private void initAction() {
         mBinding.btnAdd.setOnClickListener(this);
+        mBinding.btnDelete.setOnClickListener(this);
+        mBinding.btnCancel.setOnClickListener(this);
+        mBinding.btnSelectAll.setOnClickListener(this);
     }
 
     private void initUI() {
         mNavigator = new Navigator(mMainActivity);
+        mLinearLayoutManager = new LinearLayoutManager(mMainActivity);
         helper = MessageDatabaseHelper.getInstance(mMainActivity);
         mMessages = helper.getAllMsgPending();
-        mAdapter = new MessageScheduleAdapter(mMainActivity, mMessages);
-        mAdapter.setOnDataListener(this);
-        mBinding.recycleView.setLayoutManager(new LinearLayoutManager(mMainActivity));
-        mBinding.recycleView.setAdapter(mAdapter);
+        showMessageNormal(mMessages);
     }
 
     @Override
@@ -71,7 +83,50 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
             case R.id.btn_add:
                 mNavigator.startActivity(AddMsgActivity.class, Navigator.NavigateAnim.BOTTOM_UP);
                 break;
+            case R.id.btn_cancel:
+                mIsSelectAll = false;
+                mBinding.btnSelectAll.setText(R.string.select_all);
+                showMessageNormal(helper.getAllMsgPending());
+                break;
+            case R.id.btn_delete:
+                ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance();
+                getChildFragmentManager().beginTransaction().add(f, DELETE_ALL_DIALOG).commit();
+                break;
+
+            case R.id.btn_select_all:
+                if (!mIsSelectAll) {
+                    mAdapter.setSelectedAll();
+                    mIsSelectAll = true;
+                    mBinding.btnSelectAll.setText(R.string.un_select_all);
+                } else {
+                    mAdapter.removeSelectedAll();
+                    mIsSelectAll = false;
+                    mBinding.btnSelectAll.setText(R.string.select_all);
+                }
+
+
+                break;
         }
+    }
+
+    public void deleteAllSelected() {
+        List<Message> messages = ((MessageScheduleAdapter) mBinding.recycleView.getAdapter()).getMessages();
+        MessageDatabaseHelper databaseHelper = MessageDatabaseHelper.getInstance(mMainActivity);
+        int size = messages.size();
+        for (int i = 0; i < size; i++) {
+            Message message = messages.get(i);
+            if (message.getSelected()) {
+                int id = message.getPendingId();
+                databaseHelper.deleteMsg(id);
+                Intent z = new Intent(mMainActivity, MessageService.class);
+                PendingIntent pIntent = PendingIntent.getService(mMainActivity, id, z, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager aManager = (AlarmManager) mMainActivity.getSystemService(ALARM_SERVICE);
+                aManager.cancel(pIntent);
+            }
+        }
+        showMessageNormal(MessageDatabaseHelper.getInstance(mMainActivity).getAllMsgPending());
+        mIsSelectAll = false;
+        mBinding.btnSelectAll.setText(R.string.select_all);
     }
 
     @Override
@@ -85,15 +140,37 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
         super.onStart();
         Log.i(TAG, "onStart: ");
         mAdapter.setMessages(helper.getAllMsgPending());
-        //get All msg Schedule
-
     }
 
     @Override
     public void onItemClick(Message message, int pos) {
-        //start Activity View Msg
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constant.EXTRA_MSG, message);
+        bundle.putBoolean(Constant.EXTRA_IS_EDIT, true);
         mNavigator.startActivity(ViewMsgActivity.class, bundle);
     }
+
+    @Override
+    public void onItemLongClick(String data) {
+        mBinding.layoutOption.setVisibility(View.VISIBLE);
+        mIsSelectAll = false;
+        mBinding.btnSelectAll.setText(R.string.select_all);
+        mAdapter = new MessageScheduleAdapter(mMainActivity, helper.getAllMsgPending(), true);
+        mAdapter.setOnDataListener(this);
+        mAdapter.setOnLongItemClickListner(this);
+        mBinding.recycleView.setLayoutManager(mLinearLayoutManager);
+        mBinding.recycleView.setAdapter(mAdapter);
+        mBinding.btnAdd.setVisibility(View.GONE);
+    }
+
+    private void showMessageNormal(List<Message> messages) {
+        mBinding.layoutOption.setVisibility(View.GONE);
+        mAdapter = new MessageScheduleAdapter(mMainActivity, messages, false);
+        mAdapter.setOnDataListener(this);
+        mAdapter.setOnLongItemClickListner(this);
+        mBinding.recycleView.setLayoutManager(mLinearLayoutManager);
+        mBinding.recycleView.setAdapter(mAdapter);
+        mBinding.btnAdd.setVisibility(View.VISIBLE);
+    }
+
 }

@@ -60,15 +60,16 @@ public class SharedPrefsImpl implements SharedPrefsApi {
         mSharedPreferences.edit().clear().apply();
     }
 
-    public List<Contact> getListContact() {
-        String tracks = mSharedPreferences.getString(SharedPrefsKey.KEY_LIST_CONTACT, null);
+    public List<Contact> getListContact(String key) {
+        String tracks = mSharedPreferences.getString(key, null);
         Type listType = new TypeToken<ArrayList<Contact>>() {
         }.getType();
         return new Gson().fromJson(tracks, listType);
     }
 
-    public void putListContact(List<Contact> messages) {
+    public void putListContact(List<Contact> messages, String key) {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(SharedPrefsKey.KEY_LIST_CONTACT, new Gson().toJson(messages)).apply();
+        editor.putString(key, new Gson().toJson(messages)).apply();
     }
+
 }

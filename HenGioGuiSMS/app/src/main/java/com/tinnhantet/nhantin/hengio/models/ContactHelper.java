@@ -49,6 +49,26 @@ public class ContactHelper {
                 if (cur != null) {
                     cur.close();
                 }
+                int size = contacts.size();
+                if (size > 0) {
+                    for (int i = 0; i < size; i++) {
+                        for (int j = i + 1; j < size; j++) {
+                            if (contacts.get(i).getPhone().equals(contacts.get(j).getPhone())) {
+                                contacts.get(i).setSelected(true);
+                            }
+                        }
+                    }
+                    List<Contact> newContact = new ArrayList<>();
+                    for (int i = 0; i < size; i++) {
+                        Contact contact = contacts.get(i);
+                        if (!contact.isSelected()) {
+                            newContact.add(contact);
+                        }
+                    }
+                    contacts.clear();
+                    contacts.addAll(newContact);
+                }
+
                 callBack.onDataSuccess(contacts);
             }
         });

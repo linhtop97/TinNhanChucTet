@@ -20,13 +20,8 @@ public class Message implements Parcelable {
         mTime = time;
         mListContact = listContact;
         mIsSend = isSend;
+        mIsSelected = false;
     }
-
-    private int mPendingId;
-    private String mContent;
-    private String mTime;
-    private String mListContact;
-    private Boolean mIsSend;
 
     protected Message(Parcel in) {
         mPendingId = in.readInt();
@@ -35,6 +30,8 @@ public class Message implements Parcelable {
         mListContact = in.readString();
         byte tmpMIsSend = in.readByte();
         mIsSend = tmpMIsSend == 0 ? null : tmpMIsSend == 1;
+        byte tmpMIsSelected = in.readByte();
+        mIsSelected = tmpMIsSelected == 0 ? null : tmpMIsSelected == 1;
     }
 
     public static final Creator<Message> CREATOR = new Creator<Message>() {
@@ -94,6 +91,33 @@ public class Message implements Parcelable {
         return this;
     }
 
+    public Boolean getSelected() {
+        return mIsSelected;
+    }
+
+    public Message setSelected(Boolean selected) {
+        mIsSelected = selected;
+        return this;
+    }
+
+    private int mPendingId;
+    private String mContent;
+    private String mTime;
+    private String mListContact;
+    private Boolean mIsSend;
+    private Boolean mIsSelected = false;
+
+    public static Message getMessage(List<Contact> contacts, String content, Calendar c) {
+        String listContact = StringUtils.listContactString((contacts));
+        Message message = new Message();
+        message.setListContact(listContact);
+        message.setSend(false);
+        message.setTime(String.valueOf(c.getTimeInMillis()));
+        message.setContent(content);
+        message.setSelected(false);
+        return message;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -106,15 +130,6 @@ public class Message implements Parcelable {
         dest.writeString(mTime);
         dest.writeString(mListContact);
         dest.writeByte((byte) (mIsSend == null ? 0 : mIsSend ? 1 : 2));
-    }
-
-    public static Message getMessage(List<Contact> contacts, String content, Calendar c) {
-        String listContact = StringUtils.listContactString((contacts));
-        Message message = new Message();
-        message.setListContact(listContact);
-        message.setSend(false);
-        message.setTime(String.valueOf(c.getTimeInMillis()));
-        message.setContent(content);
-        return message;
+        dest.writeByte((byte) (mIsSelected == null ? 0 : mIsSelected ? 1 : 2));
     }
 }

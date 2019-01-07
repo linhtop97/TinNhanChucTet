@@ -155,5 +155,4 @@ public class MessageDatabaseHelper extends SQLiteOpenHelper {
         }
         return msgList;
     }
-
 }

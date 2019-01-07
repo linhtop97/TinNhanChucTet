@@ -11,6 +11,36 @@
         android:layout_height="match_parent"
         android:background="@android:color/darker_gray">
 
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_option"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_48sdp"
+                android:text="Xóa"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/btn_select_all" />
+
+            <Button
+                android:id="@+id/btn_select_all"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_48sdp"
+                android:text="Chọn tất cả"
+                app:layout_constraintLeft_toRightOf="@id/btn_delete"
+                app:layout_constraintRight_toLeftOf="@id/btn_cancel" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_48sdp"
+                android:text="Hủy"
+                app:layout_constraintLeft_toRightOf="@id/btn_select_all"
+                app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycle_view"
             android:layout_width="@dimen/dp_0"
@@ -21,7 +51,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/layout_option" />
 
         <ImageButton
             android:id="@+id/btn_add"

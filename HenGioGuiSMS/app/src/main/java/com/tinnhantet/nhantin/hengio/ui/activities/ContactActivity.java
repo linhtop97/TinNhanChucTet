@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.view.View;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.ContactAdapter;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsKey;
 import com.tinnhantet.nhantin.hengio.databinding.ActivityContactBinding;
 import com.tinnhantet.nhantin.hengio.listeners.OnItemClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
@@ -26,6 +30,8 @@ import com.tinnhantet.nhantin.hengio.utils.Navigator;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.ObservableSource;
 
 public class ContactActivity extends AppCompatActivity implements View.OnClickListener,
         OnItemClickListener {
@@ -51,6 +57,27 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         mBinding.btnOption.setOnClickListener(this);
         mBinding.btnCancel.setOnClickListener(this);
         mBinding.btnDone.setOnClickListener(this);
+        mBinding.edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence s, int start, int before, int count) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //mAdapter.filterContact(s.toString());
+                    }
+                }, 300);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void initUI() {
@@ -59,7 +86,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         mContactSelected = new ArrayList<>();
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_contact);
         mBinding.btnDone.setText(Html.fromHtml(getString(R.string.done)));
-        mContacts = mSharedPrefs.getListContact();
+        mContacts = mSharedPrefs.getListContact(SharedPrefsKey.KEY_LIST_CONTACT);
         if (mContacts == null) {
             mContacts = new ArrayList<>();
         }
@@ -80,10 +107,18 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         mSize = mContacts.size();
+        //mSharedPrefs.putListContact(mContacts, SharedPrefsKey.KEY_LIST_CONTACT_HOLDER);
         mAdapter = new ContactAdapter(this, mContacts);
         mAdapter.setOnItemClickListener(this);
         mBinding.recycleView.setLayoutManager(new LinearLayoutManager(this));
         mBinding.recycleView.setAdapter(mAdapter);
+    }
+
+    private void fillContactToAdapter(String result) {
+    }
+
+    private ObservableSource<String> searchContact(String query) {
+        return null;
     }
 
     @Override
@@ -160,5 +195,23 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         return mIsHasContactSelected;
+    }
+
+    public void filter(String contactName) {
+        List<Contact> contacts = new ArrayList<>();
+        if (contactName.isEmpty()) {
+            contacts.clear();
+            contacts.addAll(mContacts);
+        } else {
+            List<Contact> result = new ArrayList<>();
+            for (Contact item : mContacts) {
+                //match by name or phone
+                if (item.getName().contains(contactName)) {
+                    result.add(item);
+                }
+            }
+            contacts.clear();
+            contacts.addAll(result);
+        }
     }
 }

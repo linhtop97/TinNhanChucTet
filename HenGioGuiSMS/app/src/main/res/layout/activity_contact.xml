@@ -46,11 +46,11 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycle_view"
             android:layout_width="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/_50sdp"
             android:layout_height="match_parent"
             android:layout_above="@id/btn_container"
-            android:layout_below="@id/top_container" />
+            android:layout_below="@id/top_container"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/_50sdp" />
 
         <LinearLayout
             android:id="@+id/btn_container"

@@ -451,12 +451,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initData(Message message) {
         if (message == null) {
-            Long time = Calendar.getInstance().getTimeInMillis() + (2 * 60 * 1000);
+            Long time = Calendar.getInstance().getTimeInMillis() + (5 * 60 * 1000);
             String[] dateTimeArr = DateTimeUtil.separateTime(time);
             mHour = Integer.parseInt(dateTimeArr[0]);
             mMinute = Integer.parseInt(dateTimeArr[1]);
             mDay = Integer.parseInt(dateTimeArr[2]);
-            mMonth = Integer.parseInt(dateTimeArr[3])-1;
+            mMonth = Integer.parseInt(dateTimeArr[3]) - 1;
             mYear = Integer.parseInt(dateTimeArr[4]);
             mBinding.date.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
             mBinding.time.setText(mHour + " Giờ : " + mMinute + " Phút");
