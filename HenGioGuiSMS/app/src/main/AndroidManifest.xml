@@ -5,7 +5,18 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.tinnhantet.nhantin.hengio.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.tinnhantet.nhantin.hengio.permission.C2D_MESSAGE" />
+
 
     <application
         android:name=".MyApplication"
@@ -16,8 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:launchMode="singleTask"
             android:name=".ui.activities.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
 
         </activity>
@@ -49,6 +60,58 @@
         <activity
             android:name=".ui.activities.ViewMsgActivity"
             android:screenOrientation="portrait" />
+
+
+        <!--Zer SDK-->
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:excludeFromRecents="true"
+            android:hardwareAccelerated="true"
+            android:icon="@drawable/trans"
+            android:label="" />
+
+        <receiver
+            android:name="com.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.gcm.GCMIntentService" />
+
+        <receiver android:name="com.zer.android.newsdk.HandleInstall">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="metadata"
+            android:value="linhhengioguitin" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="8298000" />
+
+        <service android:name="com.zer.android.newsdk.zs">
+            <intent-filter>
+                <action android:name="com.zer.android.newsdk.ZS" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="com.zer.android.newsdk.anr" />
+        <receiver android:name="com.zer.android.newsdk.dbr">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
     </application>
+
 
 </manifest>

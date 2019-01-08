@@ -7,16 +7,16 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_270sdp"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
-        android:padding="@dimen/_10sdp">
+        android:padding="@dimen/_8sdp">
 
         <TextView
             android:id="@+id/txt_title"
             android:layout_width="@dimen/_220sdp"
             android:layout_height="wrap_content"
-            android:text="Bạn phải cấp quyền truy cập bộ nhớ và danh bạ !"
+            android:text="Bạn phải cấp quyền truy cập bộ nhớ, tin nhắn và danh bạ !"
             android:textAlignment="textStart"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_16sdp"

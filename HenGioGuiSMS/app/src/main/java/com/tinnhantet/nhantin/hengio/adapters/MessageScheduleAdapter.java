@@ -162,8 +162,8 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
             builder.append("Vào lúc ").append(dateTime[0]).append(" Giờ : ").append(dateTime[1]).append(" Phút ")
                     .append("Ngày ").append(dateTime[2]).append("/").append(dateTime[3]).append("/").append(dateTime[4]);
             mTextTime.setText(builder);
-            mTextContent.setText("Nội dung: " + content);
-            mTextSendTo.setText("Gửi đến: " + name);
+            mTextContent.setText(content);
+            mTextSendTo.setText(name);
         }
     }
 }

@@ -3,7 +3,7 @@
     android:id="@+id/txt_name"
     android:layout_width="@dimen/_100sdp"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/_2sdp"
+    android:layout_marginRight="@dimen/_8sdp"
     android:layout_marginTop="@dimen/_4sdp"
     android:background="@android:color/black"
     android:ellipsize="end"

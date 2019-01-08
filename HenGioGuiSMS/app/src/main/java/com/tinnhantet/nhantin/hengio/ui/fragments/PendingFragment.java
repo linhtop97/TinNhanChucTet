@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.MessageScheduleAdapter;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsKey;
 import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
 import com.tinnhantet.nhantin.hengio.databinding.FragmentPendingBinding;
 import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
@@ -27,6 +29,7 @@ import com.tinnhantet.nhantin.hengio.ui.activities.AddMsgActivity;
 import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
 import com.tinnhantet.nhantin.hengio.ui.activities.ViewMsgActivity;
 import com.tinnhantet.nhantin.hengio.ui.dialogs.ConfirmDeleteAllDialog;
+import com.tinnhantet.nhantin.hengio.ui.dialogs.GuidDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 
@@ -45,6 +48,8 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
     private MessageDatabaseHelper helper;
     private LinearLayoutManager mLinearLayoutManager;
     private boolean mIsSelectAll = false;
+    private SharedPrefsImpl mSharedPrefs;
+    private static final String GUIDE_DIALOG = "GUIDE_DIALOG";
 
     public static PendingFragment newInstance() {
         PendingFragment fragment = new PendingFragment();
@@ -71,10 +76,23 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
 
     private void initUI() {
         mNavigator = new Navigator(mMainActivity);
+        mSharedPrefs = new SharedPrefsImpl(mMainActivity);
         mLinearLayoutManager = new LinearLayoutManager(mMainActivity);
         helper = MessageDatabaseHelper.getInstance(mMainActivity);
         mMessages = helper.getAllMsgPending();
         showMessageNormal(mMessages);
+        if (mMessages.size() > 0) {
+            if (!mSharedPrefs.get(SharedPrefsKey.PREF_REMEMBER_GUIDE, Boolean.class)) {
+                GuidDialog f = GuidDialog.getInstance();
+                mMainActivity.getSupportFragmentManager().beginTransaction().add(f, GUIDE_DIALOG).commit();
+            }
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -89,8 +107,22 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
                 showMessageNormal(helper.getAllMsgPending());
                 break;
             case R.id.btn_delete:
-                ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance();
-                getChildFragmentManager().beginTransaction().add(f, DELETE_ALL_DIALOG).commit();
+                List<Message> messages = ((MessageScheduleAdapter) mBinding.recycleView.getAdapter()).getMessages();
+                int size = messages.size();
+                boolean check = false;
+                for (int i = 0; i < size; i++) {
+                    if (messages.get(i).getSelected()) {
+                        check = true;
+                        break;
+                    }
+                }
+                if (check) {
+                    ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance();
+                    getChildFragmentManager().beginTransaction().add(f, DELETE_ALL_DIALOG).commit();
+                } else {
+                    mNavigator.showToast(R.string.havent_chosse);
+                }
+
                 break;
 
             case R.id.btn_select_all:

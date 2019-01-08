@@ -164,8 +164,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         }
         List<Contact> results = new ArrayList<>();
         contactName = contactName.toLowerCase();
-        for (int i = 0; i < mSizeHolder; i++) {
-            Contact contact = mContactsHolder.get(i);
+        for (int i = 0; i < mContacts.size(); i++) {
+            Contact contact = mContacts.get(i);
             if (contact.getPhone().contains(contactName) || contact.getName().contains(contactName)) {
                 results.add(contact);
             }

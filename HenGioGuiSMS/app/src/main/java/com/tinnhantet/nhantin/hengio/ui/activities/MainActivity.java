@@ -1,18 +1,19 @@
 package com.tinnhantet.nhantin.hengio.ui.activities;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
+import com.tinnhantet.nhantin.hengio.Ads;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.MainPagerAdapter;
 import com.tinnhantet.nhantin.hengio.databinding.ActivityMainBinding;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 import com.tinnhantet.nhantin.hengio.utils.TabType;
+import com.zer.android.newsdk.ZAndroidSDK;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnTabSelectedListener {
     private ActivityMainBinding mBinding;
@@ -37,6 +38,30 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
         mBinding.tablayout.getTabAt(TabType.PENDING).setText(R.string.pending);
         mBinding.tablayout.getTabAt(TabType.SENT).setText(R.string.sent);
         sInstance = this;
+        //ads();
+    }
+
+    public void ads() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            ZAndroidSDK.init(MainActivity.this);
+        }
+        Ads.f(MainActivity.this);
+        Ads.b(MainActivity.this, mBinding.layoutAds, new Ads.OnAdsListener() {
+            @Override
+            public void onError() {
+                mBinding.layoutAds.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                mBinding.layoutAds.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdOpened() {
+                mBinding.layoutAds.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override

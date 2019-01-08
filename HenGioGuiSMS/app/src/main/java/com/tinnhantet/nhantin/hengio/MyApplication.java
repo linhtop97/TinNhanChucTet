@@ -19,7 +19,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        ZAndroidSDK.initApplication(this, getApplicationContext().getPackageName());
+        //ZAndroidSDK.initApplication(this, getApplicationContext().getPackageName());
 //        CalligraphyConfig.initDefault(
 //                new CalligraphyConfig.Builder()
 //                        .setDefaultFontPath("fonts/font_app.ttf")

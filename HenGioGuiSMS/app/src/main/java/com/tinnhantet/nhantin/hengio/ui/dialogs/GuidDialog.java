@@ -3,7 +3,6 @@ package com.tinnhantet.nhantin.hengio.ui.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,25 +10,28 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.CompoundButton;
 
-import com.tinnhantet.nhantin.hengio.MyApplication;
 import com.tinnhantet.nhantin.hengio.R;
-import com.tinnhantet.nhantin.hengio.databinding.DialogRequestBinding;
-import com.tinnhantet.nhantin.hengio.ui.activities.SplashActivity;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
+import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsKey;
+import com.tinnhantet.nhantin.hengio.databinding.DialogGuidBinding;
+import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
 
-public class DialogRequestFragment extends DialogFragment implements View.OnClickListener {
-    private DialogRequestBinding mBinding;
-    private SplashActivity mSplashActivity;
+public class GuidDialog extends DialogFragment implements View.OnClickListener {
+    private DialogGuidBinding mBinding;
+    private MainActivity mMainActivity;
+    private SharedPrefsImpl mSharedPrefs;
+    private Boolean mIsChecked = false;
 
-    public static DialogRequestFragment getInstance() {
-        DialogRequestFragment fragment = new DialogRequestFragment();
+    public static GuidDialog getInstance() {
+        GuidDialog fragment = new GuidDialog();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -38,25 +40,20 @@ public class DialogRequestFragment extends DialogFragment implements View.OnClic
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_request, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_guid, container, false);
         initUI();
         return mBinding.getRoot();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Window window = getDialog().getWindow();
-        int width = getResources().getDimensionPixelSize(R.dimen._250sdp);
-        int height = getResources().getDimensionPixelSize(R.dimen._150sdp);
-        window.setLayout(width, height);
-        window.setGravity(Gravity.CENTER);
-    }
-
     private void initUI() {
-
+        mSharedPrefs = new SharedPrefsImpl(mMainActivity);
         mBinding.btnOk.setOnClickListener(this);
-
+        mBinding.ckRemember.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mIsChecked = isChecked;
+            }
+        });
     }
 
     @NonNull
@@ -87,17 +84,26 @@ public class DialogRequestFragment extends DialogFragment implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ok:
-                Intent intent = new Intent();
-                intent.setAction("RequestPMS");
-                LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
+                mSharedPrefs.put(SharedPrefsKey.PREF_REMEMBER_GUIDE, mIsChecked);
+                dismiss();
                 dismiss();
                 break;
         }
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        int width = getResources().getDimensionPixelSize(R.dimen._250sdp);
+        int height = getResources().getDimensionPixelSize(R.dimen._180sdp);
+        window.setLayout(width, height);
+        window.setGravity(Gravity.CENTER);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mSplashActivity = (SplashActivity) context;
+        mMainActivity = (MainActivity) context;
     }
 }

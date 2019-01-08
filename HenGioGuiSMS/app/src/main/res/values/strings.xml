@@ -20,11 +20,13 @@
     <string name="done"><![CDATA[<u>Xong</u>]]></string>
     <string name="loading_plz_wait">Đang tải dữ liệu, vui lòng chờ…</string>
     <string name="contact_empty">Bạn chưa chọn số điện thoại</string>
-    <string name="invalid_date">Thời gian hẹn gửi phải lớn hơn thời gian hiện tại 5 phút</string>
+    <string name="invalid_date">Thời gian hẹn gửi phải lớn hơn thời gian hiện tại 2 phút</string>
     <string name="content_empty">Nội dung không được trống</string>
     <string name="success">Thành công!</string>
     <string name="foward">Chuyển tiếp</string>
     <string name="delete">Xóa</string>
     <string name="invalid_phone">Số điện thoại phải bao gồm 10 chữ số!</string>
     <string name="confirm_delete_all">Bạn có muốn xóa hết các tin nhắn đã chọn?</string>
+    <string name="guid_msg">Bạn có thể xóa các tin nhắn cách ấn giữ vào tin nhắn đó tại đây</string>
+    <string name="havent_chosse">Chưa có tin nhắn nào được lựa chọn</string>
 </resources>

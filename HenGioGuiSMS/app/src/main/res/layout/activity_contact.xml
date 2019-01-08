@@ -30,6 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_42sdp"
                 android:hint="@string/search_contact"
+                android:singleLine="true"
                 android:textSize="@dimen/_14sdp"
                 app:layout_constraintLeft_toRightOf="@id/btn_back"
                 app:layout_constraintRight_toLeftOf="@id/btn_option" />
@@ -50,6 +51,9 @@
             android:layout_above="@id/btn_container"
             android:layout_below="@id/top_container"
             android:clipToPadding="false"
+            android:paddingLeft="@dimen/_8sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingRight="@dimen/_8sdp"
             android:paddingBottom="@dimen/_50sdp" />
 
         <LinearLayout

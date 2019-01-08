@@ -10,7 +10,7 @@
         android:layout_width="@dimen/_270sdp"
         android:layout_height="wrap_content"
         android:background="@android:color/black"
-        android:padding="@dimen/_16sdp">
+        android:padding="@dimen/_8sdp">
 
         <TextView
             android:id="@+id/txt_confirm"

@@ -68,7 +68,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //mAdapter.filterContact(s.toString());
+                       //mAdapter.filterContact(s.toString());
                     }
                 }, 300);
             }
