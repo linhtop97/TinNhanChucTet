@@ -205,4 +205,16 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
         mBinding.btnAdd.setVisibility(View.VISIBLE);
     }
 
+    public void setTextUnSelectAll() {
+        mIsSelectAll = true;
+        mAdapter.setSelectedAll();
+        mBinding.btnSelectAll.setText(R.string.un_select_all);
+    }
+
+    public void setTextSelectAll() {
+        mIsSelectAll = false;
+        mAdapter.removeSelectedAll();
+        mBinding.btnSelectAll.setText(R.string.select_all);
+    }
+
 }

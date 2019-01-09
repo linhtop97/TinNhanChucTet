@@ -29,4 +29,6 @@
     <string name="confirm_delete_all">Bạn có muốn xóa hết các tin nhắn đã chọn?</string>
     <string name="guid_msg">Bạn có thể xóa các tin nhắn cách ấn giữ vào tin nhắn đó tại đây</string>
     <string name="havent_chosse">Chưa có tin nhắn nào được lựa chọn</string>
+    <string name="plz_select_phone_number">Bạn chưa chọn số điện thoại nào</string>
+    <string name="havent_contact">Bạn chưa có danh bạ</string>
 </resources>

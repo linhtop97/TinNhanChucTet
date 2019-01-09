@@ -2,6 +2,8 @@ package com.tinnhantet.nhantin.hengio.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,9 @@ import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.listeners.OnItemLongClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
+import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
+import com.tinnhantet.nhantin.hengio.ui.fragments.PendingFragment;
+import com.tinnhantet.nhantin.hengio.ui.fragments.SentFragment;
 import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
 import com.tinnhantet.nhantin.hengio.utils.StringUtils;
 
@@ -30,11 +35,14 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
     private boolean isShowCheckBox = false;
     private boolean mIsSelectAll;
     private int mSize;
+    private int numOfSelected = 0;
+    private MainActivity mMainActivity;
 
     public MessageScheduleAdapter(Context context, List<Message> messages, boolean isShow) {
         mMessages = messages;
         mSize = mMessages.size();
         mContext = context;
+        mMainActivity = (MainActivity) context;
         isShowCheckBox = isShow;
         mSharedPrefs = new SharedPrefsImpl(mContext);
     }
@@ -130,6 +138,38 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
                         Boolean b = mCheckBox.isChecked();
                         mCheckBox.setChecked(!b);
                         mMessages.get(pos).setSelected(!b);
+                        int num = 0;
+                        for (int i = 0; i < mSize; i++) {
+                            if (mMessages.get(i).getSelected()) {
+                                num++;
+                            }
+                        }
+                        if (num == mSize) {
+                            FragmentManager manager = mMainActivity.getSupportFragmentManager();
+                            Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 0);
+                            if (fragment != null) {
+                                PendingFragment pendingFragment = (PendingFragment) fragment;
+                                pendingFragment.setTextUnSelectAll();
+                            }
+                            Fragment fragment2 = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 1);
+                            if (fragment2 != null) {
+                                SentFragment sentFragment = (SentFragment) fragment2;
+                                sentFragment.setTextUnSelectAll();
+                            }
+                        }
+                        if (num == 0) {
+                            FragmentManager manager = mMainActivity.getSupportFragmentManager();
+                            Fragment fragment = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 0);
+                            if (fragment != null) {
+                                PendingFragment pendingFragment = (PendingFragment) fragment;
+                                pendingFragment.setTextSelectAll();
+                            }
+                            Fragment fragment2 = manager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 1);
+                            if (fragment2 != null) {
+                                SentFragment sentFragment = (SentFragment) fragment2;
+                                sentFragment.setTextSelectAll();
+                            }
+                        }
                         notifyItemChanged(pos, "changed");
 
                     }

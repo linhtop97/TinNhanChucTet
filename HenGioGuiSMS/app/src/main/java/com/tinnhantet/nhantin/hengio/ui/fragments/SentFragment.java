@@ -162,4 +162,16 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
         mBinding.recycleView.setLayoutManager(mLinearLayoutManager);
         mBinding.recycleView.setAdapter(mAdapter);
     }
+
+    public void setTextUnSelectAll() {
+        mIsSelectAll = true;
+        mAdapter.setSelectedAll();
+        mBinding.btnSelectAll.setText(R.string.un_select_all);
+    }
+
+    public void setTextSelectAll() {
+        mIsSelectAll = false;
+        mAdapter.removeSelectedAll();
+        mBinding.btnSelectAll.setText(R.string.select_all);
+    }
 }

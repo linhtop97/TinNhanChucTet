@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -64,13 +63,13 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             }
 
             @Override
-            public void onTextChanged(final CharSequence s, int start, int before, int count) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                       //mAdapter.filterContact(s.toString());
-                    }
-                }, 300);
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+                //  mAdapter.filterContact(s.toString());
+//                    }
+//                }, 100);
             }
 
             @Override
@@ -107,7 +106,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         mSize = mContacts.size();
-        //mSharedPrefs.putListContact(mContacts, SharedPrefsKey.KEY_LIST_CONTACT_HOLDER);
+        mSharedPrefs.putListContact(mContacts, SharedPrefsKey.KEY_LIST_CONTACT_HOLDER);
         mAdapter = new ContactAdapter(this, mContacts);
         mAdapter.setOnItemClickListener(this);
         mBinding.recycleView.setLayoutManager(new LinearLayoutManager(this));
@@ -159,11 +158,28 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btn_done:
                 mContactSelected = mAdapter.getContacts();
-                Intent intent = new Intent();
-                intent.setClass(this, AddMsgActivity.class);
-                intent.putParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT, (ArrayList<? extends Parcelable>) mContactSelected);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                int size = mContactSelected.size();
+                if (size > 0) {
+                    boolean check = false;
+                    for (int i = 0; i < size; i++) {
+                        if (mContactSelected.get(i).isSelected()) {
+                            check = true;
+                            break;
+                        }
+                    }
+                    if (check) {
+                        Intent intent = new Intent();
+                        intent.setClass(this, AddMsgActivity.class);
+                        intent.putParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT, (ArrayList<? extends Parcelable>) mContactSelected);
+                        setResult(Activity.RESULT_OK, intent);
+                        finish();
+                    } else {
+                        mNavigator.showToast(R.string.plz_select_phone_number);
+                    }
+                } else {
+                    mNavigator.showToast(R.string.havent_contact);
+                }
+
                 break;
         }
     }
@@ -188,30 +204,15 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
 
     private boolean checkHasSelected() {
         mContactSelected = mAdapter.getContacts();
-        for (int i = 0; i < mSize; i++) {
-            if (mContactSelected.get(i).isSelected()) {
-                mIsHasContactSelected = true;
-                break;
-            }
-        }
-        return mIsHasContactSelected;
-    }
-
-    public void filter(String contactName) {
-        List<Contact> contacts = new ArrayList<>();
-        if (contactName.isEmpty()) {
-            contacts.clear();
-            contacts.addAll(mContacts);
-        } else {
-            List<Contact> result = new ArrayList<>();
-            for (Contact item : mContacts) {
-                //match by name or phone
-                if (item.getName().contains(contactName)) {
-                    result.add(item);
+        if (mContactSelected.size() > 0) {
+            for (int i = 0; i < mSize; i++) {
+                if (mContactSelected.get(i).isSelected()) {
+                    mIsHasContactSelected = true;
+                    break;
                 }
             }
-            contacts.clear();
-            contacts.addAll(result);
         }
+
+        return mIsHasContactSelected;
     }
 }

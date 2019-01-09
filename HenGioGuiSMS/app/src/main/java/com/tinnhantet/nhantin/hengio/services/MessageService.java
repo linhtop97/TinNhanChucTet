@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.telephony.SmsManager;
 
 import com.tinnhantet.nhantin.hengio.R;
-import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
@@ -18,6 +17,7 @@ import com.tinnhantet.nhantin.hengio.ui.fragments.SentFragment;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageService extends Service {
@@ -37,8 +37,9 @@ public class MessageService extends Service {
             int size = contacts.size();
             for (int j = 0; j < size; j++) {
                 String SPhone = contacts.get(j).getPhone();
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(SPhone, null, SSms, null, null);
+                SmsManager sm = SmsManager.getDefault();
+                ArrayList<String> parts = sm.divideMessage(SSms);
+                sm.sendMultipartTextMessage(SPhone, null, parts, null, null);
             }
             MessageDatabaseHelper helper = MessageDatabaseHelper.getInstance(this);
             helper.removeMsgToSent(message.getPendingId());

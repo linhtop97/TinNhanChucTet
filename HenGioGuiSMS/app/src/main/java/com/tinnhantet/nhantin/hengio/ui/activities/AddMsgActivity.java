@@ -17,9 +17,12 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.tinnhantet.nhantin.hengio.R;
@@ -89,15 +92,45 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     mBinding.rvNumbers.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                     mBinding.rvNumbers.setVisibility(View.VISIBLE);
+                } else {
+                    String number = mBinding.edtPhoneNumber.getText().toString();
+                    if (number.length() == 10) {
+                        if (mContactSelected == null) {
+                            mContactSelected = new ArrayList<>();
+                        }
+                        int size = mContactSelected.size();
+                        boolean check = false;
+                        if (size > 0) {
+                            for (int i = 0; i < size; i++) {
+                                if (mContactSelected.get(i).getPhone().equals(number)) {
+                                    check = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!check) {
+                            Contact contact = new Contact(0, "", number);
+                            contact.setSelected(true);
+                            mContactSelected.add(contact);
+                            typeContact.add(contact);
+                            mAdapter.notifyItemInserted(mContactSelected.size() - 1);
+                            mBinding.edtPhoneNumber.clearFocus();
+                            mBinding.edtPhoneNumber.setText("");
+                        }
+                    } else {
+                        mNavigator.showToast(R.string.invalid_phone);
+                    }
+
                 }
             }
         });
 
-        mBinding.edtPhoneNumber.setOnKeyListener(new View.OnKeyListener() {
 
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        mBinding.edtPhoneNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_GO) {
                     String pattern = "\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
                     String num = mBinding.edtPhoneNumber.getText().toString();
                     if (num.matches(pattern)) {
@@ -147,6 +180,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mBinding.edtPhoneNumber.clearFocus();
+        return true;
     }
 
     private void initUI() {

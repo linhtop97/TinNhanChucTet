@@ -130,6 +130,20 @@ public class MessageDatabaseHelper extends SQLiteOpenHelper {
             }
             while (cursor.moveToNext());
         }
+        int size = msgList.size();
+        if (size > 1) {
+            for (int i = 0; i < size; i++) {
+                for (int j = i + 1; j < size; j++) {
+                    Message one = msgList.get(i);
+                    Message two = msgList.get(j);
+                    if (Long.parseLong(one.getTime()) > Long.parseLong(two.getTime())) {
+                        msgList.set(i, two);
+                        msgList.set(j, one);
+                    }
+                }
+            }
+        }
+
         return msgList;
     }
 
