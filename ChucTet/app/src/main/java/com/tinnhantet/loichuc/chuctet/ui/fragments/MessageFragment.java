@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.tinnhantet.loichuc.chuctet.Ads;
 import com.tinnhantet.loichuc.chuctet.R;
 import com.tinnhantet.loichuc.chuctet.adapters.MyTVAdapter;
 import com.tinnhantet.loichuc.chuctet.adapters.TextViewAdapter;
@@ -117,7 +118,7 @@ public class MessageFragment extends Fragment implements View.OnClickListener, E
                 return mScrollState == ViewPager.SCROLL_STATE_SETTLING;
             }
         });
-
+        Ads.f(mMainActivity);
 
         //   final TextViewAdapter adapter = new TextViewAdapter(mMainActivity, mMessages, this);
 //        mBinding.viewPager.setAdapter(adapter);

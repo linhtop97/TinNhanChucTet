@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.tinnhantet.loichuc.chuctet.Ads;
 import com.tinnhantet.loichuc.chuctet.R;
 import com.tinnhantet.loichuc.chuctet.adapters.CategoryAdapter;
 import com.tinnhantet.loichuc.chuctet.database.sqlite.TableEntity;
@@ -54,6 +55,7 @@ public class LibraryFragment extends Fragment implements OnCategoryClickListener
         categoryAdapter.setOnItemClick(this);
         mBinding.recyclerView.setLayoutManager(mLinearLayoutManager);
         mBinding.recyclerView.setAdapter(categoryAdapter);
+        Ads.f(mMainActivity);
     }
 
     @Override

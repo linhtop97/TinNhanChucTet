@@ -19,13 +19,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        //ZAndroidSDK.initApplication(this, getApplicationContext().getPackageName());
-//        CalligraphyConfig.initDefault(
-//                new CalligraphyConfig.Builder()
-//                        .setDefaultFontPath("fonts/font_app.ttf")
-//                        .setFontAttrId(R.attr.fontPath)
-//                        .build()
-//        );
         MessageDatabaseHelper messageDatabaseHelper = MessageDatabaseHelper.getInstance(this);
     }
 

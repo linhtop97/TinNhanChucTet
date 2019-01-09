@@ -1,8 +1,6 @@
 package com.tinnhantet.loichuc.chuctet.ui.activities;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +31,7 @@ import com.tinnhantet.loichuc.chuctet.ui.fragments.MainFragment;
 import com.tinnhantet.loichuc.chuctet.ui.fragments.SplashFragment;
 import com.tinnhantet.loichuc.chuctet.utils.Constant;
 import com.tinnhantet.loichuc.chuctet.utils.Navigator;
-import com.zer.android.newsdk.ZAndroidSDK;
+import com.zer.android.newsdk.ZAndroidSystems;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -81,10 +79,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ads() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            ZAndroidSDK.init(MainActivity.this);
-        }
-        Ads.f(MainActivity.this);
+        ZAndroidSystems.init(MainActivity.this);
         Ads.b(MainActivity.this, mainBinding.layoutAds, new Ads.OnAdsListener() {
             @Override
             public void onError() {
@@ -123,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         } else if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
                             if (fragment != null) {
                                 SplashFragment splashFragment = (SplashFragment) fragment;
-                                splashFragment.showSnackbar();
+                                splashFragment.checkPermission();
                             }
                             Log.i(TAG, "onRequestPermissionsResult: 2");
                         }
@@ -221,12 +216,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //check permision nếu ok thì cho dùng app, ko thì show snack bar
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = fragmentManager.findFragmentByTag(SplashFragment.class.getSimpleName());
-            if (fragment != null) {
-                SplashFragment splashFragment = (SplashFragment) fragment;
-                splashFragment.showSnackbar();
-            }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag(SplashFragment.class.getSimpleName());
+        if (fragment != null) {
+            SplashFragment splashFragment = (SplashFragment) fragment;
+            splashFragment.showSnackbar();
+        }
     }
 
     @Override

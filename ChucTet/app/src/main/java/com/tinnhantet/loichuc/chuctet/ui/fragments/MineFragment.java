@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.tinnhantet.loichuc.chuctet.Ads;
 import com.tinnhantet.loichuc.chuctet.MyApplication;
 import com.tinnhantet.loichuc.chuctet.R;
 import com.tinnhantet.loichuc.chuctet.adapters.MessageAdapter;
@@ -77,6 +78,7 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
         mAdapter.setOnItemLongClick(this);
         mBinding.recyclerView.setLayoutManager(linearLayoutManager);
         mBinding.recyclerView.setAdapter(mAdapter);
+        Ads.f(mMainActivity);
     }
 
     @Override

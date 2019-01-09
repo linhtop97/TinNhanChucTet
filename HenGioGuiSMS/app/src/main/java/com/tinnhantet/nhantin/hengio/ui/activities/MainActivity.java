@@ -5,7 +5,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tinnhantet.nhantin.hengio.Ads;
 import com.tinnhantet.nhantin.hengio.R;
@@ -35,14 +38,23 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
         mBinding.viewPager.setCurrentItem(TabType.PENDING);
         mBinding.tablayout.addOnTabSelectedListener(this);
         mBinding.tablayout.setupWithViewPager(mBinding.viewPager);
-        mBinding.tablayout.getTabAt(TabType.PENDING).setText(R.string.pending);
-        mBinding.tablayout.getTabAt(TabType.SENT).setText(R.string.sent);
+        int[] tabIcon = new int[]{R.drawable.cb_unchecked, R.drawable.cb_checked};
+        int[] tabTitle = new int[]{R.string.pending, R.string.sent};
+        for (int i = 0; i < 2; i++) {
+            LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.item_tab, null);
+            TextView tabContent = (TextView) tabLinearLayout.findViewById(R.id.tabContent);
+            tabContent.setText("  " + getApplicationContext().getResources().getString(tabTitle[i]));
+            tabContent.setCompoundDrawablesWithIntrinsicBounds(tabIcon[i], 0, 0, 0);
+            mBinding.tablayout.getTabAt(i).setCustomView(tabContent);
+        }
+
+
         sInstance = this;
         //ads();
     }
 
     public void ads() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             ZAndroidSDK.init(MainActivity.this);
         }
         Ads.f(MainActivity.this);

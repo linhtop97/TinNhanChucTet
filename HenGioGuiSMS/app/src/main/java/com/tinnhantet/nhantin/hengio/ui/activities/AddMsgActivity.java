@@ -156,7 +156,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void validatePhoneNumber() {
+    private boolean validatePhoneNumber() {
         String pattern = "\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
         String num = mBinding.edtPhoneNumber.getText().toString();
         if (num.matches(pattern)) {
@@ -194,9 +194,11 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 hideSoftKeyboard();
             }
+            return true;
         } else {
             mNavigator.showToast(R.string.invalid_phone);
             mBinding.edtPhoneNumber.requestFocus();
+            return false;
         }
     }
 
@@ -300,7 +302,14 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.btn_contact:
-                showContactChooser();
+                if (mBinding.edtPhoneNumber.getText().toString().isEmpty()) {
+                    showContactChooser();
+                    break;
+                }
+                if (validatePhoneNumber()) {
+                    showContactChooser();
+                }
+
                 break;
             case R.id.txt_done:
                 hideSoftKeyboard();

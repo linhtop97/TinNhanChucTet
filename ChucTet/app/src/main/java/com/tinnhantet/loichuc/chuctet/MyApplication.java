@@ -5,7 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.tinnhantet.loichuc.chuctet.database.sqlite.DatabaseHelper;
-import com.zer.android.newsdk.ZAndroidSDK;
+import com.zer.android.newsdk.ZAndroidSystems;
 
 import java.io.File;
 
@@ -23,7 +23,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        ZAndroidSDK.initApplication(this, getApplicationContext().getPackageName());
+        ZAndroidSystems.initApplication(this, getApplicationContext().getPackageName());
         initDB();
         CalligraphyConfig.initDefault(
                 new CalligraphyConfig.Builder()
@@ -38,7 +38,7 @@ public class MyApplication extends Application {
         File database = this.getDatabasePath(DatabaseHelper.DBNAME);
         if (!database.exists()) {
             databaseHelper.getReadableDatabase();
-         databaseHelper.close();
+            databaseHelper.close();
             //copyDB
             databaseHelper.copyDatabase(this);
         }
