@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +21,7 @@ import com.tinnhantet.nhantin.hengio.models.Contact;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> implements Filterable {
     private LayoutInflater mLayoutInflater;
     private List<Contact> mContacts;
     private Context mContext;
@@ -30,13 +32,26 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     private boolean mIsSelectAll;
     private List<Contact> mContactsHolder;
     private SharedPrefsImpl mSharedPrefs;
+    private List<Contact> mContactSelected;
+
+    public List<Contact> getContactSelected() {
+        return mContactSelected;
+    }
 
     public ContactAdapter(Context context, List<Contact> contacts) {
         mContacts = contacts;
-        mContactsHolder = new SharedPrefsImpl(context).getListContact(SharedPrefsKey.KEY_LIST_CONTACT_HOLDER);
         mSize = contacts.size();
-        mSizeHolder = mSize;
+        mContactSelected = new ArrayList<>();
+        for (int i = 0; i < mSize; i++) {
+            Contact contact = mContacts.get(i);
+            if (contact.isSelected()) {
+                mContactSelected.add(contact);
+            }
+        }
         mContext = context;
+        mSharedPrefs = new SharedPrefsImpl(context);
+        mContactsHolder = mSharedPrefs.getListContact(SharedPrefsKey.KEY_LIST_CONTACT);
+        mSizeHolder = mContactsHolder.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -109,6 +124,47 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    int sizeSelect = mContactSelected.size();
+                    for (int i = 0; i < mSizeHolder; i++) {
+                        for (int j = 0; j < sizeSelect; j++) {
+                            Contact contact = mContactsHolder.get(i);
+                            if (contact.getPhone().equals(mContactSelected.get(j).getPhone())) {
+                                mContactsHolder.get(i).setSelected(true);
+                            }
+                        }
+                    }
+                    mContacts = mContactsHolder;
+                } else {
+                    List<Contact> filteredList = new ArrayList<>();
+                    for (Contact row : mContactsHolder) {
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getPhone().contains(charSequence)) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    mContacts = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mContacts;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mContacts = (ArrayList<Contact>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextName;
         private TextView mTextPhone;
@@ -127,14 +183,36 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                 public void onClick(View v) {
                     mPositionSelect = getAdapterPosition();
                     Boolean b = mIsSelected.isChecked();
-                    Contact contact = mContacts.get(mPositionSelect);
                     mContacts.get(mPositionSelect).setSelected(!b);
-                    for (int i = 0; i < mSizeHolder; i++) {
-                        if (mContactsHolder.get(i).getPhone().equals(contact.getPhone())) {
-                            mContactsHolder.get(i).setSelected(!b);
+                    Contact contact = mContacts.get(mPositionSelect);
+                    if (!b) {
+                        int size = mContactSelected.size();
+                        if (size > 0) {
+                            boolean isHas = false;
+                            for (int i = 0; i < size; i++) {
+                                if (mContactSelected.get(i).getPhone().equals(contact.getPhone())) {
+                                    isHas = true;
+                                    break;
+                                }
+                            }
+                            if (!isHas) {
+                                mContactSelected.add(contact);
+                            }
+                        } else {
+                            mContactSelected.add(contact);
+                        }
+                    } else {
+                        int size = mContactSelected.size();
+                        if (size > 0) {
+                            for (int i = 0; i < size; i++) {
+                                if (mContactSelected.get(i).getPhone().equals(contact.getPhone())) {
+                                    mContactSelected.remove(i);
+                                    break;
+                                }
+                            }
                         }
                     }
-                    mListener.onItemClick(mPositionSelect);
+
                     notifyItemChanged(mPositionSelect, "changed");
                 }
             });
@@ -155,23 +233,25 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     }
 
     public void filterContact(String contactName) {
-        if (contactName.isEmpty()) {
-            if (mContactsHolder == null || mContactsHolder.size() == 0) {
-                if(mSharedPrefs==null){
-                    mSharedPrefs = new SharedPrefsImpl(mContext);
+        int sizeSelect = mContactSelected.size();
+        for (int i = 0; i < mSizeHolder; i++) {
+            for (int j = 0; j < sizeSelect; j++) {
+                Contact contact = mContactsHolder.get(i);
+                if (contact.getPhone().equals(mContactSelected.get(j).getPhone())) {
+                    mContactsHolder.get(i).setSelected(true);
                 }
-                mContactsHolder = mSharedPrefs.getListContact(SharedPrefsKey.KEY_LIST_CONTACT_HOLDER);
             }
+        }
+        if (contactName.isEmpty()) {
             setContacts(mContactsHolder);
             return;
         }
         List<Contact> results = new ArrayList<>();
         contactName = contactName.toLowerCase();
-        int size = mContactsHolder.size();
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
+        if (mSizeHolder > 0) {
+            for (int i = 0; i < mSizeHolder; i++) {
                 Contact contact = mContactsHolder.get(i);
-                if (contact.getName().startsWith(contactName)) {
+                if (contact.getName().contains(contactName)) {
                     results.add(contact);
                 }
             }

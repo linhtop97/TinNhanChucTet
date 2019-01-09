@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -58,18 +59,18 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         mBinding.btnDone.setOnClickListener(this);
         mBinding.edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+            public void beforeTextChanged(final CharSequence s, int start, int count, int after) {
+                mAdapter.getFilter().filter(s);
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-                //  mAdapter.filterContact(s.toString());
-//                    }
-//                }, 100);
+            public void onTextChanged(final CharSequence s, int start, int before, int count) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.getFilter().filter(s);
+                    }
+                }, 100);
             }
 
             @Override
@@ -113,13 +114,6 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         mBinding.recycleView.setAdapter(mAdapter);
     }
 
-    private void fillContactToAdapter(String result) {
-    }
-
-    private ObservableSource<String> searchContact(String query) {
-        return null;
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -157,31 +151,20 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.btn_done:
-                mContactSelected = mAdapter.getContacts();
+                mContactSelected = mAdapter.getContactSelected();
                 int size = mContactSelected.size();
                 if (size > 0) {
-                    boolean check = false;
-                    for (int i = 0; i < size; i++) {
-                        if (mContactSelected.get(i).isSelected()) {
-                            check = true;
-                            break;
-                        }
-                    }
-                    if (check) {
-                        Intent intent = new Intent();
-                        intent.setClass(this, AddMsgActivity.class);
-                        intent.putParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT, (ArrayList<? extends Parcelable>) mContactSelected);
-                        setResult(Activity.RESULT_OK, intent);
-                        finish();
-                    } else {
-                        mNavigator.showToast(R.string.plz_select_phone_number);
-                    }
+                    Intent intent = new Intent();
+                    intent.setClass(this, AddMsgActivity.class);
+                    intent.putParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT, (ArrayList<? extends Parcelable>) mContactSelected);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
                 } else {
-                    mNavigator.showToast(R.string.havent_contact);
+                    mNavigator.showToast(R.string.plz_select_phone_number);
                 }
-
                 break;
         }
+
     }
 
     private void showDialogConfirm() {

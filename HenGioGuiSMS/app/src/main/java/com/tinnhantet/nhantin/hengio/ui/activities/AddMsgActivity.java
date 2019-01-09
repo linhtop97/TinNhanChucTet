@@ -93,93 +93,111 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     mAdapter.notifyDataSetChanged();
                     mBinding.rvNumbers.setVisibility(View.VISIBLE);
                 } else {
-                    String number = mBinding.edtPhoneNumber.getText().toString();
-                    if (number.length() == 10) {
-                        if (mContactSelected == null) {
-                            mContactSelected = new ArrayList<>();
-                        }
-                        int size = mContactSelected.size();
-                        boolean check = false;
-                        if (size > 0) {
-                            for (int i = 0; i < size; i++) {
-                                if (mContactSelected.get(i).getPhone().equals(number)) {
-                                    check = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (!check) {
-                            Contact contact = new Contact(0, "", number);
-                            contact.setSelected(true);
-                            mContactSelected.add(contact);
-                            typeContact.add(contact);
-                            mAdapter.notifyItemInserted(mContactSelected.size() - 1);
-                            mBinding.edtPhoneNumber.clearFocus();
-                            mBinding.edtPhoneNumber.setText("");
-                        }
-                    } else {
-                        mNavigator.showToast(R.string.invalid_phone);
-                    }
+//                    String number = mBinding.edtPhoneNumber.getText().toString();
+//                    if (number.length() == 10) {
+//                        if (mContactSelected == null) {
+//                            mContactSelected = new ArrayList<>();
+//                        }
+//                        int size = mContactSelected.size();
+//                        boolean check = false;
+//                        if (size > 0) {
+//                            for (int i = 0; i < size; i++) {
+//                                if (mContactSelected.get(i).getPhone().equals(number)) {
+//                                    check = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//
+//                        if (!check) {
+//                            Contact contact = new Contact(0, "", number);
+//                            contact.setSelected(true);
+//                            mContactSelected.add(contact);
+//                            typeContact.add(contact);
+//                            mAdapter.notifyItemInserted(mContactSelected.size() - 1);
+//                            mBinding.edtPhoneNumber.clearFocus();
+//                            mBinding.edtPhoneNumber.setText("");
+//                        }
+//                    } else {
+//                        mNavigator.showToast(R.string.invalid_phone);
+//                    }
 
                 }
             }
         });
 
+        mBinding.edtContent.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    String num = mBinding.edtPhoneNumber.getText().toString();
+                    if (mContactSelected == null) {
+                        mContactSelected = new ArrayList<>();
+                    }
+                    if (num.isEmpty() && mContactSelected.size() == 0) {
+                        mNavigator.showToast(R.string.contact_empty);
+                        mBinding.edtPhoneNumber.requestFocus();
+                    } else if (!num.isEmpty()) {
+                        validatePhoneNumber();
+                    }
 
+                }
+            }
+        });
         mBinding.edtPhoneNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_GO) {
-                    String pattern = "\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
-                    String num = mBinding.edtPhoneNumber.getText().toString();
-                    if (num.matches(pattern)) {
-                        boolean ok = true;
-                        if (mContactSelected == null) {
-                            mContactSelected = new ArrayList<>();
-                        }
-                        int size = mContactSelected.size();
-                        for (int i = 0; i < size; i++) {
-                            Contact contact = mContactSelected.get(i);
-                            String phone = contact.getPhone();
-                            if (ok) {
-                                if (num.equals(phone)) {
-                                    mNavigator.showToast(contact.getName() + "(" + phone + ")" + "đã có");
-                                    mBinding.edtPhoneNumber.requestFocus();
-                                    ok = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if (ok) {
-                            Contact contact = new Contact(0, "", num);
-                            contact.setSelected(true);
-                            mContactSelected.add(contact);
-                            typeContact.add(contact);
-                            mAdapter.notifyItemInserted(mContactSelected.size() - 1);
-                            mBinding.edtPhoneNumber.clearFocus();
-                            mBinding.edtPhoneNumber.setText("");
-                            if (mIsForward) {
-                                mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
-                                mAdapter.setOnContactListener(AddMsgActivity.this);
-                                StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
-                                        StaggeredGridLayoutManager.VERTICAL);
-                                mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
-                                mBinding.rvNumbers.setAdapter(mAdapter);
-                                mBinding.rvNumbers.setVisibility(View.VISIBLE);
-                            }
-
-                            hideSoftKeyboard();
-                        }
-                    } else {
-                        mNavigator.showToast(R.string.invalid_phone);
-                        mBinding.edtPhoneNumber.requestFocus();
-                    }
+                    validatePhoneNumber();
                     return false;
                 }
                 return false;
             }
         });
+    }
+
+    private void validatePhoneNumber() {
+        String pattern = "\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
+        String num = mBinding.edtPhoneNumber.getText().toString();
+        if (num.matches(pattern)) {
+            boolean ok = true;
+            if (mContactSelected == null) {
+                mContactSelected = new ArrayList<>();
+            }
+            int size = mContactSelected.size();
+            for (int i = 0; i < size; i++) {
+                Contact contact = mContactSelected.get(i);
+                String phone = contact.getPhone();
+                if (num.equals(phone)) {
+                    mNavigator.showToast(contact.getName() + "(" + phone + ")" + "đã có");
+                    mBinding.edtPhoneNumber.requestFocus();
+                    ok = false;
+                    break;
+                }
+            }
+            if (ok) {
+                Contact contact = new Contact(0, "", num);
+                contact.setSelected(true);
+                mContactSelected.add(contact);
+                typeContact.add(contact);
+                mAdapter.notifyItemInserted(mContactSelected.size() - 1);
+                mBinding.edtPhoneNumber.clearFocus();
+                mBinding.edtPhoneNumber.setText("");
+                if (mIsForward) {
+                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
+                    mAdapter.setOnContactListener(AddMsgActivity.this);
+                    StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
+                            StaggeredGridLayoutManager.VERTICAL);
+                    mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
+                    mBinding.rvNumbers.setAdapter(mAdapter);
+                    mBinding.rvNumbers.setVisibility(View.VISIBLE);
+                }
+                hideSoftKeyboard();
+            }
+        } else {
+            mNavigator.showToast(R.string.invalid_phone);
+            mBinding.edtPhoneNumber.requestFocus();
+        }
     }
 
     @Override
@@ -223,28 +241,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                         mIsEdit = true;
                     }
                     initData(mMessageEdit);
-//                    mContactSelected = mSharedPrefs.getAllContact(mMessageEdit.getListContact());
-//                    mAdapter = new PhoneNumberAdapter(this, mContactSelected);
-//                    mAdapter.setOnContactListener(this);
-//                    StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
-//                            StaggeredGridLayoutManager.VERTICAL);
-//                    mBinding.rvNumbers.setLayoutManager(layoutManager);
-//                    mBinding.rvNumbers.setAdapter(mAdapter);
-//                    Long time = Long.parseLong(mMessageEdit.getTime());
-//                    String stime = DateTimeUtil.convertTimeToTime(time);
-//                    String sdate = DateTimeUtil.convertTimeToDate(time);
-//                    mBinding.time.setText(stime);
-//                    mBinding.date.setText(sdate);
-//                    mBinding.edtContent.setText(mMessageEdit.getContent());
-//
-//                    //set year, month, day, h, m
-//                    String sTime1[] = stime.split(":");
-//                    String sDate1[] = sdate.split("/");
-//                    mHour = Integer.valueOf(sTime1[0]);
-//                    mMinute = Integer.valueOf(sTime1[1]);
-//                    mDay = Integer.valueOf(sDate1[0]);
-//                    mMonth = Integer.valueOf(sDate1[1]);
-//                    mYear = Integer.valueOf(sDate1[2]);
                 } else {
                     initData(null);
                 }
@@ -308,6 +304,16 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.txt_done:
                 hideSoftKeyboard();
+                String num = mBinding.edtPhoneNumber.getText().toString();
+                if (mContactSelected == null) {
+                    mContactSelected = new ArrayList<>();
+                }
+                if (num.isEmpty() && mContactSelected.size() == 0) {
+                    mNavigator.showToast(R.string.contact_empty);
+                    mBinding.edtPhoneNumber.requestFocus();
+                } else {
+                    validatePhoneNumber();
+                }
                 switch (invalidData()) {
                     case 0:
                         if (mIsEdit) {
