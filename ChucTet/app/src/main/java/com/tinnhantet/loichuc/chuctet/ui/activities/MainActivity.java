@@ -79,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ads() {
-        ZAndroidSystems.init(MainActivity.this);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
+            ZAndroidSystems.init(MainActivity.this);
+        }
         Ads.b(MainActivity.this, mainBinding.layoutAds, new Ads.OnAdsListener() {
             @Override
             public void onError() {

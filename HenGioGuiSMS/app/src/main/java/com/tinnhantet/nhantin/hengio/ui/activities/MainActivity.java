@@ -5,11 +5,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tinnhantet.nhantin.hengio.Ads;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.MainPagerAdapter;
@@ -34,21 +34,16 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
         mNavigator = new Navigator(this);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        Glide.with(this)
+                .load(R.drawable.bg_main)
+                .into(mBinding.imgBackground);
         mBinding.viewPager.setAdapter(adapter);
-        mBinding.viewPager.setCurrentItem(TabType.PENDING);
-        mBinding.tablayout.addOnTabSelectedListener(this);
         mBinding.tablayout.setupWithViewPager(mBinding.viewPager);
-        int[] tabIcon = new int[]{R.drawable.cb_unchecked, R.drawable.cb_checked};
-        int[] tabTitle = new int[]{R.string.pending, R.string.sent};
-        for (int i = 0; i < 2; i++) {
-            LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.item_tab, null);
-            TextView tabContent = (TextView) tabLinearLayout.findViewById(R.id.tabContent);
-            tabContent.setText("  " + getApplicationContext().getResources().getString(tabTitle[i]));
-            tabContent.setCompoundDrawablesWithIntrinsicBounds(tabIcon[i], 0, 0, 0);
-            mBinding.tablayout.getTabAt(i).setCustomView(tabContent);
+        for (int i = 0; i < MainPagerAdapter.TAB_COUNT; i++) {
+            TabLayout.Tab tab = mBinding.tablayout.getTabAt(i);
+            tab.setCustomView(adapter.getTabView(i));
         }
-
-
+        mBinding.tablayout.addOnTabSelectedListener(this);
         sInstance = this;
         //ads();
     }
@@ -80,17 +75,48 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
     public void onTabSelected(TabLayout.Tab tab) {
         int pos = tab.getPosition();
         switch (pos) {
-            case TabType.PENDING:
-                break;
             case TabType.SENT:
+                View v = mBinding.tablayout.getTabAt(TabType.SENT).getCustomView();
+                ImageView img = v.findViewById(R.id.img_icon_tab);
+                TextView txt1 = v.findViewById(R.id.tabContent);
+                txt1.setTextColor(getResources().getColor(R.color.white));
+                img.setImageDrawable(getResources().getDrawable(R.drawable.ic_send_click));
                 break;
+
+            case TabType.PENDING:
+                View v4 = mBinding.tablayout.getTabAt(TabType.PENDING).getCustomView();
+                ImageView img4 = v4.findViewById(R.id.img_icon_tab);
+                TextView txt4 = v4.findViewById(R.id.tabContent);
+                txt4.setTextColor(getResources().getColor(R.color.white));
+                img4.setImageDrawable(getResources().getDrawable(R.drawable.ic_loading_click));
+                break;
+
         }
         mBinding.viewPager.setCurrentItem(pos);
     }
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
+        int pos = tab.getPosition();
+        switch (pos) {
+            case TabType.SENT:
+                View v = mBinding.tablayout.getTabAt(TabType.SENT).getCustomView();
+                ImageView img = v.findViewById(R.id.img_icon_tab);
+                TextView txt1 = v.findViewById(R.id.tabContent);
+                txt1.setTextColor(getResources().getColor(R.color.colorWitheOpa));
+                img.setImageDrawable(getResources().getDrawable(R.drawable.ic_send));
 
+                break;
+
+            case TabType.PENDING:
+                View v4 = mBinding.tablayout.getTabAt(TabType.PENDING).getCustomView();
+                ImageView img4 = v4.findViewById(R.id.img_icon_tab);
+                TextView txt4 = v4.findViewById(R.id.tabContent);
+                txt4.setTextColor(getResources().getColor(R.color.colorWitheOpa));
+                img4.setImageDrawable(getResources().getDrawable(R.drawable.ic_loading));
+                break;
+
+        }
     }
 
     @Override

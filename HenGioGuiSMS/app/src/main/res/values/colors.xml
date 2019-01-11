@@ -8,4 +8,8 @@
     <color name="black">#000</color>
     <color name="white">#FFF</color>
     <color name="sdfd">#ffffff</color>
+    <color name="colorWitheOpa">#e1ffffff</color>
+    <color name="colorYellow">#fca445 </color>
+    <color name="colorPinkRed">#e73b61 </color>
+    <color name="colorPinkRed_ef">#c6153c</color>
 </resources>

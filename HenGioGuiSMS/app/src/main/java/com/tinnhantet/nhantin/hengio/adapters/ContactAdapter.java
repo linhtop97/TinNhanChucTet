@@ -71,12 +71,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.bindData(mContacts.get(position));
         Contact contact = mContacts.get(position);
-//        Bitmap bm = contact.openPhoto(mContext, (long) contact.getId());
-//        if (bm != null) {
-//            holder.mImgAvatar.setImageBitmap(bm);
-//        } else {
-//            holder.mImgAvatar.setImageDrawable(mContext.getResources().getDrawable(R.drawable.avatar));
-//        }
         holder.mIsSelected.setChecked(contact.isSelected());
     }
 
@@ -84,12 +78,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
         if (payloads.contains("payload")) {
             Contact contact = mContacts.get(position);
-//            Bitmap bm = contact.openPhoto(mContext, (long) contact.getId());
-//            if (bm != null) {
-//                holder.mImgAvatar.setImageBitmap(bm);
-//            }else {
-//                holder.mImgAvatar.setImageDrawable(mContext.getResources().getDrawable(R.drawable.avatar));
-//            }
             holder.mIsSelected.setChecked(contact.isSelected());
         } else {
             super.onBindViewHolder(holder, position, payloads);
@@ -107,21 +95,55 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
 
     public void setSelectedAll() {
-        if (!mIsSelectAll) {
-            for (int i = 0; i < mSize; i++) {
-                mContacts.get(i).setSelected(true);
-            }
-            mIsSelectAll = true;
-            notifyDataSetChanged();
+        for (int i = 0; i < mContacts.size(); i++) {
+            mContacts.get(i).setSelected(true);
         }
+
+        int size = mContactSelected.size();
+        List<Contact> contactListSelectNew = new ArrayList<>();
+        contactListSelectNew.addAll(mContacts);
+        for (int i = 0; i < mContacts.size(); i++) {
+            for (int j = 0; j < size; j++) {
+                if (mContacts.get(i).getPhone().equals(mContactSelected.get(j))) {
+                    mContacts.get(i).setSelected(false);
+                }
+            }
+        }
+        for (int i = 0; i < mContacts.size(); i++) {
+            if (mContacts.get(i).isSelected()) {
+                mContactSelected.add(mContacts.get(i));
+            }
+        }
+        mContacts.clear();
+        mContacts.addAll(contactListSelectNew);
+        // mIsSelectAll = true;
+        notifyDataSetChanged();
     }
 
     public void removeSelectedAll() {
-        for (int i = 0; i < mSize; i++) {
+        for (int i = 0; i < mContacts.size(); i++) {
             mContacts.get(i).setSelected(false);
         }
-        mIsSelectAll = false;
+        int size = mContactSelected.size();
+        int size1 = mContacts.size();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size1; j++) {
+                if (mContactSelected.get(i).getPhone().equals(mContacts.get(j).getPhone())) {
+                    mContactSelected.get(i).setSelected(false);
+                }
+            }
+        }
+        List<Contact> contacts = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            if (mContactSelected.get(i).isSelected()) {
+                contacts.add(mContactSelected.get(i));
+            }
+        }
+        mContactSelected.clear();
+        mContactSelected.addAll(contacts);
         notifyDataSetChanged();
+        //
+
     }
 
     @Override
@@ -130,9 +152,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString();
+                List<Contact> filteredList = new ArrayList<>();
                 if (charString.isEmpty()) {
                     int sizeSelect = mContactSelected.size();
-                    for (int i = 0; i < mSizeHolder; i++) {
+                    int sizeHolder = mContactsHolder.size();
+                    for (int i = 0; i < sizeHolder; i++) {
                         for (int j = 0; j < sizeSelect; j++) {
                             Contact contact = mContactsHolder.get(i);
                             if (contact.getPhone().equals(mContactSelected.get(j).getPhone())) {
@@ -140,20 +164,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                             }
                         }
                     }
-                    mContacts = mContactsHolder;
+                    filteredList = mContactsHolder;
                 } else {
-                    List<Contact> filteredList = new ArrayList<>();
                     for (Contact row : mContactsHolder) {
                         if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getPhone().contains(charSequence)) {
                             filteredList.add(row);
                         }
                     }
-
-                    mContacts = filteredList;
                 }
 
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = mContacts;
+                filterResults.values = filteredList;
                 return filterResults;
             }
 
@@ -257,6 +278,5 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             }
             setContacts(results);
         }
-
     }
 }

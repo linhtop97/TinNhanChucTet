@@ -17,7 +17,7 @@
         android:protectionLevel="signature" />
     <uses-permission android:name="com.tinnhantet.nhantin.hengio.permission.C2D_MESSAGE" />
 
-
+    <!--android:name=".MyApplication"-->
     <application
         android:name=".MyApplication"
         android:allowBackup="true"

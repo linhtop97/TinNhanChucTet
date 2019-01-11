@@ -82,8 +82,21 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
                 showMessageNormal(helper.getAllMsgSent());
                 break;
             case R.id.btn_delete:
-                ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance();
-                getChildFragmentManager().beginTransaction().add(f, DELETE_ALL_DIALOG).commit();
+                List<Message> messages = ((MessageScheduleAdapter) mBinding.recycleView.getAdapter()).getMessages();
+                int size = messages.size();
+                boolean check = false;
+                for (int i = 0; i < size; i++) {
+                    if (messages.get(i).getSelected()) {
+                        check = true;
+                        break;
+                    }
+                }
+                if (check) {
+                    ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance();
+                    getChildFragmentManager().beginTransaction().add(f, DELETE_ALL_DIALOG).commit();
+                } else {
+                    mNavigator.showToast(R.string.havent_chosse);
+                }
                 break;
 
             case R.id.btn_select_all:
@@ -147,7 +160,7 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
         mBinding.layoutOption.setVisibility(View.VISIBLE);
         mIsSelectAll = false;
         mBinding.btnSelectAll.setText(R.string.select_all);
-        mAdapter = new MessageScheduleAdapter(mMainActivity, helper.getAllMsgSent(), true);
+        mAdapter = new MessageScheduleAdapter(mMainActivity, helper.getAllMsgSent(), true, false);
         mAdapter.setOnDataListener(this);
         mAdapter.setOnLongItemClickListner(this);
         mBinding.recycleView.setLayoutManager(mLinearLayoutManager);
@@ -156,7 +169,7 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
 
     private void showMessageNormal(List<Message> messages) {
         mBinding.layoutOption.setVisibility(View.GONE);
-        mAdapter = new MessageScheduleAdapter(mMainActivity, messages, false);
+        mAdapter = new MessageScheduleAdapter(mMainActivity, messages, false, false);
         mAdapter.setOnDataListener(this);
         mAdapter.setOnLongItemClickListner(this);
         mBinding.recycleView.setLayoutManager(mLinearLayoutManager);

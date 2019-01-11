@@ -96,7 +96,7 @@ public class GuidDialog extends DialogFragment implements View.OnClickListener {
         super.onResume();
         Window window = getDialog().getWindow();
         int width = getResources().getDimensionPixelSize(R.dimen._250sdp);
-        int height = getResources().getDimensionPixelSize(R.dimen._180sdp);
+        int height = getResources().getDimensionPixelSize(R.dimen._130sdp);
         window.setLayout(width, height);
         window.setGravity(Gravity.CENTER);
     }

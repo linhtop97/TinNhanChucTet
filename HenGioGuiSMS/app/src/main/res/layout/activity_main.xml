@@ -12,14 +12,18 @@
 
         <ImageView
             android:id="@+id/img_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/layout_ads"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/main_container"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="@dimen/dp_0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@id/layout_ads"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -28,27 +32,27 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/tablayout"
                 style="@style/MyCustomTabLayout"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/_48sdp"
                 android:textSize="@dimen/_20sdp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:tabBackground="@drawable/tab_color_selector"
+                app:tabBackground="@color/colorPinkRed"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@android:color/white"
+                app:tabIndicatorColor="@color/colorWitheOpa"
+                app:tabMaxWidth="0dp"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="#fffffc"
                 app:tabTextColor="#bab4b4">
 
                 <android.support.design.widget.TabItem
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Đang chờ" />
+                    android:layout_height="wrap_content" />
 
                 <android.support.design.widget.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Đã gửi" />
+                    android:layout="@layout/item_tab" />
             </android.support.design.widget.TabLayout>
 
             <android.support.v4.view.ViewPager

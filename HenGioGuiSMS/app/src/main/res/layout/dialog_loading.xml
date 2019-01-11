@@ -9,7 +9,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="@dimen/_270sdp"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
+        android:background="@drawable/dialog_background"
         android:padding="@dimen/_8sdp">
 
         <TextView
@@ -20,7 +20,7 @@
             android:gravity="center"
             android:padding="@dimen/_8sdp"
             android:text="@string/loading_plz_wait"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="@dimen/_16sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

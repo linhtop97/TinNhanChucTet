@@ -8,34 +8,43 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/holo_orange_dark">
+        android:layout_height="match_parent">
 
         <android.support.constraint.ConstraintLayout
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/_8sdp"
             android:id="@+id/layout_option"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <Button
+                android:background="@drawable/btn_background"
                 android:id="@+id/btn_delete"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_48sdp"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_38sdp"
                 android:text="Xóa"
+                android:textSize="@dimen/_11sdp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/btn_select_all" />
 
             <Button
+                android:textSize="@dimen/_11sdp"
+                android:background="@drawable/btn_background"
                 android:id="@+id/btn_select_all"
                 android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_48sdp"
+                android:layout_height="@dimen/_38sdp"
                 android:text="Chọn tất cả"
                 app:layout_constraintLeft_toRightOf="@id/btn_delete"
                 app:layout_constraintRight_toLeftOf="@id/btn_cancel" />
 
             <Button
+                android:textSize="@dimen/_11sdp"
+                android:background="@drawable/btn_background"
                 android:id="@+id/btn_cancel"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_48sdp"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_38sdp"
                 android:text="Hủy"
                 app:layout_constraintLeft_toRightOf="@id/btn_select_all"
                 app:layout_constraintRight_toRightOf="parent" />

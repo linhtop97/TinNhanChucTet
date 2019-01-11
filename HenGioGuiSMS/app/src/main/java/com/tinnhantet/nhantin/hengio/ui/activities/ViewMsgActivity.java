@@ -11,6 +11,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Html;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.PhoneNumberAdapter;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
@@ -57,6 +58,9 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initUI() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_view_msg);
+        Glide.with(this)
+                .load(R.drawable.bg_main)
+                .into(mBinding.imgBackground);
         mBinding.txtEdit.setText(Html.fromHtml(getString(R.string.edit)));
         mNavigator = new Navigator(this);
         mSharedPrefs = new SharedPrefsImpl(this);
@@ -69,7 +73,7 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
         }
         if (mMessage != null) {
             List<Contact> contacts = StringUtils.getAllContact(mMessage.getListContact());
-            mAdapter = new PhoneNumberAdapter(this, contacts);
+            mAdapter = new PhoneNumberAdapter(this, contacts, false);
             mAdapter.setOnContactListener(this);
             StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
                     StaggeredGridLayoutManager.VERTICAL);
@@ -137,7 +141,7 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
             Bundle bundle = data.getBundleExtra(Constant.EXTRA_MSG);
             Message message = bundle.getParcelable(Constant.EXTRA_MSG);
             List<Contact> contacts = StringUtils.getAllContact(message.getListContact());
-            mAdapter = new PhoneNumberAdapter(this, contacts);
+            mAdapter = new PhoneNumberAdapter(this, contacts, false);
             mAdapter.setOnContactListener(this);
             StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
                     StaggeredGridLayoutManager.VERTICAL);
@@ -145,7 +149,7 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
             mBinding.rvNumbers.setAdapter(mAdapter);
             String content = message.getContent();
             String dateTime[] = DateTimeUtil.separateTime(Long.valueOf(message.getTime()));
-            mBinding.txtTime.setText("Vào lúc " + dateTime[0] + " Giờ : " + dateTime[1] + " Phút " + "Ngày " + dateTime[2] + "/" + dateTime[3] + "/" + dateTime[4]);
+            mBinding.txtTime.setText("Thời gian : " + dateTime[0] + " giờ " + dateTime[1] + " phút " + "Ngày " + dateTime[2] + "/" + dateTime[3] + "/" + dateTime[4]);
             mBinding.edtContent.setText(content);
             mMessage = message;
         }

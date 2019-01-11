@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsKey;
@@ -91,6 +93,14 @@ public class SplashActivity extends AppCompatActivity implements DataCallBack<Li
         mNavigator = new Navigator(this);
         mSharedPrefs = new SharedPrefsImpl(this);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/app_name_font.ttf");
+        mBinding.txtAppName.setTypeface(font);
+        Glide.with(this)
+                .load(R.drawable.bg_splash)
+                .into(mBinding.bgSplash);
+        Glide.with(this)
+                .load(R.drawable.ic_launcher_hi)
+                .into(mBinding.iconApp);
     }
 
     @Override
@@ -154,13 +164,13 @@ public class SplashActivity extends AppCompatActivity implements DataCallBack<Li
 
     public void showRequest() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = fragmentManager.findFragmentByTag(REQUEST_DIALOG);
-            if (fragment != null) {
-                DialogRequestFragment f = (DialogRequestFragment) fragment;
-                f.dismiss();
-            }
             if (checkPermission(SplashActivity.PERMISSION_STRING, this) == PackageManager.PERMISSION_GRANTED) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                Fragment fragment = fragmentManager.findFragmentByTag(REQUEST_DIALOG);
+                if (fragment != null) {
+                    DialogRequestFragment f = (DialogRequestFragment) fragment;
+                    f.dismiss();
+                }
                 loadContacts();
             } else {
                 showDialogRequest();

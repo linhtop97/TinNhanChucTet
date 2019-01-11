@@ -19,7 +19,6 @@ import android.view.Window;
 
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.databinding.DialogContactOptionBinding;
-import com.tinnhantet.nhantin.hengio.listeners.RemoveContactCallback;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.ui.activities.AddMsgActivity;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
@@ -27,7 +26,6 @@ import com.tinnhantet.nhantin.hengio.utils.Constant;
 public class ContactOptionDialog extends DialogFragment implements View.OnClickListener {
     private DialogContactOptionBinding mBinding;
     private AddMsgActivity mAddMsgActivity;
-    private RemoveContactCallback mCallback;
 
     public static ContactOptionDialog getInstance(Contact contact) {
         ContactOptionDialog fragment = new ContactOptionDialog();
@@ -100,15 +98,10 @@ public class ContactOptionDialog extends DialogFragment implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_delete:
-                //mCallback.contactRemoved();
                 mAddMsgActivity.removeContact();
                 dismiss();
                 break;
         }
-    }
-
-    public void setRemoveCallback(RemoveContactCallback callback) {
-        mCallback = callback;
     }
 
     @Override

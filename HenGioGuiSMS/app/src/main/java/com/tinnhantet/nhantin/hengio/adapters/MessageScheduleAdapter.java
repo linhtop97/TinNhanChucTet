@@ -37,9 +37,11 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
     private int mSize;
     private int numOfSelected = 0;
     private MainActivity mMainActivity;
+    private boolean mIsPending;
 
-    public MessageScheduleAdapter(Context context, List<Message> messages, boolean isShow) {
+    public MessageScheduleAdapter(Context context, List<Message> messages, boolean isShow, boolean isPending) {
         mMessages = messages;
+        mIsPending = isPending;
         mSize = mMessages.size();
         mContext = context;
         mMainActivity = (MainActivity) context;
@@ -199,8 +201,13 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
             String content = message.getContent();
             String dateTime[] = DateTimeUtil.separateTime(Long.valueOf(message.getTime()));
             StringBuilder builder = new StringBuilder();
-            builder.append("Vào lúc ").append(dateTime[0]).append(" Giờ : ").append(dateTime[1]).append(" Phút ")
-                    .append("Ngày ").append(dateTime[2]).append("/").append(dateTime[3]).append("/").append(dateTime[4]);
+            if (mIsPending) {
+                builder.append("Sẽ gửi : ");
+            } else {
+                builder.append("Đã gửi : ");
+            }
+            builder.append(dateTime[0]).append(" giờ ").append(dateTime[1]).append(" phút ")
+                    .append("Ngày : ").append(dateTime[2]).append("/").append(dateTime[3]).append("/").append(dateTime[4]);
             mTextTime.setText(builder);
             mTextContent.setText(content);
             mTextSendTo.setText(name);

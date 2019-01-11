@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -10,13 +11,20 @@
         android:id="@+id/layout_contain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorWitheOpa"
         android:focusableInTouchMode="true">
+
+        <ImageView
+            android:id="@+id/img_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/top_container"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_48sdp"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorPinkRed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -24,131 +32,159 @@
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="@dimen/_48sdp"
-                android:layout_height="@dimen/_48sdp"
-                android:background="@null"
-                android:src="@drawable/ic_arrow_back_black" />
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:background="@drawable/home_back_ef"
+                android:padding="@dimen/_8sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/txt_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/_14sdp"
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:background="@drawable/home_back_ef"
+                android:gravity="center"
+                android:paddingLeft="@dimen/_2sdp"
+                android:paddingRight="@dimen/_2sdp"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/_16sdp"
+                android:textSize="@dimen/_14sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
-        <ScrollView
-            android:id="@+id/scrollview"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/top_container"
-            android:background="@android:color/white"
-            android:scrollbars="none">
+            android:layout_margin="@dimen/_8sdp"
+            android:background="@drawable/edt_background"
+            android:padding="@dimen/_4sdp">
 
-            <LinearLayout
+            <ScrollView
+                android:id="@+id/scrollview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_above="@id/layout_button"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:paddingBottom="@dimen/_4sdp"
+                android:scrollbars="none">
 
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/layout_add_msg"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white">
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:orientation="vertical">
 
-
-                    <TextView
-                        android:textStyle="bold"
-                        android:id="@+id/txt_send_to"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_8sdp"
-                        android:text="@string/send_to"
-                        android:textSize="@dimen/_14sdp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/rv_numbers"
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/layout_add_msg"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/txt_send_to">
+                        android:padding="@dimen/_4sdp">
 
-                    </android.support.v7.widget.RecyclerView>
 
-                    <TextView
-                        android:textStyle="bold"
-                        android:id="@+id/txt_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_32sdp"
-                        android:text="@string/send_at"
-                        android:textSize="@dimen/_14sdp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/rv_numbers" />
+                        <TextView
+                            android:id="@+id/txt_send_to"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/send_to"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:textStyle="bold"
-                        android:id="@+id/txt_content"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_32sdp"
-                        android:text="@string/content"
-                        android:textSize="@dimen/_14sdp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/txt_time" />
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rv_numbers"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/txt_send_to">
 
-                    <TextView
-                        android:id="@+id/edt_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_marginRight="@dimen/_8sdp"
-                        android:gravity="left"
-                        android:minHeight="@dimen/_186sdp"
-                        android:padding="@dimen/_8sdp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/txt_content" />
-                </android.support.constraint.ConstraintLayout>
+                        </android.support.v7.widget.RecyclerView>
+
+                        <TextView
+                            android:id="@+id/txt_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:text="@string/send_at"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/rv_numbers"
+                            tools:layout_editor_absoluteY="262dp" />
+
+                        <TextView
+                            android:id="@+id/txt_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:text="@string/content"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/txt_time" />
+
+                        <TextView
+                            android:id="@+id/edt_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:gravity="left"
+                            android:minHeight="@dimen/_186sdp"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_13sdp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/txt_content" />
+                    </android.support.constraint.ConstraintLayout>
+                </LinearLayout>
+
+            </ScrollView>
+
+            <LinearLayout
+                android:id="@+id/layout_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/_14sdp"
+                android:paddingRight="@dimen/_14sdp">
+
+                <Button
+                    android:id="@+id/btn_forward"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/_12sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_ef_bg"
+                    android:text="@string/foward"
+                    android:textColor="@color/colorWitheOpa" />
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_ef_bg"
+                    android:text="@string/delete"
+                    android:textColor="@color/colorWitheOpa" />
             </LinearLayout>
+        </RelativeLayout>
 
-        </ScrollView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_48sdp"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/white"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_forward"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/foward" />
-
-            <Button
-                android:id="@+id/btn_delete"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/delete" />
-        </LinearLayout>
     </RelativeLayout>
 
 

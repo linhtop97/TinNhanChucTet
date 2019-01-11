@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.tinnhantet.nhantin.hengio.R;
@@ -18,10 +19,12 @@ public class PhoneNumberAdapter extends RecyclerView.Adapter<PhoneNumberAdapter.
     private List<Contact> mContacts;
     private Context mContext;
     private OnDataClickListener<Contact> mListener;
+    private boolean mIsEdit;
 
-    public PhoneNumberAdapter(Context context, List<Contact> contacts) {
+    public PhoneNumberAdapter(Context context, List<Contact> contacts, boolean isEdit) {
         mContacts = contacts;
         mContext = context;
+        mIsEdit = isEdit;
     }
 
     public void setOnContactListener(OnDataClickListener listener) {
@@ -55,11 +58,18 @@ public class PhoneNumberAdapter extends RecyclerView.Adapter<PhoneNumberAdapter.
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextName;
+        private ImageButton mImageButton;
 
         ViewHolder(View itemView) {
             super(itemView);
             mTextName = itemView.findViewById(R.id.txt_name);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            mImageButton = itemView.findViewById(R.id.btn_del);
+            if (mIsEdit) {
+                mImageButton.setVisibility(View.VISIBLE);
+            } else {
+                mImageButton.setVisibility(View.GONE);
+            }
+            mImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = getAdapterPosition();

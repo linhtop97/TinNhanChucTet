@@ -4,26 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/_5sdp"
     android:layout_marginTop="@dimen/_5sdp"
-    android:padding="5dp">
+    android:paddingTop="@dimen/_4sdp"
+    android:paddingBottom="@dimen/_4sdp">
 
     <TextView
         android:id="@+id/txt_time_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="18h ngày 20/10/2019"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/_12sdp" />
+        android:textColor="@color/colorYellow"
+        android:textSize="@dimen/_13sdp"
+        android:textStyle="italic" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_infor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_5sdp"
         android:background="@drawable/edt_background"
-        android:padding="@dimen/_4sdp"
+        android:padding="@dimen/_6sdp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/layout_cb"
+        app:layout_constraintRight_toLeftOf="@id/cb_select_msg"
         app:layout_constraintTop_toBottomOf="@id/txt_time_send">
 
         <TextView
@@ -32,31 +35,31 @@
             android:layout_height="wrap_content"
             android:text="@string/send_to"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_13sdp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="7dp" />
 
         <TextView
             android:id="@+id/txt_send_to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_2sdp"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_13sdp"
             app:layout_constraintLeft_toLeftOf="@id/lb_sent_to"
-            app:layout_constraintTop_toBottomOf="@id/lb_sent_to"
-            tools:layout_editor_absoluteX="69dp"
-            tools:layout_editor_absoluteY="6dp" />
+            app:layout_constraintTop_toBottomOf="@id/lb_sent_to" />
 
         <TextView
             android:id="@+id/lb_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4sp"
+            android:layout_marginTop="8sp"
             android:text="Nội dung:"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_13sdp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/txt_send_to" />
 
@@ -64,31 +67,23 @@
             android:id="@+id/txt_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_2sdp"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp"
+            android:textSize="@dimen/_13sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lb_content" />
     </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_cb"
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight=".20"
-        android:gravity="center"
+    <CheckBox
+        android:id="@+id/cb_select_msg"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:background="@drawable/cb_selector"
+        android:button="@null"
+        android:text="@null"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/layout_infor"
+        app:layout_constraintLeft_toRightOf="@id/layout_infor"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/layout_infor">
-
-        <CheckBox
-            android:id="@+id/cb_select_msg"
-            android:layout_width="@dimen/_32sdp"
-            android:layout_height="@dimen/_32sdp"
-            android:button="@drawable/cb_selector"
-            android:gravity="center_vertical"
-            android:text="@null"
-            android:translationX="@dimen/_6sdp"
-            android:visibility="gone" />
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="@id/layout_infor" />
 </android.support.constraint.ConstraintLayout>

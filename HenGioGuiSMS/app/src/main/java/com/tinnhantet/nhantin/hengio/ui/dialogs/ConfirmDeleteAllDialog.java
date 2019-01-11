@@ -77,7 +77,7 @@ public class ConfirmDeleteAllDialog extends DialogFragment implements View.OnCli
         super.onResume();
         Window window = getDialog().getWindow();
         int width = getResources().getDimensionPixelSize(R.dimen._250sdp);
-        int height = getResources().getDimensionPixelSize(R.dimen._150sdp);
+        int height = getResources().getDimensionPixelSize(R.dimen._100sdp);
         window.setLayout(width, height);
         window.setGravity(Gravity.CENTER);
     }

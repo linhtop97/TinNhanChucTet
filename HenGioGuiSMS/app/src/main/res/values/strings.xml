@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">HenGioGuiSMS</string>
+    <string name="app_name">Hẹn giờ tin nhắn chúc Tết</string>
     <string name="pending">Đang chờ</string>
     <string name="sent">Đã gửi</string>
-    <string name="send_to">Gửi tới:</string>
-    <string name="send_at">Gửi lúc:</string>
-    <string name="content">Nội dung</string>
+    <string name="send_to">Gửi tới :</string>
+    <string name="send_at">Thời gian :</string>
+    <string name="content">Nội dung : </string>
     <string name="cancel">Hủy</string>
     <string name="edit">Sửa</string>
-    <string name="time">Giờ:</string>
-    <string name="date">Ngày:</string>
+    <string name="time">Giờ : </string>
+    <string name="date">Ngày : </string>
     <string name="search_contact">Tìm số liên lạc</string>
     <string name="contact_name">name</string>
     <string name="contact_number">phone number</string>
@@ -17,7 +17,7 @@
     <string name="un_select_all">Bỏ chọn</string>
     <string name="confirm_cancel">Bạn có muốn hủy thao tác này?</string>
     <string name="confirm_delete">Bạn có muốn xóa tin nhắn này?</string>
-    <string name="done"><![CDATA[<u>Xong</u>]]></string>
+    <string name="done">Xong</string>
     <string name="loading_plz_wait">Đang tải dữ liệu, vui lòng chờ…</string>
     <string name="contact_empty">Bạn chưa chọn số điện thoại</string>
     <string name="invalid_date">Thời gian hẹn gửi phải lớn hơn thời gian hiện tại 2 phút</string>
@@ -26,9 +26,10 @@
     <string name="foward">Chuyển tiếp</string>
     <string name="delete">Xóa</string>
     <string name="invalid_phone">Số điện thoại phải bao gồm 10 chữ số!</string>
-    <string name="confirm_delete_all">Bạn có muốn xóa hết các tin nhắn đã chọn?</string>
-    <string name="guid_msg">Bạn có thể xóa các tin nhắn cách ấn giữ vào tin nhắn đó tại đây</string>
+    <string name="confirm_delete_all">Bạn có muốn xóa hết các tin nhắn đã chọn không?</string>
+    <string name="guid_msg">Bạn có thể xóa các tin nhắn bằng cách ấn giữ chúng tại đây</string>
     <string name="havent_chosse">Chưa có tin nhắn nào được lựa chọn</string>
     <string name="plz_select_phone_number">Bạn chưa chọn số điện thoại nào</string>
     <string name="havent_contact">Bạn chưa có danh bạ</string>
+    <string name="request_per">Bạn phải cho phép quyền truy cập bộ nhớ, tin nhắn và danh bạ !</string>
 </resources>

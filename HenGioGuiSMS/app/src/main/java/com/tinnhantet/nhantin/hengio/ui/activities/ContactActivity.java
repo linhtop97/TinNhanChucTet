@@ -31,8 +31,6 @@ import com.tinnhantet.nhantin.hengio.utils.Navigator;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.ObservableSource;
-
 public class ContactActivity extends AppCompatActivity implements View.OnClickListener,
         OnItemClickListener {
     private static final String CANCEL_DIALOG = "CANCEL_DIALOG";
@@ -44,6 +42,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private int mSize;
     private Navigator mNavigator;
     private SharedPrefsImpl mSharedPrefs;
+    private  boolean isHasContactDefault;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,6 +101,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 for (int j = 0; j < sizeSend; j++) {
                     if (mContacts.get(i).getPhone().equals(contactReceive.get(j).getPhone())) {
                         mContacts.get(i).setSelected(true);
+                        isHasContactDefault = true;
                     }
                 }
             }
@@ -188,11 +188,10 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private boolean checkHasSelected() {
         mContactSelected = mAdapter.getContacts();
         if (mContactSelected.size() > 0) {
-            for (int i = 0; i < mSize; i++) {
-                if (mContactSelected.get(i).isSelected()) {
-                    mIsHasContactSelected = true;
-                    break;
-                }
+            mIsHasContactSelected = true;
+        }else {
+            if(isHasContactDefault){
+                mIsHasContactSelected = true;
             }
         }
 

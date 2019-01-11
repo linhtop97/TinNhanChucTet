@@ -13,7 +13,6 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
@@ -25,9 +24,9 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.bumptech.glide.Glide;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.PhoneNumberAdapter;
-import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
 import com.tinnhantet.nhantin.hengio.databinding.ActivityAddMsgBinding;
 import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
@@ -53,7 +52,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     private List<Contact> mContactSelected;
     private PhoneNumberAdapter mAdapter;
     private int mPosSelected;
-    private SharedPrefsImpl mSharedPrefs;
     private Calendar mMyCalendar;
     private int mHour, mMinute, mYear, mMonth, mDay;
     private PendingIntent pIntent;
@@ -84,7 +82,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     mBinding.edtPhoneNumber.setText("");
-                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
+                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected, true);
                     mAdapter.setOnContactListener(AddMsgActivity.this);
                     StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
                             StaggeredGridLayoutManager.VERTICAL);
@@ -92,36 +90,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     mBinding.rvNumbers.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                     mBinding.rvNumbers.setVisibility(View.VISIBLE);
-                } else {
-//                    String number = mBinding.edtPhoneNumber.getText().toString();
-//                    if (number.length() == 10) {
-//                        if (mContactSelected == null) {
-//                            mContactSelected = new ArrayList<>();
-//                        }
-//                        int size = mContactSelected.size();
-//                        boolean check = false;
-//                        if (size > 0) {
-//                            for (int i = 0; i < size; i++) {
-//                                if (mContactSelected.get(i).getPhone().equals(number)) {
-//                                    check = true;
-//                                    break;
-//                                }
-//                            }
-//                        }
-//
-//                        if (!check) {
-//                            Contact contact = new Contact(0, "", number);
-//                            contact.setSelected(true);
-//                            mContactSelected.add(contact);
-//                            typeContact.add(contact);
-//                            mAdapter.notifyItemInserted(mContactSelected.size() - 1);
-//                            mBinding.edtPhoneNumber.clearFocus();
-//                            mBinding.edtPhoneNumber.setText("");
-//                        }
-//                    } else {
-//                        mNavigator.showToast(R.string.invalid_phone);
-//                    }
-
                 }
             }
         });
@@ -130,17 +98,18 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    String num = mBinding.edtPhoneNumber.getText().toString();
                     if (mContactSelected == null) {
                         mContactSelected = new ArrayList<>();
                     }
-                    if (num.isEmpty() && mContactSelected.size() == 0) {
-                        mNavigator.showToast(R.string.contact_empty);
-                        mBinding.edtPhoneNumber.requestFocus();
-                    } else if (!num.isEmpty()) {
-                        validatePhoneNumber();
+                    if (mContactSelected.size() == 0) {
+                        String num = mBinding.edtPhoneNumber.getText().toString();
+                        if (num.isEmpty() && mContactSelected.size() == 0) {
+                            mNavigator.showToast(R.string.contact_empty);
+                            mBinding.edtPhoneNumber.requestFocus();
+                        } else if (!num.isEmpty()) {
+                            validatePhoneNumber();
+                        }
                     }
-
                 }
             }
         });
@@ -184,7 +153,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 mBinding.edtPhoneNumber.clearFocus();
                 mBinding.edtPhoneNumber.setText("");
                 if (mIsForward) {
-                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected);
+                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected, true);
                     mAdapter.setOnContactListener(AddMsgActivity.this);
                     StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
                             StaggeredGridLayoutManager.VERTICAL);
@@ -210,22 +179,23 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initUI() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_msg);
-        mBinding.txtDone.setText(Html.fromHtml(getString(R.string.done)));
+        mBinding.txtDone.setText(getString(R.string.done));
+        Glide.with(this)
+                .load(R.drawable.bg_main)
+                .into(mBinding.imgBackground);
         mNavigator = new Navigator(this);
-        mSharedPrefs = new SharedPrefsImpl(this);
         mHelper = MessageDatabaseHelper.getInstance(this);
         mMyCalendar = Calendar.getInstance();
         mBinding.edtContent.setMovementMethod(new ScrollingMovementMethod());
         typeContact = new ArrayList<>();
         //set Data to UI when nothing
         mContactSelected = new ArrayList<>();
-        mAdapter = new PhoneNumberAdapter(this, mContactSelected);
+        mAdapter = new PhoneNumberAdapter(this, mContactSelected, true);
         mAdapter.setOnContactListener(this);
         StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.VERTICAL);
         mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
         mBinding.rvNumbers.setAdapter(mAdapter);
-        //getIntent from edit
         Intent intent = getIntent();
         if (intent != null) {
             String action = intent.getAction();
@@ -253,6 +223,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         } else {
             initData(null);
         }
+        mBinding.rvNumbers.setVisibility(View.GONE);
     }
 
     private void showDatePicker() {
@@ -282,7 +253,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                                           int minute) {
                         mHour = hourOfDay;
                         mMinute = minute;
-                        mBinding.time.setText(mHour + " Giờ : " + mMinute + " Phút");
+                        mBinding.time.setText(mHour + " giờ : " + mMinute + " phút");
 
                     }
                 }, mHour, mMinute, true);
@@ -305,9 +276,14 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 if (mBinding.edtPhoneNumber.getText().toString().isEmpty()) {
                     showContactChooser();
                     break;
-                }
-                if (validatePhoneNumber()) {
-                    showContactChooser();
+                } else {
+                    if (mContactSelected.size() == 0) {
+                        if (validatePhoneNumber()) {
+                            showContactChooser();
+                        }
+                    } else {
+                        showContactChooser();
+                    }
                 }
 
                 break;
@@ -321,7 +297,16 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     mNavigator.showToast(R.string.contact_empty);
                     mBinding.edtPhoneNumber.requestFocus();
                 } else {
-                    validatePhoneNumber();
+                    if (!num.equals("")) {
+                        if ((mBinding.rvNumbers.getVisibility() == View.VISIBLE)) {
+                            if (mContactSelected.size() > 0) {
+                                if (!validatePhoneNumber()) {
+                                    return;
+                                }
+                            }
+                        }
+
+                    }
                 }
                 switch (invalidData()) {
                     case 0:
@@ -459,7 +444,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             mContactSelected.addAll(newContactSelected);
             mBinding.edtPhoneNumber.setText(StringUtils.getAllNameContact(mContactSelected));
             mBinding.edtPhoneNumber.clearFocus();
-            mAdapter = new PhoneNumberAdapter(this, mContactSelected);
+            mAdapter = new PhoneNumberAdapter(this, mContactSelected, true);
             mAdapter.notifyDataSetChanged();
             mBinding.rvNumbers.setVisibility(View.GONE);
             //getResources().getDimension(R.dimen._1sdp)
@@ -513,7 +498,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             mMonth = Integer.parseInt(dateTimeArr[3]) - 1;
             mYear = Integer.parseInt(dateTimeArr[4]);
             mBinding.date.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
-            mBinding.time.setText(mHour + " Giờ : " + mMinute + " Phút");
+            mBinding.time.setText(mHour + " giờ : " + mMinute + " phút");
             mBinding.edtPhoneNumber.setText("");
             mBinding.edtContent.setText("");
         } else {
@@ -525,7 +510,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             mMonth = Integer.parseInt(dateTimeArr[3]) - 1;
             mYear = Integer.parseInt(dateTimeArr[4]);
             mBinding.date.setText(mDay + "/" + (mMonth + 1) + "/" + mYear);
-            mBinding.time.setText(mHour + " Giờ : " + mMinute + " Phút");
+            mBinding.time.setText(mHour + " giờ : " + mMinute + " phút");
             List<Contact> contacts = StringUtils.getAllContact(message.getListContact());
             mBinding.edtPhoneNumber.setText(StringUtils.getAllNameContact(contacts));
             mBinding.edtContent.setText(message.getContent());

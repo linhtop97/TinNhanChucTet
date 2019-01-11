@@ -187,7 +187,7 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
         mBinding.layoutOption.setVisibility(View.VISIBLE);
         mIsSelectAll = false;
         mBinding.btnSelectAll.setText(R.string.select_all);
-        mAdapter = new MessageScheduleAdapter(mMainActivity, helper.getAllMsgPending(), true);
+        mAdapter = new MessageScheduleAdapter(mMainActivity, helper.getAllMsgPending(), true, true);
         mAdapter.setOnDataListener(this);
         mAdapter.setOnLongItemClickListner(this);
         mBinding.recycleView.setLayoutManager(mLinearLayoutManager);
@@ -197,7 +197,7 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
 
     private void showMessageNormal(List<Message> messages) {
         mBinding.layoutOption.setVisibility(View.GONE);
-        mAdapter = new MessageScheduleAdapter(mMainActivity, messages, false);
+        mAdapter = new MessageScheduleAdapter(mMainActivity, messages, false, true);
         mAdapter.setOnDataListener(this);
         mAdapter.setOnLongItemClickListner(this);
         mBinding.recycleView.setLayoutManager(mLinearLayoutManager);
