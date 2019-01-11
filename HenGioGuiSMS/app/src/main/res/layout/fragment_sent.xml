@@ -20,7 +20,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:background="@drawable/btn_background"
+                android:background="@drawable/btn_white_bg"
                 android:id="@+id/btn_delete"
                 android:layout_width="@dimen/_80sdp"
                 android:layout_height="@dimen/_38sdp"
@@ -31,7 +31,7 @@
 
             <Button
                 android:textSize="@dimen/_11sdp"
-                android:background="@drawable/btn_background"
+                android:background="@drawable/btn_white_bg"
                 android:id="@+id/btn_select_all"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_38sdp"
@@ -41,7 +41,7 @@
 
             <Button
                 android:textSize="@dimen/_11sdp"
-                android:background="@drawable/btn_background"
+                android:background="@drawable/btn_white_bg"
                 android:id="@+id/btn_cancel"
                 android:layout_width="@dimen/_80sdp"
                 android:layout_height="@dimen/_38sdp"

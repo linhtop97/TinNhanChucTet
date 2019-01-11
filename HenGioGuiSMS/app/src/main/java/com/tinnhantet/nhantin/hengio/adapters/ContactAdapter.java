@@ -189,14 +189,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTextName;
         private TextView mTextPhone;
-        private ImageView mImgAvatar;
         private CheckBox mIsSelected;
 
         ViewHolder(View itemView) {
             super(itemView);
             mTextName = itemView.findViewById(R.id.text_name);
             mTextPhone = itemView.findViewById(R.id.text_phone);
-            mImgAvatar = itemView.findViewById(R.id.img_avartar);
             mIsSelected = itemView.findViewById(R.id.cb_select_contact);
             mIsSelected.setClickable(false);
             itemView.setOnClickListener(new View.OnClickListener() {

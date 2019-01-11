@@ -11,12 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.ContactAdapter;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
@@ -42,7 +42,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private int mSize;
     private Navigator mNavigator;
     private SharedPrefsImpl mSharedPrefs;
-    private  boolean isHasContactDefault;
+    private boolean isHasContactDefault;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +84,10 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         mSharedPrefs = new SharedPrefsImpl(this);
         mContactSelected = new ArrayList<>();
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_contact);
-        mBinding.btnDone.setText(Html.fromHtml(getString(R.string.done)));
+        Glide.with(this)
+                .load(R.drawable.bg_main)
+                .into(mBinding.imgBackground);
+        mBinding.btnDone.setText(getString(R.string.done));
         mContacts = mSharedPrefs.getListContact(SharedPrefsKey.KEY_LIST_CONTACT);
         if (mContacts == null) {
             mContacts = new ArrayList<>();
@@ -189,8 +192,8 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         mContactSelected = mAdapter.getContacts();
         if (mContactSelected.size() > 0) {
             mIsHasContactSelected = true;
-        }else {
-            if(isHasContactDefault){
+        } else {
+            if (isHasContactDefault) {
                 mIsHasContactSelected = true;
             }
         }

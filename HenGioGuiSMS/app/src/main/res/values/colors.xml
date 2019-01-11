@@ -6,9 +6,11 @@
     <color name="tab_background_selected">#de160b</color>
     <color name="tab_background_unselected">#51d9d9</color>
     <color name="black">#000</color>
+    <color name="black_hint">#252424</color>
     <color name="white">#FFF</color>
     <color name="sdfd">#ffffff</color>
     <color name="colorWitheOpa">#e1ffffff</color>
+    <color name="colorWitheOpa_ef">#b4b1b1</color>
     <color name="colorYellow">#fca445 </color>
     <color name="colorPinkRed">#e73b61 </color>
     <color name="colorPinkRed_ef">#c6153c</color>

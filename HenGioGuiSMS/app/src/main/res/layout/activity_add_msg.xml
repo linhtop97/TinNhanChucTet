@@ -44,15 +44,15 @@
 
             <TextView
                 android:id="@+id/txt_done"
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_38sdp"
                 android:layout_marginEnd="@dimen/_14sdp"
                 android:background="@drawable/home_back_ef"
-                android:paddingLeft="@dimen/_2sdp"
                 android:gravity="center"
+                android:paddingLeft="@dimen/_2sdp"
                 android:paddingRight="@dimen/_2sdp"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/_14sdp"
-                android:layout_width="@dimen/_38sdp"
-                android:layout_height="@dimen/_38sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -91,19 +91,19 @@
                             android:layout_height="wrap_content"
                             android:text="@string/send_to"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="@id/edt_phone_number"
                             app:layout_constraintTop_toTopOf="@id/edt_phone_number"
-                            tools:layout_editor_absoluteY="28dp" />
+                            app:layout_constraintLeft_toLeftOf="parent" />
 
                         <EditText
                             android:id="@+id/edt_phone_number"
                             android:layout_width="0dp"
-                            android:layout_height="@dimen/_34sdp"
-                            android:layout_marginLeft="@dimen/_4sdp"
+                            android:layout_height="@dimen/_32sdp"
+                            android:layout_marginLeft="@dimen/_8sdp"
                             android:layout_marginTop="@dimen/_14sdp"
-                            android:layout_marginRight="@dimen/_4sdp"
+                            android:layout_marginRight="@dimen/_8sdp"
                             android:background="@drawable/number_background"
                             android:ellipsize="end"
                             android:inputType="phone"
@@ -117,8 +117,8 @@
 
                         <ImageButton
                             android:id="@+id/btn_contact"
-                            android:layout_width="@dimen/_28sdp"
-                            android:layout_height="@dimen/_28sdp"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
                             android:layout_marginLeft="@dimen/_4sdp"
                             android:background="@drawable/contact_selector"
                             android:padding="@dimen/_4sdp"
@@ -131,6 +131,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:visibility="gone"
+                            android:layout_marginTop="@dimen/_4sdp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/edt_phone_number">
@@ -144,7 +145,7 @@
                             android:layout_marginTop="@dimen/_12sdp"
                             android:text="@string/send_at"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/rv_numbers" />
@@ -157,25 +158,25 @@
                             android:gravity="center_vertical"
                             android:text="@string/time"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/txt_send_at"
                             tools:layout_editor_absoluteY="120dp" />
 
                         <TextView
+                            android:layout_marginStart="@dimen/_20sdp"
                             android:id="@+id/time"
-                            android:layout_width="@dimen/_180sdp"
-                            android:layout_height="@dimen/_34sdp"
+                            android:layout_width="@dimen/_130sdp"
+                            android:layout_height="@dimen/_32sdp"
                             android:layout_alignBaseline="@id/txt_time"
-                            android:layout_marginLeft="@dimen/_16sdp"
                             android:background="@drawable/number_background"
                             android:gravity="center_vertical"
                             android:hint="hh:mm"
                             android:paddingLeft="@dimen/_8sdp"
                             android:singleLine="true"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             app:layout_constraintLeft_toRightOf="@id/txt_time"
                             app:layout_constraintTop_toTopOf="@id/txt_time" />
 
@@ -189,22 +190,22 @@
                             android:gravity="center_vertical"
                             android:text="@string/date"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/txt_time" />
 
                         <TextView
                             android:id="@+id/date"
-                            android:layout_width="@dimen/_180sdp"
-                            android:layout_height="@dimen/_34sdp"
+                            android:layout_width="@dimen/_130sdp"
+                            android:layout_height="@dimen/_32sdp"
                             android:layout_alignBaseline="@id/txt_time"
                             android:background="@drawable/number_background"
                             android:gravity="center_vertical"
                             android:hint="dd/MM/yyyy"
                             android:paddingLeft="@dimen/_8sdp"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             app:layout_constraintLeft_toLeftOf="@id/time"
                             app:layout_constraintTop_toTopOf="@id/txt_date" />
 
@@ -212,10 +213,10 @@
                             android:id="@+id/txt_content"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_16sdp"
+                            android:layout_marginTop="@dimen/_12sdp"
                             android:text="@string/content"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             android:textStyle="bold"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/txt_date" />
@@ -229,7 +230,7 @@
                             android:gravity="left"
                             android:minHeight="@dimen/_186sdp"
                             android:padding="@dimen/_8sdp"
-                            android:textSize="@dimen/_13sdp"
+                            android:textSize="@dimen/_12sdp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
