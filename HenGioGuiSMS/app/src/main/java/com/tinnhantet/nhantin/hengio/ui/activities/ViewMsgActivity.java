@@ -12,6 +12,7 @@ import android.text.Html;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.tinnhantet.nhantin.hengio.Ads;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.PhoneNumberAdapter;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
@@ -83,6 +84,7 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
             mBinding.txtTime.setText(DateTimeUtil.convertTimeToString(Long.valueOf(mMessage.getTime())));
             mBinding.edtContent.setText(content);
         }
+        Ads.f(this);
 
     }
 
@@ -101,9 +103,8 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_forward:
                 //Start Add Msg Activity
                 Bundle fwBundle = new Bundle();
-                Message message = mMessage;
-                message.setListContact("");
-                fwBundle.putParcelable(Constant.EXTRA_MSG, mMessage);
+                Message message = new Message(mMessage.getPendingId(), mMessage.getContent(), mMessage.getTime(), "", true);
+                fwBundle.putParcelable(Constant.EXTRA_MSG, message);
                 Intent intent = new Intent();
                 intent.setClass(this, AddMsgActivity.class);
                 intent.setAction(FORWARD);

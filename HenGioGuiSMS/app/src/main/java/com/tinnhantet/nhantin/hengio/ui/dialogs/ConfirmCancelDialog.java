@@ -1,7 +1,6 @@
 package com.tinnhantet.nhantin.hengio.ui.dialogs;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -19,11 +18,9 @@ import android.view.Window;
 
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.databinding.DialogCfCancelBinding;
-import com.tinnhantet.nhantin.hengio.ui.activities.ContactActivity;
 
 public class ConfirmCancelDialog extends DialogFragment implements View.OnClickListener {
     private DialogCfCancelBinding mBinding;
-    private ContactActivity mContactActivity;
 
     public static ConfirmCancelDialog getInstance() {
         ConfirmCancelDialog fragment = new ConfirmCancelDialog();
@@ -83,18 +80,12 @@ public class ConfirmCancelDialog extends DialogFragment implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ok:
-                mContactActivity.finish();
+                getActivity().finish();
                 dismiss();
                 break;
             case R.id.btn_cancel:
                 dismiss();
                 break;
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContactActivity = (ContactActivity) context;
     }
 }

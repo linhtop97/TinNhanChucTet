@@ -54,8 +54,10 @@
             android:id="@+id/recycle_view"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_0"
+            android:layout_marginTop="@dimen/_8sdp"
             android:clipToPadding="false"
             android:padding="@dimen/_8sdp"
+
             android:paddingBottom="@dimen/_50sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

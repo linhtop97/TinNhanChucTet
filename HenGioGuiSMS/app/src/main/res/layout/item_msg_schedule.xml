@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/_5sdp"
-    android:paddingTop="@dimen/_4sdp"
     android:paddingBottom="@dimen/_4sdp">
 
     <TextView
@@ -14,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="18h ngày 20/10/2019"
         android:textColor="@color/colorYellow"
-        android:textSize="@dimen/_12sdp"
+        android:textSize="@dimen/_13sdp"
         android:textStyle="italic" />
 
     <android.support.constraint.ConstraintLayout
@@ -35,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="@string/send_to"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_13sdp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -48,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_13sdp"
             app:layout_constraintLeft_toLeftOf="@id/lb_sent_to"
             app:layout_constraintTop_toBottomOf="@id/lb_sent_to" />
 
@@ -59,7 +57,7 @@
             android:layout_marginTop="8sp"
             android:text="Nội dung:"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_13sdp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/txt_send_to" />
 
@@ -69,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_13sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lb_content" />
     </android.support.constraint.ConstraintLayout>

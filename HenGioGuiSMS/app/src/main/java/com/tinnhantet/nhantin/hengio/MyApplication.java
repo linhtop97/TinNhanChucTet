@@ -5,7 +5,7 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 
 import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
-import com.zer.android.newsdk.ZAndroidSDK;
+import com.zer.android.newsdk.ZAndroidSystems;
 
 public class MyApplication extends Application {
 
@@ -19,6 +19,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        ZAndroidSystems.initApplication(this, getApplicationContext().getPackageName());
         MessageDatabaseHelper messageDatabaseHelper = MessageDatabaseHelper.getInstance(this);
     }
 

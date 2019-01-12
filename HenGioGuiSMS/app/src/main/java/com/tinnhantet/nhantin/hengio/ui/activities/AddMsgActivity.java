@@ -33,6 +33,7 @@ import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
 import com.tinnhantet.nhantin.hengio.services.MessageService;
+import com.tinnhantet.nhantin.hengio.ui.dialogs.ConfirmCancelDialog;
 import com.tinnhantet.nhantin.hengio.ui.dialogs.ContactOptionDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
@@ -46,6 +47,7 @@ import java.util.List;
 public class AddMsgActivity extends AppCompatActivity implements View.OnClickListener, OnDataClickListener<Contact> {
 
     private static final String CONTACT_OPTION_DIALOG = "CONTACT_OPTION_DIALOG";
+    private static final String CANCEL_DIALOG = "CANCEL_DIALOG";
     private ActivityAddMsgBinding mBinding;
     private DatePickerDialog.OnDateSetListener mOnDateSetListener;
     private Navigator mNavigator;
@@ -62,6 +64,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     private Message mMessageComeback;
     private MessageDatabaseHelper mHelper;
     private List<Contact> typeContact;
+    private boolean mIsChangeData = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -212,6 +215,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     if (!mIsForward) {
                         mIsEdit = true;
                     }
+                    mIsChangeData = true;
                     initData(mMessageEdit);
                 } else {
                     initData(null);
@@ -270,7 +274,11 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 showDatePicker();
                 break;
             case R.id.btn_back:
-                finish();
+                if (mIsChangeData) {
+                    showDialogConfirm();
+                } else {
+                    finish();
+                }
                 break;
             case R.id.btn_contact:
                 if (mBinding.edtPhoneNumber.getText().toString().isEmpty()) {
@@ -303,6 +311,11 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                                 if (!validatePhoneNumber()) {
                                     return;
                                 }
+                            }
+                        }
+                        if (mContactSelected.size() == 0) {
+                            if (!validatePhoneNumber()) {
+                                return;
                             }
                         }
 
@@ -353,6 +366,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
 
                 break;
         }
+
+    }
+
+    private void showDialogConfirm() {
+        ConfirmCancelDialog f = ConfirmCancelDialog.getInstance();
+        getSupportFragmentManager().beginTransaction().add(f, CANCEL_DIALOG).commit();
     }
 
 

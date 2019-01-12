@@ -9,14 +9,12 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.tinnhantet.nhantin.hengio.Ads;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.ContactAdapter;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
@@ -43,6 +41,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private Navigator mNavigator;
     private SharedPrefsImpl mSharedPrefs;
     private boolean isHasContactDefault;
+    private int isSelectedStyle = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +97,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         if (contactReceive == null) {
             contactReceive = new ArrayList<>();
         }
+        int x = 0;
         int sizeSend = contactReceive.size();
         if (sizeRoot != 0 && sizeSend != 0) {
             for (int i = 0; i < sizeRoot; i++) {
@@ -105,16 +105,30 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                     if (mContacts.get(i).getPhone().equals(contactReceive.get(j).getPhone())) {
                         mContacts.get(i).setSelected(true);
                         isHasContactDefault = true;
+                        x++;
                     }
                 }
             }
         }
+        if (x == sizeRoot) {
+            isSelectedStyle = 0;
+            mBinding.btnOption.setImageResource(R.drawable.ic_check_tick_white);
+        }
+        if (0 < x && x < sizeRoot) {
+            isSelectedStyle = 1;
+            mBinding.btnOption.setImageResource(R.drawable.ic_check_remove);
+        } else {
+            isSelectedStyle = 2;
+            mBinding.btnOption.setImageResource(R.drawable.ic_check_no_white);
+        }
+
         mSize = mContacts.size();
         mSharedPrefs.putListContact(mContacts, SharedPrefsKey.KEY_LIST_CONTACT_HOLDER);
         mAdapter = new ContactAdapter(this, mContacts);
         mAdapter.setOnItemClickListener(this);
         mBinding.recycleView.setLayoutManager(new LinearLayoutManager(this));
         mBinding.recycleView.setAdapter(mAdapter);
+        Ads.f(this);
     }
 
     @Override
@@ -128,23 +142,20 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.btn_option:
-                //show option menu
-                PopupMenu actionMenu = new PopupMenu(this, mBinding.btnOption, Gravity.END | Gravity.BOTTOM);
-                actionMenu.inflate(R.menu.options_menu_select);
-                actionMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.action_select_all) {
-                            //select all
-                            mAdapter.setSelectedAll();
-                        } else if (item.getItemId() == R.id.action_unselect_all) {
-                            //unselect all
-                            mAdapter.removeSelectedAll();
-                        }
-                        return true;
-                    }
-                });
-                actionMenu.show();
+                switch (isSelectedStyle) {
+                    case 0:
+                    case 1:
+                        isSelectedStyle = 2;
+                        mBinding.btnOption.setImageResource(R.drawable.ic_check_no_white);
+                        mAdapter.removeSelectedAll();
+                        break;
+                    case 2:
+                        mAdapter.setSelectedAll();
+                        isSelectedStyle = 0;
+                        mBinding.btnOption.setImageResource(R.drawable.ic_check_tick_white);
+                        break;
+                }
+
                 break;
             case R.id.btn_cancel:
                 if (checkHasSelected()) {
@@ -199,5 +210,20 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         return mIsHasContactSelected;
+    }
+
+    public void setCheckedImage(int style) {
+        isSelectedStyle = style;
+        switch (style) {
+            case 0:
+                mBinding.btnOption.setImageResource(R.drawable.ic_check_tick_white);
+                break;
+            case 1:
+                mBinding.btnOption.setImageResource(R.drawable.ic_check_remove);
+                break;
+            case 2:
+                mBinding.btnOption.setImageResource(R.drawable.ic_check_no_white);
+                break;
+        }
     }
 }

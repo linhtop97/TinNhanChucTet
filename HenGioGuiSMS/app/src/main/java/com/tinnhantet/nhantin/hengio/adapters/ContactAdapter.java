@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tinnhantet.nhantin.hengio.R;
@@ -17,6 +16,7 @@ import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsKey;
 import com.tinnhantet.nhantin.hengio.listeners.OnItemClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
+import com.tinnhantet.nhantin.hengio.ui.activities.ContactActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -232,6 +232,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
                         }
                     }
 
+                    int sizeSelect = mContactSelected.size();
+                    if (sizeSelect == mSizeHolder) {
+                        ((ContactActivity) mContext).setCheckedImage(0);
+                    } else if (0 < sizeSelect) {
+                        ((ContactActivity) mContext).setCheckedImage(1);
+                    } else {
+                        ((ContactActivity) mContext).setCheckedImage(2);
+                    }
                     notifyItemChanged(mPositionSelect, "changed");
                 }
             });

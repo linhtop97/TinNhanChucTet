@@ -81,18 +81,19 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
         helper = MessageDatabaseHelper.getInstance(mMainActivity);
         mMessages = helper.getAllMsgPending();
         showMessageNormal(mMessages);
-        if (mMessages.size() > 0) {
-            if (!mSharedPrefs.get(SharedPrefsKey.PREF_REMEMBER_GUIDE, Boolean.class)) {
-                GuidDialog f = GuidDialog.getInstance();
-                mMainActivity.getSupportFragmentManager().beginTransaction().add(f, GUIDE_DIALOG).commit();
-            }
-        }
+//        if (mMessages.size() > 0) {
+//            if (!mSharedPrefs.get(SharedPrefsKey.PREF_REMEMBER_GUIDE, Boolean.class)) {
+//                GuidDialog f = GuidDialog.getInstance();
+//                mMainActivity.getSupportFragmentManager().beginTransaction().add(f, GUIDE_DIALOG).commit();
+//            }
+//        }
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
     }
 
     @Override
@@ -171,7 +172,14 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
     public void onStart() {
         super.onStart();
         Log.i(TAG, "onStart: ");
-        mAdapter.setMessages(helper.getAllMsgPending());
+        List<Message> messages = helper.getAllMsgPending();
+        mAdapter.setMessages(messages);
+        if (messages.size() > 0) {
+            if (!mSharedPrefs.get(SharedPrefsKey.PREF_REMEMBER_GUIDE, Boolean.class)) {
+                GuidDialog f = GuidDialog.getInstance();
+                mMainActivity.getSupportFragmentManager().beginTransaction().add(f, GUIDE_DIALOG).commit();
+            }
+        }
     }
 
     @Override

@@ -16,7 +16,7 @@ import com.tinnhantet.nhantin.hengio.adapters.MainPagerAdapter;
 import com.tinnhantet.nhantin.hengio.databinding.ActivityMainBinding;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 import com.tinnhantet.nhantin.hengio.utils.TabType;
-import com.zer.android.newsdk.ZAndroidSDK;
+import com.zer.android.newsdk.ZAndroidSystems;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnTabSelectedListener {
     private ActivityMainBinding mBinding;
@@ -45,14 +45,13 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
         }
         mBinding.tablayout.addOnTabSelectedListener(this);
         sInstance = this;
-        //ads();
+        ads();
     }
 
     public void ads() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
-            ZAndroidSDK.init(MainActivity.this);
+            ZAndroidSystems.init(MainActivity.this);
         }
-        Ads.f(MainActivity.this);
         Ads.b(MainActivity.this, mBinding.layoutAds, new Ads.OnAdsListener() {
             @Override
             public void onError() {

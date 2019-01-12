@@ -26,10 +26,16 @@
 
             <ImageButton
                 android:id="@+id/btn_back"
-                android:layout_width="@dimen/_48sdp"
-                android:layout_height="@dimen/_48sdp"
-                android:background="@null"
-                android:src="@drawable/ic_arrow_back_black" />
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:background="@drawable/home_back_ef"
+                android:padding="@dimen/_8sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/edt_search"
@@ -43,12 +49,12 @@
                 app:layout_constraintLeft_toRightOf="@id/btn_back"
                 app:layout_constraintRight_toLeftOf="@id/btn_option" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btn_option"
                 android:layout_width="@dimen/_48sdp"
                 android:layout_height="@dimen/_48sdp"
-                android:background="@null"
-                android:src="@drawable/ic_option"
+                android:padding="@dimen/_14sdp"
+                android:src="@drawable/ic_check_no_white"
                 app:layout_constraintRight_toRightOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
@@ -58,10 +64,10 @@
             android:layout_height="match_parent"
             android:layout_above="@id/btn_container"
             android:layout_below="@id/top_container"
+            android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginBottom="@dimen/_4sdp"
             android:clipToPadding="false"
             android:paddingLeft="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_8sdp"
             android:paddingRight="@dimen/_8sdp"
             android:paddingBottom="@dimen/_50sdp" />
 
