@@ -36,7 +36,7 @@
             android:name=".ui.activities.AddMsgActivity"
             android:isScrollContainer="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan">
 
         </activity>
         <activity
@@ -61,7 +61,16 @@
             android:name=".ui.activities.ViewMsgActivity"
             android:screenOrientation="portrait" />
 
-
+        <receiver android:name=".receivers.SentMessage" />
+        <receiver android:name=".receivers.DeliveredMessage" />
+        <receiver
+            android:name=".receivers.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <!--Zer SDK-->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -110,8 +119,5 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
     </application>
-
-
 </manifest>

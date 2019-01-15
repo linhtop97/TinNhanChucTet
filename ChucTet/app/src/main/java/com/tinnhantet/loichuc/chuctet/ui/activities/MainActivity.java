@@ -38,13 +38,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private Navigator mNavigator;
-    private SharedPrefsImpl mSharedPrefs;
-    public static final String[] PERMISSION_WRITE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private ActivityMainBinding mainBinding;
+    private Navigator mNavigators;
+    private SharedPrefsImpl mSharedPref;
+    public static final String[] PERMISSION_WRITE_PERMISSION = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private ActivityMainBinding mBinding;
 
-    private BroadcastReceiver mRefreshReceiver;
-    IntentFilter filter = new IntentFilter();
+    private BroadcastReceiver mReceiver;
+    private IntentFilter mIntentFilter = new IntentFilter();
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        filter.addAction("RequestPMS");
-        mRefreshReceiver = new BroadcastReceiver() {
+        mIntentFilter.addAction("RequestPMS");
+        mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals("RequestPMS")) {
@@ -67,14 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshReceiver, filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, mIntentFilter);
         initUI();
     }
 
     private void initUI() {
-        mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        mNavigator = new Navigator(this);
-        mSharedPrefs = new SharedPrefsImpl(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mNavigators = new Navigator(this);
+        mSharedPref = new SharedPrefsImpl(this);
         addSplashFragment();
     }
 
@@ -82,28 +82,28 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             ZAndroidSystems.init(MainActivity.this);
         }
-        Ads.b(MainActivity.this, mainBinding.layoutAds, new Ads.OnAdsListener() {
+        Ads.b(MainActivity.this, mBinding.layoutAds, new Ads.OnAdsListener() {
             @Override
             public void onError() {
-                mainBinding.layoutAds.setVisibility(View.GONE);
+                mBinding.layoutAds.setVisibility(View.GONE);
             }
 
             @Override
             public void onAdLoaded() {
-                mainBinding.layoutAds.setVisibility(View.VISIBLE);
+                mBinding.layoutAds.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAdOpened() {
-                mainBinding.layoutAds.setVisibility(View.VISIBLE);
+                mBinding.layoutAds.setVisibility(View.VISIBLE);
             }
         });
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag(SplashFragment.class.getSimpleName());
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment splashFragment = manager.findFragmentByTag(SplashFragment.class.getSimpleName());
         if (requestCode == Constant.REQUEST_CODE) {
             for (int i = 0, len = permissions.length; i < len; i++) {
                 String permission = permissions[i];
@@ -112,14 +112,14 @@ public class MainActivity extends AppCompatActivity {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         boolean showRationale = shouldShowRequestPermissionRationale(permission);
                         if (!showRationale) {
-                            if (fragment != null) {
-                                SplashFragment splashFragment = (SplashFragment) fragment;
+                            if (splashFragment != null) {
+                                SplashFragment splashFragment = (SplashFragment) splashFragment;
                                 splashFragment.showSnackbar();
                             }
                             Log.i(TAG, "onRequestPermissionsResult: 1");
                         } else if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
-                            if (fragment != null) {
-                                SplashFragment splashFragment = (SplashFragment) fragment;
+                            if (splashFragment != null) {
+                                SplashFragment splashFragment = (SplashFragment) splashFragment;
                                 splashFragment.checkPermission();
                             }
                             Log.i(TAG, "onRequestPermissionsResult: 2");
@@ -129,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
                 } else if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     Log.i(TAG, "onRequestPermissionsResult: 3");
                     if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission)) {
-                        if (fragment != null) {
-                            SplashFragment splashFragment = (SplashFragment) fragment;
+                        if (splashFragment != null) {
+                            SplashFragment splashFragment = (SplashFragment) splashFragment;
                             splashFragment.addMainFragment();
                         }
                     }
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addSplashFragment() {
         SplashFragment splashFragment = SplashFragment.newInstance();
-        mNavigator.addFragment(R.id.main_container, splashFragment, false, Navigator.NavigateAnim.NONE, SplashFragment.class.getSimpleName());
+        mNavigators.addFragment(R.id.main_container, splashFragment, false, Navigator.NavigateAnim.NONE, SplashFragment.class.getSimpleName());
     }
 
 //    public void onSwipeRight() {
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             fm.popBackStack();
         }
         MainFragment mainFragment = MainFragment.newInstance();
-        mNavigator.addFragment(R.id.main_container, mainFragment, false, Navigator.NavigateAnim.NONE, MainFragment.class.getSimpleName());
+        mNavigators.addFragment(R.id.main_container, mainFragment, false, Navigator.NavigateAnim.NONE, MainFragment.class.getSimpleName());
     }
 
     @Override
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             if (fragment != null && EditMessageFragment.class.getSimpleName().equals(fragmentTag)) {
                 EditMessageFragment editMessageFragment = (EditMessageFragment) fragment;
                 hideSoftKeyboard();
-                editMessageFragment.confirmLeave(mSharedPrefs.get(SharedPrefsKey.KEY_IS_ADD_NEW, Boolean.class), false);
+                editMessageFragment.confirmLeave(mSharedPref.get(SharedPrefsKey.KEY_IS_ADD_NEW, Boolean.class), false);
                 return;
             }
         }
@@ -229,6 +229,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRefreshReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 }

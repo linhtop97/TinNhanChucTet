@@ -8,11 +8,13 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
@@ -23,8 +25,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.tinnhantet.nhantin.hengio.MyApplication;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.PhoneNumberAdapter;
 import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
@@ -32,9 +36,10 @@ import com.tinnhantet.nhantin.hengio.databinding.ActivityAddMsgBinding;
 import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
 import com.tinnhantet.nhantin.hengio.models.Message;
+import com.tinnhantet.nhantin.hengio.receivers.DeliveredMessage;
+import com.tinnhantet.nhantin.hengio.receivers.SentMessage;
 import com.tinnhantet.nhantin.hengio.services.MessageService;
 import com.tinnhantet.nhantin.hengio.ui.dialogs.ConfirmCancelDialog;
-import com.tinnhantet.nhantin.hengio.ui.dialogs.ContactOptionDialog;
 import com.tinnhantet.nhantin.hengio.utils.Constant;
 import com.tinnhantet.nhantin.hengio.utils.DateTimeUtil;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
@@ -377,8 +382,8 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
 
     private void doneMsg() {
         Message message = Message.getMessage(mContactSelected, mBinding.edtContent.getText().toString(), mMyCalendar);
+        //     sendSMS("0966306839", message.getContent());
         long pIntentId = mHelper.addMsg(message);
-        //add msg to schedule
         message.setPendingId((int) pIntentId);
         sendMsg(message, pIntentId);
         mMessageComeback = message;
@@ -386,10 +391,20 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
 
     private void sendMsg(Message message, long pId) {
         Intent i = new Intent(this, MessageService.class);
-        i.putExtra(Constant.EXTRA_MSG, message);
-        pIntent = PendingIntent.getService(getApplicationContext(), (int) pId, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        aManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        aManager.set(AlarmManager.RTC_WAKEUP, mMyCalendar.getTimeInMillis(), pIntent);
+        Bundle bundle = new Bundle();
+        bundle.putLong(Constant.EXTRA_ID, pId);
+        i.putExtras(bundle);
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), (int) pId, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager manager = (AlarmManager) MyApplication.getInstance().getSystemService(ALARM_SERVICE);
+        long time = Long.parseLong(message.getTime());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    time, pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            manager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        } else {
+            manager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        }
     }
 
     private int invalidData() {
@@ -404,7 +419,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         calendar.set(mYear, mMonth, mDay, mHour, mMinute);
         long timeSet = calendar.getTimeInMillis();
         long timeNow = Calendar.getInstance().getTimeInMillis();
-        if ((timeSet - timeNow) < (2 * 60 * 1000)) {
+        if ((timeSet - timeNow) < (30 * 1000)) {
             return 2;
         } else {
             mMyCalendar = calendar;
@@ -419,7 +434,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.REQUEST_CODE_CONTACT && resultCode == Activity.RESULT_OK) {
-            //ko có sẵn r ->
             if (mContactSelected == null) {
                 mContactSelected = new ArrayList<>();
             }
@@ -432,7 +446,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 }
             }
-
             mContactSelected.clear();
             List<Contact> newContactSelected = new ArrayList<>();
             List<Contact> contacts = data.getParcelableArrayListExtra(Constant.EXTRA_LIST_CONTACT);
@@ -442,7 +455,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     newContactSelected.add(contacts.get(i));
                 }
             }
-
             int sizeOfSelected = typeContact.size();
             int sizeOfNewSelected = newContactSelected.size();
             for (int i = 0; i < sizeOfNewSelected; i++) {
@@ -453,7 +465,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
 
-            //add all none Selected
             for (int i = 0; i < sizeOfSelected; i++) {
                 Contact contact = typeContact.get(i);
                 if (contact.isSelected()) {
@@ -466,7 +477,6 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             mAdapter = new PhoneNumberAdapter(this, mContactSelected, true);
             mAdapter.notifyDataSetChanged();
             mBinding.rvNumbers.setVisibility(View.GONE);
-            //getResources().getDimension(R.dimen._1sdp)
         }
     }
 
@@ -493,8 +503,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onItemClick(Contact contact, int pos) {
         mPosSelected = pos;
-        ContactOptionDialog f = ContactOptionDialog.getInstance(contact);
-        getSupportFragmentManager().beginTransaction().add(f, CONTACT_OPTION_DIALOG).commit();
+        removeContact();
     }
 
     public void hideSoftKeyboard() {
@@ -537,5 +546,31 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             mAdapter.notifyDataSetChanged();
             mBinding.rvNumbers.setVisibility(View.VISIBLE);
         }
+    }
+
+
+    private void sendSMS(String phoneNumber, String message) {
+        ArrayList<PendingIntent> sentPendingIntents = new ArrayList<>();
+        ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<>();
+        PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
+                new Intent(this, SentMessage.class), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,
+                new Intent(this, DeliveredMessage.class), 0);
+        try {
+            SmsManager sms = SmsManager.getDefault();
+            ArrayList<String> mSMSMessage = sms.divideMessage(message);
+            for (int i = 0; i < mSMSMessage.size(); i++) {
+                sentPendingIntents.add(i, sentPI);
+                deliveredPendingIntents.add(i, deliveredPI);
+            }
+            sms.sendMultipartTextMessage(phoneNumber, null, mSMSMessage,
+                    sentPendingIntents, deliveredPendingIntents);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            Toast.makeText(getBaseContext(), "SMS sending failed...", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -65,184 +65,164 @@
             android:layout_margin="@dimen/_8sdp"
             android:background="@drawable/edt_background">
 
-            <ScrollView
-                android:id="@+id/scrollview"
+            <RelativeLayout
+                android:id="@+id/layout_add_msg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="@dimen/_8sdp"
-                android:scrollbars="none">
+                android:paddingLeft="@dimen/_8sdp"
+                android:paddingRight="@dimen/_8sdp">
 
-                <LinearLayout
+
+                <TextView
+                    android:id="@+id/txt_send_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_44sdp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/send_to"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edt_phone_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_marginLeft="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginRight="@dimen/_8sdp"
+                    android:layout_toStartOf="@id/layout_contact"
+                    android:layout_toEndOf="@id/txt_send_to"
+                    android:background="@drawable/number_background"
+                    android:ellipsize="end"
+                    android:inputType="phone"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:paddingRight="@dimen/_8sdp"
+                    android:singleLine="true"
+                    android:textColor="@color/black" />
+
+                <RelativeLayout
+                    android:id="@+id/layout_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_height="@dimen/_44sdp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true">
+
+                    <ImageButton
+                        android:id="@+id/btn_contact"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/contact_selector"
+                        android:padding="@dimen/_4sdp" />
+
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_numbers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_below="@id/edt_phone_number"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/edt_phone_number" />
 
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/layout_add_msg"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/_8sdp"
-                        android:paddingRight="@dimen/_8sdp">
+                <TextView
+                    android:id="@+id/txt_send_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rv_numbers"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="@string/send_at"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/txt_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_below="@id/txt_send_at"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center_vertical"
+                    android:text="@string/time"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp"
+                    android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/txt_send_to"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/send_to"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="@id/edt_phone_number"
-                            app:layout_constraintTop_toTopOf="@id/edt_phone_number"
-                            app:layout_constraintLeft_toLeftOf="parent" />
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="@dimen/_130sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_below="@id/txt_send_at"
+                    android:layout_marginStart="29dp"
+                    android:layout_marginTop="11dp"
+                    android:layout_toEndOf="@id/txt_time"
+                    android:background="@drawable/number_background"
+                    android:gravity="center_vertical"
+                    android:hint="hh:mm"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp" />
 
-                        <EditText
-                            android:id="@+id/edt_phone_number"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/_32sdp"
-                            android:layout_marginLeft="@dimen/_8sdp"
-                            android:layout_marginTop="@dimen/_14sdp"
-                            android:layout_marginRight="@dimen/_8sdp"
-                            android:background="@drawable/number_background"
-                            android:ellipsize="end"
-                            android:inputType="phone"
-                            android:paddingLeft="@dimen/_8sdp"
-                            android:paddingRight="@dimen/_8sdp"
-                            android:singleLine="true"
-                            android:textColor="@color/black"
-                            app:layout_constraintLeft_toRightOf="@id/txt_send_to"
-                            app:layout_constraintRight_toLeftOf="@id/btn_contact"
-                            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/txt_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_below="@id/txt_time"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="center_vertical"
+                    android:text="@string/date"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp"
+                    android:textStyle="bold" />
 
-                        <ImageButton
-                            android:id="@+id/btn_contact"
-                            android:layout_width="@dimen/_24sdp"
-                            android:layout_height="@dimen/_24sdp"
-                            android:layout_marginLeft="@dimen/_4sdp"
-                            android:background="@drawable/contact_selector"
-                            android:padding="@dimen/_4sdp"
-                            app:layout_constraintBottom_toBottomOf="@id/txt_send_to"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/txt_send_to" />
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="@dimen/_130sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:layout_below="@id/time"
+                    android:layout_marginTop="@dimen/_11sdp"
+                    android:layout_toEndOf="@id/txt_date"
+                    android:background="@drawable/number_background"
+                    android:gravity="center_vertical"
+                    android:hint="dd/MM/yyyy"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp" />
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/rv_numbers"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:layout_marginTop="@dimen/_4sdp"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/edt_phone_number">
+                <TextView
+                    android:id="@+id/txt_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txt_date"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="@string/content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13sdp"
+                    android:textStyle="bold" />
 
-                        </android.support.v7.widget.RecyclerView>
-
-                        <TextView
-                            android:id="@+id/txt_send_at"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_13sdp"
-                            android:text="@string/send_at"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            android:textStyle="bold"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/rv_numbers" />
-
-                        <TextView
-                            android:id="@+id/txt_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_34sdp"
-                            android:layout_marginTop="@dimen/_8sdp"
-                            android:gravity="center_vertical"
-                            android:text="@string/time"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            android:textStyle="bold"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/txt_send_at"
-                            tools:layout_editor_absoluteY="120dp" />
-
-                        <TextView
-                            android:layout_marginStart="@dimen/_20sdp"
-                            android:id="@+id/time"
-                            android:layout_width="@dimen/_130sdp"
-                            android:layout_height="@dimen/_32sdp"
-                            android:layout_alignBaseline="@id/txt_time"
-                            android:background="@drawable/number_background"
-                            android:gravity="center_vertical"
-                            android:hint="hh:mm"
-                            android:paddingLeft="@dimen/_8sdp"
-                            android:singleLine="true"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            app:layout_constraintLeft_toRightOf="@id/txt_time"
-                            app:layout_constraintTop_toTopOf="@id/txt_time" />
-
-                        <TextView
-                            android:id="@+id/txt_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_34sdp"
-                            android:layout_below="@id/txt_send_at"
-                            android:layout_alignBaseline="@id/txt_time"
-                            android:layout_marginTop="@dimen/_8sdp"
-                            android:gravity="center_vertical"
-                            android:text="@string/date"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            android:textStyle="bold"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/txt_time" />
-
-                        <TextView
-                            android:id="@+id/date"
-                            android:layout_width="@dimen/_130sdp"
-                            android:layout_height="@dimen/_32sdp"
-                            android:layout_alignBaseline="@id/txt_time"
-                            android:background="@drawable/number_background"
-                            android:gravity="center_vertical"
-                            android:hint="dd/MM/yyyy"
-                            android:paddingLeft="@dimen/_8sdp"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            app:layout_constraintLeft_toLeftOf="@id/time"
-                            app:layout_constraintTop_toTopOf="@id/txt_date" />
-
-                        <TextView
-                            android:id="@+id/txt_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_12sdp"
-                            android:text="@string/content"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            android:textStyle="bold"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/txt_date" />
-
-                        <EditText
-                            android:id="@+id/edt_content"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_8sdp"
-                            android:background="@drawable/content_background"
-                            android:gravity="left"
-                            android:minHeight="@dimen/_186sdp"
-                            android:padding="@dimen/_8sdp"
-                            android:textSize="@dimen/_13sdp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/txt_content" />
-                    </android.support.constraint.ConstraintLayout>
-                </LinearLayout>
-
-            </ScrollView>
+                <EditText
+                    android:id="@+id/edt_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/txt_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:background="@drawable/content_background"
+                    android:gravity="left"
+                    android:minHeight="@dimen/_186sdp"
+                    android:padding="@dimen/_8sdp"
+                    android:textSize="@dimen/_13sdp" />
+            </RelativeLayout>
         </RelativeLayout>
 
 
     </RelativeLayout>
-
-
 </layout>

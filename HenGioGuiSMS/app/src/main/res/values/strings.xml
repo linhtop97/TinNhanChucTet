@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Hẹn giờ tin nhắn chúc Tết</string>
+    <string name="app_name">Hẹn giờ gửi tin</string>
+    <string name="app_name_second">Hẹn giờ tin nhắn chúc Tết</string>
     <string name="pending">Đang chờ</string>
     <string name="sent">Đã gửi</string>
     <string name="send_to">Gửi tới :</string>

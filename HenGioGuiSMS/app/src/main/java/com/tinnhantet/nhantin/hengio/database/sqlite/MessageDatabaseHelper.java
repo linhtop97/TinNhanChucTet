@@ -147,6 +147,21 @@ public class MessageDatabaseHelper extends SQLiteOpenHelper {
         return msgList;
     }
 
+    public Message getMessageById(long id) {
+        Message msg = null;
+        String selectQuery = "SELECT * FROM " + TBL_MSG + " where id = " + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            msg = new Message();
+            msg.setPendingId(cursor.getInt(cursor.getColumnIndex(ID)));
+            msg.setContent(cursor.getString(cursor.getColumnIndex(CONTENT)));
+            msg.setListContact(cursor.getString(cursor.getColumnIndex(LIST_CONTACT)));
+            msg.setTime(cursor.getString(cursor.getColumnIndex(TIME)));
+        }
+        return msg;
+    }
+
     public List<Message> getAllMsgSent() {
         List<Message> msgList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TBL_MSG;

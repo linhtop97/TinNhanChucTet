@@ -1,7 +1,6 @@
 package com.tinnhantet.loichuc.chuctet.ui.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -9,10 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,8 +82,8 @@ public class SplashFragment extends Fragment {
 
     public void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkPermission(MainActivity.PERMISSION_WRITE, mMainActivity) != PackageManager.PERMISSION_GRANTED) {
-                mMainActivity.requestPermissions(MainActivity.PERMISSION_WRITE, Constant.REQUEST_CODE);
+            if (checkPermission(MainActivity.PERMISSION_WRITE_PERMISSION, mMainActivity) != PackageManager.PERMISSION_GRANTED) {
+                mMainActivity.requestPermissions(MainActivity.PERMISSION_WRITE_PERMISSION, Constant.REQUEST_CODE);
                 //mSharedPrefs.put(SharedPrefsKey.PERMISSION_IS_DECLINE, true);
             } else {
                 addMainFragment();
@@ -107,7 +104,7 @@ public class SplashFragment extends Fragment {
 
     public void showSnackbar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkPermission(MainActivity.PERMISSION_WRITE, mMainActivity) == PackageManager.PERMISSION_GRANTED) {
+            if (checkPermission(MainActivity.PERMISSION_WRITE_PERMISSION, mMainActivity) == PackageManager.PERMISSION_GRANTED) {
                 addMainFragment();
             } else {
                 showDialogRequest();
