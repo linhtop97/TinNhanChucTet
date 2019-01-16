@@ -37,7 +37,7 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
     private FragmentSentBinding mBinding;
     private MainActivity mMainActivity;
     private Navigator mNavigator;
-    private MessageScheduleAdapter mAdapter;
+    private MessageScheduleAdapter mScheduleAdapter;
     private List<Message> mMessages;
     private MessageDatabaseHelper helper;
     private LinearLayoutManager mLinearLayoutManager;
@@ -82,7 +82,7 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
                 showMessageNormal(helper.getAllMsgSent());
                 break;
             case R.id.btn_delete:
-                List<Message> messages = ((MessageScheduleAdapter) mBinding.recycleView.getAdapter()).getMessages();
+                List<Message> messages = mScheduleAdapter.getMessages();
                 int size = messages.size();
                 boolean check = false;
                 for (int i = 0; i < size; i++) {
@@ -92,7 +92,7 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
                     }
                 }
                 if (check) {
-                    ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance();
+                    ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance(false);
                     getChildFragmentManager().beginTransaction().add(f, DELETE_ALL_DIALOG).commit();
                 } else {
                     mNavigator.showToast(R.string.havent_chosse);
@@ -101,11 +101,11 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
 
             case R.id.btn_select_all:
                 if (!mIsSelectAll) {
-                    mAdapter.setSelectedAll();
+                    mScheduleAdapter.setSelectedAll();
                     mIsSelectAll = true;
                     mBinding.btnSelectAll.setText(R.string.un_select_all);
                 } else {
-                    mAdapter.removeSelectedAll();
+                    mScheduleAdapter.removeSelectedAll();
                     mIsSelectAll = false;
                     mBinding.btnSelectAll.setText(R.string.select_all);
                 }
@@ -116,7 +116,7 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
     }
 
     public void deleteAllSelected() {
-        List<Message> messages = ((MessageScheduleAdapter) mBinding.recycleView.getAdapter()).getMessages();
+        List<Message> messages = mScheduleAdapter.getMessages();
         MessageDatabaseHelper databaseHelper = MessageDatabaseHelper.getInstance(mMainActivity);
         int size = messages.size();
         for (int i = 0; i < size; i++) {
@@ -144,7 +144,7 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
     @Override
     public void onStart() {
         super.onStart();
-        mAdapter.setMessages(helper.getAllMsgSent());
+        mScheduleAdapter.setMessages(MessageDatabaseHelper.getInstance(mMainActivity).getAllMsgSent());
     }
 
     @Override
@@ -160,31 +160,31 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
         mBinding.layoutOption.setVisibility(View.VISIBLE);
         mIsSelectAll = false;
         mBinding.btnSelectAll.setText(R.string.select_all);
-        mAdapter = new MessageScheduleAdapter(mMainActivity, helper.getAllMsgSent(), true, false);
-        mAdapter.setOnDataListener(this);
-        mAdapter.setOnLongItemClickListner(this);
+        mScheduleAdapter = new MessageScheduleAdapter(mMainActivity, helper.getAllMsgSent(), true, false);
+        mScheduleAdapter.setOnDataListener(this);
+        mScheduleAdapter.setOnLongItemClickListner(this);
         mBinding.recycleView.setLayoutManager(mLinearLayoutManager);
-        mBinding.recycleView.setAdapter(mAdapter);
+        mBinding.recycleView.setAdapter(mScheduleAdapter);
     }
 
     private void showMessageNormal(List<Message> messages) {
         mBinding.layoutOption.setVisibility(View.GONE);
-        mAdapter = new MessageScheduleAdapter(mMainActivity, messages, false, false);
-        mAdapter.setOnDataListener(this);
-        mAdapter.setOnLongItemClickListner(this);
+        mScheduleAdapter = new MessageScheduleAdapter(mMainActivity, messages, false, false);
+        mScheduleAdapter.setOnDataListener(this);
+        mScheduleAdapter.setOnLongItemClickListner(this);
         mBinding.recycleView.setLayoutManager(mLinearLayoutManager);
-        mBinding.recycleView.setAdapter(mAdapter);
+        mBinding.recycleView.setAdapter(mScheduleAdapter);
     }
 
     public void setTextUnSelectAll() {
         mIsSelectAll = true;
-        mAdapter.setSelectedAll();
+        mScheduleAdapter.setSelectedAll();
         mBinding.btnSelectAll.setText(R.string.un_select_all);
     }
 
     public void setTextSelectAll() {
         mIsSelectAll = false;
-        mAdapter.removeSelectedAll();
+        mScheduleAdapter.removeSelectedAll();
         mBinding.btnSelectAll.setText(R.string.select_all);
     }
 }

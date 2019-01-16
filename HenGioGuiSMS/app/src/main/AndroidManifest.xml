@@ -64,12 +64,12 @@
         <receiver android:name=".receivers.SentMessage" />
         <receiver android:name=".receivers.DeliveredMessage" />
         <receiver
-            android:name=".receivers.AlarmReceiver"
+            android:name=".receivers.SendMessageBroadcast"
             android:enabled="true"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+            <!--</intent-filter>-->
         </receiver>
         <!--Zer SDK-->
         <activity

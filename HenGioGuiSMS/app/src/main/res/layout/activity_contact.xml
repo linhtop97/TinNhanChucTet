@@ -87,11 +87,13 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/_12sdp"
                 android:layout_weight="1"
+                android:textSize="@dimen/_12sdp"
                 android:background="@drawable/btn_white_bg"
                 android:text="@string/cancel"
                 android:textColor="@color/black" />
 
             <Button
+                android:textSize="@dimen/_12sdp"
                 android:id="@+id/btn_done"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

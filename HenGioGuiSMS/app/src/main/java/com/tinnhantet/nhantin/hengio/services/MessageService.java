@@ -40,46 +40,49 @@ public class MessageService extends Service {
     @Override
     public int onStartCommand(Intent i, int flags, int startId) {
         Log.i(TAG, "vào được đây: ");
-        Bundle bundle = i.getExtras();
-        if (bundle != null) {
-            Long id = bundle.getLong(Constant.EXTRA_ID);
-            if (id != 0) {
-                Message message = MessageDatabaseHelper.getInstance(this).getMessageById(id);
-                if (message != null) {
-                    Log.i(TAG, "đã vào được đây: ");
-                    List<Contact> contacts = StringUtils.getAllContact(message.getListContact());
-                    String SSms = message.getContent();
-                    int size = contacts.size();
-                    for (int j = 0; j < size; j++) {
-                        Log.i(TAG, "vào được: ");
-                        sendSMS(contacts.get(j).getPhone(), SSms);
-                        Log.i(TAG, "gửi được: ");
-                        try {
-                            Thread.sleep(1000 * size);
-                        } catch (InterruptedException e) {
+        if (i != null) {
+            Bundle bundle = i.getExtras();
+            if (bundle != null) {
+                Long id = bundle.getLong(Constant.EXTRA_ID);
+                if (id != 0) {
+                    Message message = MessageDatabaseHelper.getInstance(this).getMessageById(id);
+                    if (message != null) {
+                        Log.i(TAG, "đã vào được đây: ");
+                        List<Contact> contacts = StringUtils.getAllContact(message.getListContact());
+                        String SSms = message.getContent();
+                        int size = contacts.size();
+                        for (int j = 0; j < size; j++) {
+                            Log.i(TAG, "vào được: ");
+                            sendSMS(contacts.get(j).getPhone(), SSms);
+                            Log.i(TAG, "gửi được: ");
+                            try {
+                                Thread.sleep(1000 * size);
+                            } catch (InterruptedException e) {
 
+                            }
+                        }
+
+                        MessageDatabaseHelper helper = MessageDatabaseHelper.getInstance(this);
+                        helper.removeMsgToSent(message.getPendingId());
+                        if (MainActivity.active) {
+                            FragmentManager fragmentManager = MainActivity.sInstance.getSupportFragmentManager();
+                            Fragment fragment = fragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 0);
+                            if (fragment != null) {
+                                PendingFragment pendingFragment = (PendingFragment) fragment;
+                                pendingFragment.onStart();
+                            }
+                            Fragment fragment2 = fragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 1);
+                            if (fragment2 != null) {
+                                SentFragment sentFragment = (SentFragment) fragment2;
+                                sentFragment.onStart();
+                            }
                         }
                     }
 
-                    MessageDatabaseHelper helper = MessageDatabaseHelper.getInstance(this);
-                    helper.removeMsgToSent(message.getPendingId());
-                    if (MainActivity.active) {
-                        FragmentManager fragmentManager = MainActivity.sInstance.getSupportFragmentManager();
-                        Fragment fragment = fragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 0);
-                        if (fragment != null) {
-                            PendingFragment pendingFragment = (PendingFragment) fragment;
-                            pendingFragment.onStart();
-                        }
-                        Fragment fragment2 = fragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 1);
-                        if (fragment2 != null) {
-                            SentFragment sentFragment = (SentFragment) fragment2;
-                            sentFragment.onStart();
-                        }
-                    }
                 }
-
             }
         }
+
         return START_STICKY;
     }
 

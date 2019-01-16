@@ -2,6 +2,7 @@ package com.tinnhantet.nhantin.hengio.ui.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import com.tinnhantet.nhantin.hengio.utils.StringUtils;
 
 import java.util.List;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class ViewMsgActivity extends AppCompatActivity implements View.OnClickListener, OnDataClickListener {
     private static final int REQUEST_EDIT = 108;
     public static final String FORWARD = "FORWARD";
@@ -41,6 +44,11 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
     private MessageDatabaseHelper mHelper;
     private Message mMessage;
     public static ViewMsgActivity mInstance;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

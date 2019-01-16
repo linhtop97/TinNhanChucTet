@@ -108,7 +108,7 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
                 showMessageNormal(helper.getAllMsgPending());
                 break;
             case R.id.btn_delete:
-                List<Message> messages = ((MessageScheduleAdapter) mBinding.recycleView.getAdapter()).getMessages();
+                List<Message> messages = mAdapter.getMessages();
                 int size = messages.size();
                 boolean check = false;
                 for (int i = 0; i < size; i++) {
@@ -118,7 +118,7 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
                     }
                 }
                 if (check) {
-                    ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance();
+                    ConfirmDeleteAllDialog f = ConfirmDeleteAllDialog.getInstance(true);
                     getChildFragmentManager().beginTransaction().add(f, DELETE_ALL_DIALOG).commit();
                 } else {
                     mNavigator.showToast(R.string.havent_chosse);
@@ -143,7 +143,7 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
     }
 
     public void deleteAllSelected() {
-        List<Message> messages = ((MessageScheduleAdapter) mBinding.recycleView.getAdapter()).getMessages();
+        List<Message> messages = mAdapter.getMessages();
         MessageDatabaseHelper databaseHelper = MessageDatabaseHelper.getInstance(mMainActivity);
         int size = messages.size();
         for (int i = 0; i < size; i++) {

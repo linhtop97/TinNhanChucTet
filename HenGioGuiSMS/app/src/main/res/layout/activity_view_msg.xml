@@ -165,6 +165,7 @@
                 android:paddingRight="@dimen/_14sdp">
 
                 <Button
+                    android:textSize="@dimen/_12sdp"
                     android:id="@+id/btn_forward"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -175,6 +176,7 @@
                     android:textColor="@color/colorWitheOpa" />
 
                 <Button
+                    android:textSize="@dimen/_12sdp"
                     android:id="@+id/btn_delete"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

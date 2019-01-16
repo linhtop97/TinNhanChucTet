@@ -10,4 +10,6 @@ public class Constant {
     public static final String EXTRA_MSG = "EXTRA_MSG";
     public static final String EXTRA_IS_EDIT = "EXTRA_IS_EDIT";
     public static final String EXTRA_ID = "EXTRA_ID";
+    public static final String EXTRA_TIME = "EXTRA_TIME";
+    public static final String ARG_IS_PENDING = "ARG_IS_PENDING";
 }

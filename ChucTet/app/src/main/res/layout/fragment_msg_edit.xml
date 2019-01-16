@@ -6,7 +6,7 @@
 
         <variable
             name="message"
-            type="com.tinnhantet.loichuc.chuctet.models.Message" />
+            type="com.tinnhanchuctet.loichuchay.chuctet.models.Message" />
     </data>
 
     <android.support.constraint.ConstraintLayout

@@ -1,6 +1,7 @@
 package com.tinnhantet.nhantin.hengio.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.tinnhantet.nhantin.hengio.R;
-import com.tinnhantet.nhantin.hengio.database.sharedprf.SharedPrefsImpl;
 import com.tinnhantet.nhantin.hengio.listeners.OnDataClickListener;
 import com.tinnhantet.nhantin.hengio.listeners.OnItemLongClickListener;
 import com.tinnhantet.nhantin.hengio.models.Contact;
@@ -31,11 +31,9 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
     private Context mContext;
     private OnDataClickListener<Message> mListener;
     private OnItemLongClickListener<String> mItemLongClickListener;
-    private SharedPrefsImpl mSharedPrefs;
-    private boolean isShowCheckBox = false;
+    private boolean isShowCheckBox;
     private boolean mIsSelectAll;
     private int mSize;
-    private int numOfSelected = 0;
     private MainActivity mMainActivity;
     private boolean mIsPending;
 
@@ -46,7 +44,6 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
         mContext = context;
         mMainActivity = (MainActivity) context;
         isShowCheckBox = isShow;
-        mSharedPrefs = new SharedPrefsImpl(mContext);
     }
 
     public void setOnDataListener(OnDataClickListener listener) {
@@ -99,23 +96,19 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
     }
 
     public void setSelectedAll() {
-        if (!mIsSelectAll) {
-            for (int i = 0; i < mSize; i++) {
-                mMessages.get(i).setSelected(true);
-            }
-            mIsSelectAll = true;
-            notifyDataSetChanged();
+        for (int i = 0; i < mSize; i++) {
+            mMessages.get(i).setSelected(true);
         }
+        mIsSelectAll = true;
+        notifyDataSetChanged();
     }
 
     public void removeSelectedAll() {
-        if (mIsSelectAll) {
-            for (int i = 0; i < mSize; i++) {
-                mMessages.get(i).setSelected(false);
-            }
-            mIsSelectAll = false;
-            notifyDataSetChanged();
+        for (int i = 0; i < mSize; i++) {
+            mMessages.get(i).setSelected(false);
         }
+        mIsSelectAll = false;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -130,6 +123,8 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
             mTextSendTo = itemView.findViewById(R.id.txt_send_to);
             mTextContent = itemView.findViewById(R.id.txt_content);
             mCheckBox = itemView.findViewById(R.id.cb_select_msg);
+            Typeface font = Typeface.createFromAsset(mContext.getAssets(), "fonts/italic.ttf");
+            mTextTime.setTypeface(font);
             if (isShowCheckBox) {
                 mCheckBox.setVisibility(View.VISIBLE);
                 mCheckBox.setClickable(false);

@@ -1,5 +1,6 @@
 package com.tinnhantet.nhantin.hengio.ui.activities;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import com.tinnhantet.nhantin.hengio.utils.Navigator;
 import com.tinnhantet.nhantin.hengio.utils.TabType;
 import com.zer.android.newsdk.ZAndroidSystems;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnTabSelectedListener {
     private ActivityMainBinding mBinding;
     private Navigator mNavigator;
@@ -28,6 +31,11 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void initUI() {

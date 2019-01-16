@@ -7,6 +7,8 @@ import android.support.multidex.MultiDex;
 import com.tinnhantet.nhantin.hengio.database.sqlite.MessageDatabaseHelper;
 import com.zer.android.newsdk.ZAndroidSystems;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 public class MyApplication extends Application {
 
     private static MyApplication sInstance;
@@ -21,8 +23,13 @@ public class MyApplication extends Application {
         sInstance = this;
         ZAndroidSystems.initApplication(this, getApplicationContext().getPackageName());
         MessageDatabaseHelper messageDatabaseHelper = MessageDatabaseHelper.getInstance(this);
+        CalligraphyConfig.initDefault(
+                new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/text_app.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
     }
-
 
     @Override
     protected void attachBaseContext(Context base) {

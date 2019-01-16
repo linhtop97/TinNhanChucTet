@@ -6,11 +6,11 @@
 
         <variable
             name="category"
-            type="com.tinnhantet.loichuc.chuctet.models.Category" />
+            type="com.tinnhanchuctet.loichuchay.chuctet.models.Category" />
 
         <variable
             name="listener"
-            type="com.tinnhantet.loichuc.chuctet.listeners.OnCategoryClickListener" />
+            type="com.tinnhanchuctet.loichuchay.chuctet.listeners.OnCategoryClickListener" />
     </data>
 
     <android.support.constraint.ConstraintLayout

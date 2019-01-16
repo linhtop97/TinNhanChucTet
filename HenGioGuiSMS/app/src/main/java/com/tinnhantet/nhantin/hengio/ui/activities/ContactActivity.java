@@ -1,6 +1,7 @@
 package com.tinnhantet.nhantin.hengio.ui.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import com.tinnhantet.nhantin.hengio.utils.Navigator;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class ContactActivity extends AppCompatActivity implements View.OnClickListener,
         OnItemClickListener {
     private static final String CANCEL_DIALOG = "CANCEL_DIALOG";
@@ -43,6 +46,10 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isHasContactDefault;
     private int isSelectedStyle = 0;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

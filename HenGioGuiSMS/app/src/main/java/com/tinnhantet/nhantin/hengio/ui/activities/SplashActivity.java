@@ -99,7 +99,7 @@ public class SplashActivity extends AppCompatActivity implements DataCallBack<Li
                 .load(R.drawable.bg_splash)
                 .into(mBinding.bgSplash);
         Glide.with(this)
-                .load(R.drawable.ic_launcher_hi)
+                .load(R.drawable.ic_launcher)
                 .into(mBinding.iconApp);
     }
 
@@ -150,7 +150,7 @@ public class SplashActivity extends AppCompatActivity implements DataCallBack<Li
     }
 
     private void loadContacts() {
-        int SPLASH_DISPLAY_LENGTH = 2500;
+        int SPLASH_DISPLAY_LENGTH = 1500;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

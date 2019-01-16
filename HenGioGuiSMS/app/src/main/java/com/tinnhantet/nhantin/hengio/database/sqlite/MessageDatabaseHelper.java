@@ -102,14 +102,6 @@ public class MessageDatabaseHelper extends SQLiteOpenHelper {
                 ID + "=?", new String[]{String.valueOf(msg.getPendingId())});
     }
 
-    public int CancelMsg(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(IS_SENT, 1);
-        return db.update(TBL_MSG, values,
-                ID + "=?", new String[]{String.valueOf(id)});
-    }
-
     public List<Message> getAllMsgPending() {
         List<Message> msgList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TBL_MSG;

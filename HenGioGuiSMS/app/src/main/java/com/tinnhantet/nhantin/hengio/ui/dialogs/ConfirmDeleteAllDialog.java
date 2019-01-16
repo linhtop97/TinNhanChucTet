@@ -23,14 +23,17 @@ import com.tinnhantet.nhantin.hengio.databinding.DialogCfDeleteSelectedBinding;
 import com.tinnhantet.nhantin.hengio.ui.activities.MainActivity;
 import com.tinnhantet.nhantin.hengio.ui.fragments.PendingFragment;
 import com.tinnhantet.nhantin.hengio.ui.fragments.SentFragment;
+import com.tinnhantet.nhantin.hengio.utils.Constant;
 
 public class ConfirmDeleteAllDialog extends DialogFragment implements View.OnClickListener {
     private DialogCfDeleteSelectedBinding mBinding;
     private MainActivity mMainActivity;
+    private boolean mIsPending;
 
-    public static ConfirmDeleteAllDialog getInstance() {
+    public static ConfirmDeleteAllDialog getInstance(boolean isPending) {
         ConfirmDeleteAllDialog fragment = new ConfirmDeleteAllDialog();
         Bundle args = new Bundle();
+        args.putBoolean(Constant.ARG_IS_PENDING, isPending);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,6 +47,7 @@ public class ConfirmDeleteAllDialog extends DialogFragment implements View.OnCli
     }
 
     private void initUI() {
+        mIsPending = getArguments().getBoolean(Constant.ARG_IS_PENDING);
         mBinding.btnOk.setOnClickListener(this);
         mBinding.btnCancel.setOnClickListener(this);
     }
@@ -87,16 +91,20 @@ public class ConfirmDeleteAllDialog extends DialogFragment implements View.OnCli
         switch (view.getId()) {
             case R.id.btn_ok:
                 //delete Msg
-                Fragment fragment = mMainActivity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 0);
-                if (fragment != null) {
-                    PendingFragment messageFragment = (PendingFragment) fragment;
-                    messageFragment.deleteAllSelected();
+                if (mIsPending) {
+                    Fragment fragment = mMainActivity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 0);
+                    if (fragment != null) {
+                        PendingFragment messageFragment = (PendingFragment) fragment;
+                        messageFragment.deleteAllSelected();
+                    }
+                } else {
+                    Fragment fragment2 = mMainActivity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 1);
+                    if (fragment2 != null) {
+                        SentFragment messageFragment2 = (SentFragment) fragment2;
+                        messageFragment2.deleteAllSelected();
+                    }
                 }
-                Fragment fragment2 = mMainActivity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.view_pager + ":" + 1);
-                if (fragment2 != null) {
-                    SentFragment messageFragment2 = (SentFragment) fragment2;
-                    messageFragment2.deleteAllSelected();
-                }
+
                 dismiss();
                 break;
             case R.id.btn_cancel:
