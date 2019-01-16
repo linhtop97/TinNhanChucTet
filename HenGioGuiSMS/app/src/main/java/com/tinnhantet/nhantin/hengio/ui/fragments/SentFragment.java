@@ -144,7 +144,7 @@ public class SentFragment extends Fragment implements View.OnClickListener, OnDa
     @Override
     public void onStart() {
         super.onStart();
-        mScheduleAdapter.setMessages(MessageDatabaseHelper.getInstance(mMainActivity).getAllMsgSent());
+        showMessageNormal(MessageDatabaseHelper.getInstance(mMainActivity).getAllMsgSent());
     }
 
     @Override

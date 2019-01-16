@@ -71,6 +71,10 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
     }
 
 
+    public void setShowCheckBox(boolean showCheckBox) {
+        isShowCheckBox = false;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
         if (payloads.contains("payload")) {

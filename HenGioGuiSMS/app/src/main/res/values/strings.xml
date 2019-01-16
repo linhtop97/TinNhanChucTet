@@ -33,4 +33,5 @@
     <string name="plz_select_phone_number">Bạn chưa chọn số điện thoại nào</string>
     <string name="havent_contact">Bạn chưa có danh bạ</string>
     <string name="request_per">Bạn phải cho phép quyền truy cập bộ nhớ, tin nhắn và danh bạ !</string>
+    <string name="confirm_rate">Bạn có muốn đánh giá ứng dụng ngay lúc này?</string>
 </resources>

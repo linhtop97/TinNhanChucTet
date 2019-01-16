@@ -15,6 +15,7 @@ import com.tinnhantet.nhantin.hengio.Ads;
 import com.tinnhantet.nhantin.hengio.R;
 import com.tinnhantet.nhantin.hengio.adapters.MainPagerAdapter;
 import com.tinnhantet.nhantin.hengio.databinding.ActivityMainBinding;
+import com.tinnhantet.nhantin.hengio.ui.dialogs.ConfirmRateDialog;
 import com.tinnhantet.nhantin.hengio.utils.Navigator;
 import com.tinnhantet.nhantin.hengio.utils.TabType;
 import com.zer.android.newsdk.ZAndroidSystems;
@@ -23,6 +24,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnTabSelectedListener {
     private ActivityMainBinding mBinding;
+    public static final String RATE_DIALOG = "RATE_DIALOG";
     private Navigator mNavigator;
     public static boolean active = false;
     public static MainActivity sInstance;
@@ -141,5 +143,11 @@ public class MainActivity extends AppCompatActivity implements TabLayout.BaseOnT
     public void onStop() {
         super.onStop();
         active = false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        ConfirmRateDialog f = ConfirmRateDialog.getInstance();
+        getSupportFragmentManager().beginTransaction().add(f, RATE_DIALOG).commit();
     }
 }

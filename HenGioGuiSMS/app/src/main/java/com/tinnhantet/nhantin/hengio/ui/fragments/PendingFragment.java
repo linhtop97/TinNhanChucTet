@@ -81,12 +81,6 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
         helper = MessageDatabaseHelper.getInstance(mMainActivity);
         mMessages = helper.getAllMsgPending();
         showMessageNormal(mMessages);
-//        if (mMessages.size() > 0) {
-//            if (!mSharedPrefs.get(SharedPrefsKey.PREF_REMEMBER_GUIDE, Boolean.class)) {
-//                GuidDialog f = GuidDialog.getInstance();
-//                mMainActivity.getSupportFragmentManager().beginTransaction().add(f, GUIDE_DIALOG).commit();
-//            }
-//        }
 
     }
 
@@ -173,7 +167,7 @@ public class PendingFragment extends Fragment implements View.OnClickListener, O
         super.onStart();
         Log.i(TAG, "onStart: ");
         List<Message> messages = helper.getAllMsgPending();
-        mAdapter.setMessages(messages);
+        showMessageNormal(messages);
         if (messages.size() > 0) {
             if (!mSharedPrefs.get(SharedPrefsKey.PREF_REMEMBER_GUIDE, Boolean.class)) {
                 GuidDialog f = GuidDialog.getInstance();
