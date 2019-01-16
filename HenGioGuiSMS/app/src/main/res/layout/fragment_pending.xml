@@ -25,11 +25,13 @@
                 android:layout_height="@dimen/_38sdp"
                 android:background="@drawable/btn_white_bg"
                 android:text="Xóa"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_11sdp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/btn_select_all" />
 
             <Button
+                android:textColor="@color/black"
                 android:id="@+id/btn_select_all"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_38sdp"
@@ -40,6 +42,7 @@
                 app:layout_constraintRight_toLeftOf="@id/btn_cancel" />
 
             <Button
+                android:textColor="@color/black"
                 android:id="@+id/btn_cancel"
                 android:layout_width="@dimen/_80sdp"
                 android:layout_height="@dimen/_38sdp"

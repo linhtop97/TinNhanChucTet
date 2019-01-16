@@ -22,13 +22,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:textColor="@color/black"
         android:id="@+id/text_phone"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/_14sdp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
         android:gravity="start"
         android:text="@string/contact_number"
+        android:textColor="@color/black"
         android:textSize="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

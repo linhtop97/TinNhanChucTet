@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -67,6 +68,10 @@ public class ViewMsgActivity extends AppCompatActivity implements View.OnClickLi
 
     private void initUI() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_view_msg);
+        Typeface font2 = Typeface.createFromAsset(getAssets(), "fonts/text_app_bold.ttf");
+        mBinding.txtSendTo.setTypeface(font2);
+        mBinding.txtTime.setTypeface(font2);
+        mBinding.txtContent.setTypeface(font2);
         Glide.with(this)
                 .load(R.drawable.bg_main)
                 .into(mBinding.imgBackground);

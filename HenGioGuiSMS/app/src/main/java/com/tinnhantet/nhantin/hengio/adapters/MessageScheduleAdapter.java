@@ -125,6 +125,10 @@ public class MessageScheduleAdapter extends RecyclerView.Adapter<MessageSchedule
             mCheckBox = itemView.findViewById(R.id.cb_select_msg);
             Typeface font = Typeface.createFromAsset(mContext.getAssets(), "fonts/italic.ttf");
             mTextTime.setTypeface(font);
+            Typeface font2 = Typeface.createFromAsset(mContext.getAssets(), "fonts/text_app_bold.ttf");
+            ((TextView) itemView.findViewById(R.id.lb_sent_to)).setTypeface(font2);
+            ((TextView) itemView.findViewById(R.id.lb_content)).setTypeface(font2);
+
             if (isShowCheckBox) {
                 mCheckBox.setVisibility(View.VISIBLE);
                 mCheckBox.setClickable(false);

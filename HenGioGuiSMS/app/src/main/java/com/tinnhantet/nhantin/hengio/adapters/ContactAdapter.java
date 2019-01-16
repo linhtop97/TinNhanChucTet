@@ -1,6 +1,7 @@
 package com.tinnhantet.nhantin.hengio.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -196,6 +197,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             mTextName = itemView.findViewById(R.id.text_name);
             mTextPhone = itemView.findViewById(R.id.text_phone);
             mIsSelected = itemView.findViewById(R.id.cb_select_contact);
+            Typeface font = Typeface.createFromAsset(mContext.getAssets(), "fonts/text_app_bold.ttf");
+            mTextName.setTypeface(font);
             mIsSelected.setClickable(false);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

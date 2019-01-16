@@ -8,7 +8,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="@dimen/_270sdp"
-        android:layout_height="@dimen/_100sdp"
+        android:layout_height="@dimen/_105sdp"
         android:background="@drawable/dialog_background"
         android:padding="@dimen/_8sdp">
 
@@ -21,30 +21,34 @@
             android:text="@string/confirm_delete_all"
             android:textColor="@android:color/black"
             android:textSize="@dimen/_16sdp"
+            app:layout_constraintBottom_toTopOf="@id/btn_ok"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:background="@null"
             android:id="@+id/btn_ok"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:background="@null"
             android:gravity="center"
             android:text="Có"
-            android:layout_marginTop="@dimen/_4sdp"
+            android:textColor="@color/black_hint"
             android:textSize="@dimen/_16sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@id/btn_cancel"
             app:layout_constraintTop_toBottomOf="@id/txt_confirm" />
 
         <TextView
-            android:background="@null"
             android:id="@+id/btn_cancel"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_30sdp"
+            android:background="@null"
             android:gravity="center"
             android:text="Không"
             android:textAllCaps="false"
+            android:textColor="@color/black_hint"
             android:textSize="@dimen/_16sdp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/btn_ok" />

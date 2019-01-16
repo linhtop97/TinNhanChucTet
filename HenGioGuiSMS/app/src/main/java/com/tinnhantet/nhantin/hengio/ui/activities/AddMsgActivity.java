@@ -8,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -196,6 +197,12 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initUI() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_msg);
+        Typeface font2 = Typeface.createFromAsset(getAssets(), "fonts/text_app_bold.ttf");
+        mBinding.txtSendTo.setTypeface(font2);
+        mBinding.txtSendAt.setTypeface(font2);
+        mBinding.txtDate.setTypeface(font2);
+        mBinding.txtTime.setTypeface(font2);
+        mBinding.txtContent.setTypeface(font2);
         mBinding.txtDone.setText(getString(R.string.done));
         Glide.with(this)
                 .load(R.drawable.bg_main)
