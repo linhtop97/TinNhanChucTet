@@ -1,6 +1,7 @@
 package com.tinnhantet.nhantin.hengio.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -66,6 +67,8 @@ public class PhoneNumberAdapter extends RecyclerView.Adapter<PhoneNumberAdapter.
             super(itemView);
             constraintLayout = itemView.findViewById(R.id.layout_par_number);
             mTextName = itemView.findViewById(R.id.txt_name);
+            Typeface font2 = Typeface.createFromAsset(mContext.getAssets(), "fonts/text_app_bold.ttf");
+            mTextName.setTypeface(font2);
             mImageButton = itemView.findViewById(R.id.btn_del);
             if (mIsEdit) {
                 mImageButton.setVisibility(View.VISIBLE);

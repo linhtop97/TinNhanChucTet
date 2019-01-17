@@ -43,16 +43,25 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         mContacts = contacts;
         mSize = contacts.size();
         mContactSelected = new ArrayList<>();
+        int x = 0;
         for (int i = 0; i < mSize; i++) {
             Contact contact = mContacts.get(i);
             if (contact.isSelected()) {
                 mContactSelected.add(contact);
+                x++;
             }
         }
         mContext = context;
         mSharedPrefs = new SharedPrefsImpl(context);
         mContactsHolder = mSharedPrefs.getListContact(SharedPrefsKey.KEY_LIST_CONTACT);
         mSizeHolder = mContactsHolder.size();
+        if (x>= mSizeHolder) {
+            ((ContactActivity) mContext).setCheckedImage(0);
+        } else if (x>0) {
+            ((ContactActivity) mContext).setCheckedImage(1);
+        } else {
+            ((ContactActivity) mContext).setCheckedImage(2);
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {

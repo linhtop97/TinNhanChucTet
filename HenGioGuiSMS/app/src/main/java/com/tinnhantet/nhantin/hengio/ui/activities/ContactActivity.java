@@ -117,7 +117,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         }
-        if (x == sizeRoot) {
+        if (x >= sizeRoot) {
             isSelectedStyle = 0;
             mBinding.btnOption.setImageResource(R.drawable.ic_check_tick_white);
         }

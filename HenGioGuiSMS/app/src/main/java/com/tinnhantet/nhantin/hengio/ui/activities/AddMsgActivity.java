@@ -96,18 +96,28 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     if (!mBinding.edtPhoneNumber.getText().toString().equals("") && mBinding.rvNumbers.getVisibility() == View.VISIBLE) {
-                        validatePhoneNumber();
+                        if (validatePhoneNumber()) {
+                            mBinding.edtPhoneNumber.setText("");
+                            mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected, true);
+                            mAdapter.setOnContactListener(AddMsgActivity.this);
+                            StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
+                                    StaggeredGridLayoutManager.VERTICAL);
+                            mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
+                            mBinding.rvNumbers.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                            mBinding.rvNumbers.setVisibility(View.VISIBLE);
+                        }
+                    } else if (!mBinding.edtPhoneNumber.getText().toString().equals("") && mContactSelected.size() > 0) {
+                        mBinding.edtPhoneNumber.setText("");
+                        mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected, true);
+                        mAdapter.setOnContactListener(AddMsgActivity.this);
+                        StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
+                                StaggeredGridLayoutManager.VERTICAL);
+                        mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
+                        mBinding.rvNumbers.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                        mBinding.rvNumbers.setVisibility(View.VISIBLE);
                     }
-
-                    mBinding.edtPhoneNumber.setText("");
-                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected, true);
-                    mAdapter.setOnContactListener(AddMsgActivity.this);
-                    StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
-                            StaggeredGridLayoutManager.VERTICAL);
-                    mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
-                    mBinding.rvNumbers.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-                    mBinding.rvNumbers.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -121,12 +131,19 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     if (mContactSelected.size() == 0) {
                         String num = mBinding.edtPhoneNumber.getText().toString();
-                        if (num.isEmpty() && mContactSelected.size() == 0) {
+                        if (num.isEmpty()) {
                             mNavigator.showToast(R.string.contact_empty);
                             mBinding.edtPhoneNumber.requestFocus();
-                        } else if (!num.isEmpty()) {
+                        } else {
                             validatePhoneNumber();
                         }
+                    } else {
+                    //    String num = mBinding.edtPhoneNumber.getText().toString();
+//                        if (!num.isEmpty()) {
+//                            validatePhoneNumber();
+//                        } else {
+                           // mBinding.edtPhoneNumber.setText("");
+//                        }
                     }
                 }
             }
@@ -135,8 +152,8 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_GO) {
-                    validatePhoneNumber();
-                    return false;
+                    return validatePhoneNumber();
+
                 }
                 return false;
             }
@@ -170,16 +187,16 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                 mAdapter.notifyItemInserted(mContactSelected.size() - 1);
                 mBinding.edtPhoneNumber.clearFocus();
                 mBinding.edtPhoneNumber.setText("");
-                if (mIsForward) {
-                    mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected, true);
-                    mAdapter.setOnContactListener(AddMsgActivity.this);
-                    StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
-                            StaggeredGridLayoutManager.VERTICAL);
-                    mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
-                    mBinding.rvNumbers.setAdapter(mAdapter);
-                    mBinding.rvNumbers.setVisibility(View.VISIBLE);
-                }
-                hideSoftKeyboard();
+                //    if (mIsForward) {
+                mAdapter = new PhoneNumberAdapter(AddMsgActivity.this, mContactSelected, true);
+                mAdapter.setOnContactListener(AddMsgActivity.this);
+                StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3,
+                        StaggeredGridLayoutManager.VERTICAL);
+                mBinding.rvNumbers.setLayoutManager(gridLayoutManager);
+                mBinding.rvNumbers.setAdapter(mAdapter);
+                mBinding.rvNumbers.setVisibility(View.VISIBLE);
+                mBinding.edtPhoneNumber.requestFocus();
+                //    }
             }
             return true;
         } else {
@@ -544,6 +561,9 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         }
         mContactSelected.remove(mPosSelected);
         mAdapter.notifyItemRemoved(mPosSelected);
+        if (mContactSelected.size() == 0) {
+            mBinding.rvNumbers.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -123,7 +123,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_numbers"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_40sdp"
                     android:layout_below="@id/edt_phone_number"
                     android:layout_marginTop="@dimen/_4sdp"
                     android:visibility="gone"
@@ -136,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rv_numbers"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:text="@string/send_at"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp"
