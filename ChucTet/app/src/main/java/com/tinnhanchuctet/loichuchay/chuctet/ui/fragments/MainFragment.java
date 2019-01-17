@@ -61,7 +61,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         List<Message> mMessages = DatabaseHelper.getInstance(MyApplication.getInstance()).getListMsg(TableEntity.TBL_MY_MESSAGE);
         new SharedPrefsImpl(MyApplication.getInstance()).putListMsg(mMessages);
         mNav = new Navigator(Objects.requireNonNull(getActivity()));
-        Typeface font = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_tieude.ttf");
+        Typeface font = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_tieude.otf");
         mMainBinding.txtTitle.setTypeface(font);
         mMainActivity.ads();
         //mMainActivity.ads();

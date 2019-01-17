@@ -138,11 +138,11 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
                             validatePhoneNumber();
                         }
                     } else {
-                    //    String num = mBinding.edtPhoneNumber.getText().toString();
+                        //    String num = mBinding.edtPhoneNumber.getText().toString();
 //                        if (!num.isEmpty()) {
 //                            validatePhoneNumber();
 //                        } else {
-                           // mBinding.edtPhoneNumber.setText("");
+                        // mBinding.edtPhoneNumber.setText("");
 //                        }
                     }
                 }
@@ -463,7 +463,7 @@ public class AddMsgActivity extends AppCompatActivity implements View.OnClickLis
         calendar.set(mYear, mMonth, mDay, mHour, mMinute);
         long timeSet = calendar.getTimeInMillis();
         long timeNow = Calendar.getInstance().getTimeInMillis();
-        if ((timeSet - timeNow) < (30 * 1000)) {
+        if ((timeSet - timeNow) < (2 * 60 * 1000)) {
             return 2;
         } else {
             mMyCalendar = calendar;
