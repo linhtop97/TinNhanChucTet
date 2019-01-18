@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,16 @@ public class ConfirmEditFragment extends DialogFragment implements View.OnClickL
         initUI();
         return mDialogCfEditBinding.getRoot();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        int width = getResources().getDimensionPixelSize(R.dimen._220sdp);
+        int height = getResources().getDimensionPixelSize(R.dimen._100sdp);
+        window.setLayout(width, height);
+        window.setGravity(Gravity.CENTER);
+    }
+
 
     private void initUI() {
         Bundle bundle = getArguments();
@@ -85,8 +96,6 @@ public class ConfirmEditFragment extends DialogFragment implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ok:
-                mDialogCfEditBinding.btnOk.setBackgroundResource(R.drawable.background_button_option);
-                mDialogCfEditBinding.btnOk.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
                 if (mIsHomeScreen) {
                     mMainActivity.gotoHomeFragment();
                 } else {
@@ -95,8 +104,6 @@ public class ConfirmEditFragment extends DialogFragment implements View.OnClickL
                 dismiss();
                 break;
             case R.id.btn_cancel:
-                mDialogCfEditBinding.btnCancel.setBackgroundResource(R.drawable.background_button_option);
-                mDialogCfEditBinding.btnCancel.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
                 dismiss();
                 break;
         }

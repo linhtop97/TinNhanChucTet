@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,11 +91,19 @@ public class ConfirmDelFragment extends DialogFragment implements View.OnClickLi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        int width = getResources().getDimensionPixelSize(R.dimen._220sdp);
+        int height = getResources().getDimensionPixelSize(R.dimen._100sdp);
+        window.setLayout(width, height);
+        window.setGravity(Gravity.CENTER);
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_ok:
-                mDelBinding.btnOk.setBackgroundResource(R.drawable.background_button_option);
-                mDelBinding.btnOk.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
                 if (deleteMsg(TableEntity.TBL_MY_MESSAGE, mMMessage) > 0) {
                     mCallBack.deleteSuccess(mMMessage);
                     mNav.showToast(R.string.delete_success);
@@ -104,8 +113,6 @@ public class ConfirmDelFragment extends DialogFragment implements View.OnClickLi
                 dismiss();
                 break;
             case R.id.btn_cancel:
-                mDelBinding.btnCancel.setBackgroundResource(R.drawable.background_button_option);
-                mDelBinding.btnCancel.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
                 dismiss();
                 break;
         }

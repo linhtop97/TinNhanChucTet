@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,16 @@ public class OptionMineFragment extends DialogFragment implements View.OnClickLi
         mMineOpBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_mine_op, container, false);
         initUI();
         return mMineOpBinding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        int width = getResources().getDimensionPixelSize(R.dimen._236sdp);
+        int height = getResources().getDimensionPixelSize(R.dimen._130sdp);
+        window.setLayout(width, height);
+        window.setGravity(Gravity.CENTER);
     }
 
     private void initUI() {
@@ -98,16 +109,12 @@ public class OptionMineFragment extends DialogFragment implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txt_delete_msg:
-                mMineOpBinding.txtDeleteMsg.setBackgroundResource(R.drawable.background_button_option);
-                mMineOpBinding.txtDeleteMsg.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
                 ConfirmDelFragment f = ConfirmDelFragment.getInstance(mMessage, tblName);
                 f.setCallBack(mCallBack);
                 mMainActivity.getSupportFragmentManager().beginTransaction().add(f, MY_DEL_DIALOG).commit();
                 dismiss();
                 break;
             case R.id.txt_share_msg:
-                mMineOpBinding.txtShareMsg.setBackgroundResource(R.drawable.background_button_option);
-                mMineOpBinding.txtShareMsg.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
                 shareMessage();
                 dismiss();
                 break;

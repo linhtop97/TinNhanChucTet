@@ -1,6 +1,7 @@
 package com.tinnhanchuctet.loichuchay.chuctet.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,7 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         public MessageViewHolder(View itemView) {
             super(itemView);
-            mTxtNum = itemView.findViewById(R.id.txt_num);
+            mTxtNum = itemView.findViewById(R.id.txt_title_num);
             mTxtContent = itemView.findViewById(R.id.txt_content);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,7 +84,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             if (message == null) {
                 return;
             }
-            mTxtNum.setText(" " + (position + 1));
+            Typeface font = Typeface.createFromAsset(mCxt.getAssets(), "fonts/font_tieude.otf");
+            mTxtNum.setTypeface(font);
+            mTxtNum.setText("Lời chúc " + (position + 1));
             mTxtContent.setText(message.getContent());
         }
     }

@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -63,8 +64,14 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
     }
 
     private void initUI() {
+        Typeface font = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_tieude.otf");
+        mMsgEditBinding.txtTitle.setTypeface(font);
+        Typeface font2 = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_app_b.ttf");
+        mMsgEditBinding.txtCopyMsg.setTypeface(font2);
+        mMsgEditBinding.txtEditMsg.setTypeface(font2);
+        mMsgEditBinding.txtShareMsg.setTypeface(font2);
         Glide.with(this)
-                .load(R.drawable.bg_1)
+                .load(R.drawable.bg_app_none)
                 .into(mMsgEditBinding.imgBackground);
         mSharedPref = new SharedPrefsImpl(mMainActivity);
         mMessagelist = mSharedPref.getListMsg();
@@ -76,7 +83,7 @@ public class EditMessageFragment extends Fragment implements View.OnClickListene
         mSharedPref.put(SharedPrefsKey.KEY__MSG_EDIT, mMessageGet.getContent());
         mSharedPref.put(SharedPrefsKey.KEY_IS_ADD_NEW, mIsAddNewMsg);
         if (!mIsAddNewMsg) {
-            mMsgEditBinding.txtAdd.setText(R.string.done);
+            mMsgEditBinding.txtEditMsg.setText(R.string.done);
             mMsgEditBinding.imgAdd.setImageResource(R.drawable.ic_done);
             mMsgEditBinding.txtTitle.setText(R.string.edit_msg);
         } else {

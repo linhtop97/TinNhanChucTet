@@ -63,6 +63,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mNav = new Navigator(Objects.requireNonNull(getActivity()));
         Typeface font = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_tieude.otf");
         mMainBinding.txtTitle.setTypeface(font);
+        mMainBinding.txtLibMsg.setTypeface(font);
+        mMainBinding.txtMyMsg.setTypeface(font);
+        mMainBinding.txtRate.setTypeface(font);
         mMainActivity.ads();
         //mMainActivity.ads();
         mMainBinding.layoutMsgLib.setOnClickListener(this);

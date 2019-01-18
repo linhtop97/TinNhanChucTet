@@ -71,7 +71,7 @@
 
         <meta-data
             android:name="metadata"
-            android:value="linhtinnhantet" />
+            android:value="linhthongdiepchuctet" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="8298000" />

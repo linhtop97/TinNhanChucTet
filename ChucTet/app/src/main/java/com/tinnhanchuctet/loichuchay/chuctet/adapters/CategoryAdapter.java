@@ -2,6 +2,7 @@ package com.tinnhanchuctet.loichuchay.chuctet.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -65,6 +66,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             Glide.with(mCxt)
                     .load(category.getIcon())
                     .into(mCategoryBinding.imgMsgMine);
+            Glide.with(mCxt)
+                    .load(category.getCategoryBg())
+                    .into(mCategoryBinding.imgBackground);
+            Typeface font = Typeface.createFromAsset(mCxt.getAssets(), "fonts/font_tieude.otf");
+            mCategoryBinding.txtCategoryName.setTypeface(font);
             mCategoryBinding.setCategory(category);
             mCategoryBinding.setListener(mCategoryClickListener);
             mCategoryBinding.executePendingBindings();

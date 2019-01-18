@@ -11,10 +11,22 @@ public class Category {
     private String mName;
     private int mIcon;
 
-    public Category(int id, String name, int icon) {
+    public int getCategoryBg() {
+        return mCategoryBg;
+    }
+
+    public Category setCategoryBg(int categoryBg) {
+        mCategoryBg = categoryBg;
+        return this;
+    }
+
+    private int mCategoryBg;
+
+    public Category(int id, String name, int icon, int categoryBg) {
         mId = id;
         mName = name;
         mIcon = icon;
+        mCategoryBg = categoryBg;
     }
 
     public int getId() {
@@ -47,6 +59,10 @@ public class Category {
     public static List<Category> initCategory() {
         List<Category> categories = new ArrayList<>();
         Integer[] mArraysId = new Integer[]{1, 2, 3, 4, 5, 6, 7};
+        Integer[] mArraysBG = new Integer[]{R.drawable.select_two_ef, R.drawable.select_three_ef,
+                R.drawable.select_two_ef, R.drawable.select_three_ef
+                , R.drawable.select_two_ef, R.drawable.select_three_ef,
+                R.drawable.select_two_ef};
         Integer[] mArraysIcon = new Integer[]{R.drawable.ic_loichuchay, R.drawable.ic_ongdo,
                 R.drawable.ic_giadinh, R.drawable.ic_thayco, R.drawable.ic_sep,
                 R.drawable.ic_nguoiyeu, R.drawable.ic_cute};
@@ -54,7 +70,7 @@ public class Category {
                 , "Chúc tết thầy cô", "Chúc tết sếp", "Chúc tết người yêu, vợ chồng",
                 "Lời chúc tết cute"};
         for (int i = 0; i < mArraysIcon.length; i++) {
-            categories.add(new Category(mArraysId[i], mArraysName[i], mArraysIcon[i]));
+            categories.add(new Category(mArraysId[i], mArraysName[i], mArraysIcon[i], mArraysBG[i]));
         }
 
         return categories;

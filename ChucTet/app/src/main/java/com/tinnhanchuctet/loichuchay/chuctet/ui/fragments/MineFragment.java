@@ -2,6 +2,7 @@ package com.tinnhanchuctet.loichuchay.chuctet.ui.fragments;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,8 +55,10 @@ public class MineFragment extends Fragment implements OnItemClickListener, View.
     }
 
     private void initUI() {
+        Typeface font = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_tieude.otf");
+        mMineBinding.txtTitle.setTypeface(font);
         Glide.with(this)
-                .load(R.drawable.bg_1)
+                .load(R.drawable.bg_app_none)
                 .into(mMineBinding.imgBackground);
         mMineBinding.btnBack.setOnClickListener(this);
         mMineBinding.btnHome.setOnClickListener(this);

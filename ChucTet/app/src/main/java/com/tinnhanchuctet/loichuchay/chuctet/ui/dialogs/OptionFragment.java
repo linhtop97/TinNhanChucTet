@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,16 @@ public class OptionFragment extends DialogFragment implements View.OnClickListen
         initUI();
         return mOptionBinding.getRoot();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        int width = getResources().getDimensionPixelSize(R.dimen._236sdp);
+        int height = getResources().getDimensionPixelSize(R.dimen._130sdp);
+        window.setLayout(width, height);
+        window.setGravity(Gravity.CENTER);
+    }
+
 
     private void initUI() {
         mNav = new Navigator(mMainActivity);
@@ -99,14 +110,10 @@ public class OptionFragment extends DialogFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txt_add_collection:
-                mOptionBinding.txtAddCollection.setBackgroundResource(R.drawable.background_button_option);
-                mOptionBinding.txtAddCollection.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
                 insertMsg(mMessage);
                 dismiss();
                 break;
             case R.id.txt_share_msg:
-                mOptionBinding.txtShareMsg.setBackgroundResource(R.drawable.background_button_option);
-                mOptionBinding.txtShareMsg.setTextColor(mMainActivity.getResources().getColor(R.color.colorWhite));
                 shareMessage();
                 dismiss();
                 break;

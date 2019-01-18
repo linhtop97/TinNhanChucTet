@@ -27,8 +27,8 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/top_container"
             android:layout_width="@dimen/dp_0"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/bg_header"
+            android:layout_height="@dimen/_48sdp"
+            android:background="@color/color_one"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -79,22 +79,17 @@
             android:id="@+id/content_of_msg"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_0"
-            android:layout_marginStart="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_16sdp"
-            android:background="@drawable/background_button"
-            android:gravity="center"
-            android:paddingLeft="@dimen/_12sdp"
-            android:paddingTop="@dimen/_12sdp"
-            android:paddingRight="@dimen/_8sdp"
-            android:paddingBottom="@dimen/_100sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:textAlignment="center"
             android:textColor="@color/colorText"
             android:textSize="@dimen/_16sdp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/txt_swipe"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_container" />
+            app:layout_constraintBottom_toTopOf="@id/icon_bottom"
+            app:layout_constraintLeft_toLeftOf="@id/view_pager"
+            app:layout_constraintRight_toRightOf="@id/view_pager"
+            app:layout_constraintTop_toTopOf="@id/view_pager" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
@@ -103,11 +98,11 @@
             android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_16sdp"
-            android:background="@drawable/background_button"
-            android:paddingLeft="@dimen/_12sdp"
-            android:paddingTop="@dimen/_12sdp"
-            android:paddingRight="@dimen/_8sdp"
-            android:paddingBottom="@dimen/_104sdp"
+            android:background="@drawable/background_button_two"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingTop="@dimen/_8sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_182sdp"
             android:textColor="@color/colorText"
             app:layout_constraintBottom_toTopOf="@id/txt_swipe"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -115,8 +110,10 @@
             app:layout_constraintTop_toBottomOf="@id/top_container" />
 
         <ImageView
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="@dimen/_100sdp"
+            android:id="@+id/icon_bottom"
+            android:layout_width="@dimen/_215sdp"
+            android:layout_height="@dimen/_180sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
             android:src="@drawable/ic_background"
             app:layout_constraintBottom_toBottomOf="@id/view_pager"
             app:layout_constraintLeft_toLeftOf="@id/view_pager"
@@ -127,10 +124,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_4sdp"
-            android:layout_marginBottom="@dimen/_32sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
             android:text="@string/swipe"
-            android:textColor="@color/colorText"
-            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/color_two"
+            android:textSize="@dimen/_13sdp"
             app:layout_constraintBottom_toTopOf="@id/btn_copy"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -141,8 +138,9 @@
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_7sdp"
             android:layout_marginBottom="@dimen/_8sdp"
-            android:background="@drawable/select_btn_ef"
+            android:background="@drawable/select_one_ef"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -156,11 +154,12 @@
                 android:src="@drawable/ic_copy" />
 
             <TextView
+                android:id="@+id/txt_copy_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_4sdp"
                 android:text="@string/copy"
-                android:textColor="@color/colorTextDetail"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>
 
@@ -168,7 +167,8 @@
             android:id="@+id/btn_edit"
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_40sdp"
-            android:background="@drawable/select_btn_ef"
+            android:layout_marginEnd="@dimen/_7sdp"
+            android:background="@drawable/select_two_ef"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@id/btn_copy"
@@ -182,11 +182,12 @@
                 android:src="@drawable/ic_edit" />
 
             <TextView
+                android:id="@+id/txt_edit_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_4sdp"
                 android:text="@string/edit"
-                android:textColor="@color/colorTextDetail"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>
 
@@ -195,7 +196,7 @@
             android:layout_width="@dimen/_90sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_marginEnd="@dimen/_8sdp"
-            android:background="@drawable/select_btn_ef"
+            android:background="@drawable/select_three_ef"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@id/btn_copy"
@@ -209,11 +210,12 @@
                 android:src="@drawable/ic_share" />
 
             <TextView
+                android:id="@+id/txt_share_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_4sdp"
                 android:text="@string/share"
-                android:textColor="@color/colorTextDetail"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>

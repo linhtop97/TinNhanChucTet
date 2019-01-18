@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,16 @@ public class GuideRequestFragment extends DialogFragment implements View.OnClick
     private void initUI() {
         mGuideRequestBinding.btnOk.setOnClickListener(this);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        int width = getResources().getDimensionPixelSize(R.dimen._220sdp);
+        int height = getResources().getDimensionPixelSize(R.dimen._100sdp);
+        window.setLayout(width, height);
+        window.setGravity(Gravity.CENTER);
     }
 
     @NonNull

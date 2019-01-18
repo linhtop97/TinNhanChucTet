@@ -27,7 +27,7 @@ public class MyApplication extends Application {
         initDB();
         CalligraphyConfig.initDefault(
                 new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/font_app.ttf")
+                        .setDefaultFontPath("fonts/font_app_n.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );

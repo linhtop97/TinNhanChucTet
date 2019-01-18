@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -9,9 +8,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
+        android:padding="@dimen/_8sdp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_dialog"
-        android:padding="@dimen/_10sdp">
+        android:background="@drawable/bg_dialog">
 
         <TextView
             android:id="@+id/txt_title"
@@ -19,17 +18,20 @@
             android:layout_height="wrap_content"
             android:text="Bạn có thể chia sẻ/thêm lời chúc bằng cách ấn giữ vào lời chúc đó tại đây!"
             android:textAlignment="textStart"
-            android:textColor="@color/colorText"
+            android:textColor="@color/color_two"
             android:textSize="@dimen/_16sdp"
-            tools:layout_editor_absoluteX="10dp"
-            tools:layout_editor_absoluteY="10dp" />
+            app:layout_constraintBottom_toTopOf="@id/ck_remember"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
             android:id="@+id/ck_remember"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
             android:layout_marginTop="@dimen/_8sdp"
-            android:button="@drawable/cb_selector"
+            android:background="@drawable/cb_selector"
+            android:button="@null"
+            app:layout_constraintBottom_toTopOf="@id/btn_OK"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txt_title" />
 
@@ -38,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
             android:text="Đã nhớ và không nhắc lại"
-            android:textColor="@color/colorText"
+            android:textColor="@color/color_two"
             android:textSize="@dimen/_16sdp"
             app:layout_constraintBottom_toBottomOf="@id/ck_remember"
             app:layout_constraintLeft_toRightOf="@id/ck_remember"
@@ -47,13 +49,14 @@
         <Button
             android:id="@+id/btn_OK"
             android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_32sdp"
+            android:layout_height="@dimen/_36sdp"
             android:layout_marginTop="@dimen/_8sdp"
-            android:background="@drawable/select_option_ef"
+            android:background="@drawable/select_two_ef"
             android:text="@string/ok"
             android:textAllCaps="false"
             android:textColor="@color/colorText"
             android:textSize="@dimen/_16sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ck_remember" />

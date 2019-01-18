@@ -2,6 +2,7 @@ package com.tinnhanchuctet.loichuchay.chuctet.ui.fragments;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,7 +46,11 @@ public class LibraryFragment extends Fragment implements OnCategoryClickListener
 
 
     private void initUI() {
-        Glide.with(this).load(R.drawable.bg_1).into(mMsgLibBinding.imgBackground);
+        Typeface font = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_tieude.otf");
+        mMsgLibBinding.txtTitle.setTypeface(font);
+        Glide.with(this)
+                .load(R.drawable.bg_app_none)
+                .into(mMsgLibBinding.imgBackground);
         mNav = new Navigator(mMainActivity);
         List<Category> categoryList = Category.initCategory();
         mLayoutManager = new LinearLayoutManager(mMainActivity);

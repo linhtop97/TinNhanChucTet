@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -63,8 +64,15 @@ public class MessageFragment extends Fragment implements View.OnClickListener, E
     }
 
     private void initUI() {
+        Typeface font = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_tieude.otf");
+        mMsgBinding.txtTitle.setTypeface(font);
+        Typeface font2 = Typeface.createFromAsset(mMainActivity.getAssets(), "fonts/font_app_b.ttf");
+        mMsgBinding.txtCopyMsg.setTypeface(font2);
+        mMsgBinding.txtEditMsg.setTypeface(font2);
+        mMsgBinding.txtShareMsg.setTypeface(font2);
+        mMsgBinding.txtSwipe.setTypeface(font2);
         Glide.with(this)
-                .load(R.drawable.bg_1)
+                .load(R.drawable.bg_app_none)
                 .into(mMsgBinding.imgBackground);
         mNav = new Navigator(mMainActivity);
         Bundle bundle = getArguments();
