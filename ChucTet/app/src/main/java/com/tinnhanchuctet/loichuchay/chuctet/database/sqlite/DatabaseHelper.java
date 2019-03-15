@@ -39,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+//CREATE TABLE `tbl_General` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT, `Content` TEXT NOT NULL )
     }
 
     @Override
